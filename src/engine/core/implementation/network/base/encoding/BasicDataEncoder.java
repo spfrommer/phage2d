@@ -19,41 +19,53 @@ public class BasicDataEncoder implements DataEncoder {
 		for (Field field : fields) {
 			Element fieldElement = doc.createElement(field.getName());
 			Class<?> fieldType = field.getType();
-			String typeName = fieldType.getName().toUpperCase().replace(".", "");
+			String typeName = fieldType.getName().toUpperCase()
+					.replace(".", "");
 			FieldType type = FieldType.valueOf(typeName);
 			try {
 				switch (type) {
 				case INT:
-					fieldElement.appendChild(doc.createTextNode("" + field.getInt(component)));
+					fieldElement.appendChild(doc.createTextNode(""
+							+ field.getInt(component)));
 					break;
 				case DOUBLE:
-					fieldElement.appendChild(doc.createTextNode("" + field.getDouble(component)));
+					fieldElement.appendChild(doc.createTextNode(""
+							+ field.getDouble(component)));
 					break;
 				case BYTE:
-					fieldElement.appendChild(doc.createTextNode("" + field.getByte(component)));
+					fieldElement.appendChild(doc.createTextNode(""
+							+ field.getByte(component)));
 					break;
 				case SHORT:
-					fieldElement.appendChild(doc.createTextNode("" + field.getShort(component)));
+					fieldElement.appendChild(doc.createTextNode(""
+							+ field.getShort(component)));
 					break;
 				case LONG:
-					fieldElement.appendChild(doc.createTextNode("" + field.getLong(component)));
+					fieldElement.appendChild(doc.createTextNode(""
+							+ field.getLong(component)));
 					break;
 				case FLOAT:
-					fieldElement.appendChild(doc.createTextNode("" + field.getFloat(component)));
+					fieldElement.appendChild(doc.createTextNode(""
+							+ field.getFloat(component)));
 					break;
 				case BOOLEAN:
-					fieldElement.appendChild(doc.createTextNode("" + field.getBoolean(component)));
+					fieldElement.appendChild(doc.createTextNode(""
+							+ field.getBoolean(component)));
 					break;
 				case CHAR:
-					fieldElement.appendChild(doc.createTextNode("" + field.getChar(component)));
+					fieldElement.appendChild(doc.createTextNode(""
+							+ field.getChar(component)));
 					break;
 				case JAVALANGSTRING:
-					fieldElement.appendChild(doc.createTextNode("" + field.get(component)));
+					fieldElement.appendChild(doc.createTextNode(""
+							+ field.get(component)));
 					break;
 				default:
 					throw new RuntimeException("No type for: " + typeName);
 				}
-			} catch (IllegalArgumentException | IllegalAccessException e) {
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 			}
 			compElement.appendChild(fieldElement);

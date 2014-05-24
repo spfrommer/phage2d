@@ -51,10 +51,7 @@ public class FlipFlop extends Game {
 
 	@Override
 	public void onStart() {
-		DynamicLevel dynamic = new DynamicLevel();
-		dynamic.load(LevelReader.read("level1.lvl"));
-
-		loadLevel(dynamic);
+		loadLevel(new TestLevel());
 
 		m_portalManager
 				.addPortalsSatisfiedListener(new PortalsSatisfiedListener() {
@@ -95,13 +92,13 @@ public class FlipFlop extends Game {
 
 	private void nextLevel() {
 		this.getEntitySystem().removeAllEntities();
+		m_physics.setGravity(new Vector(0, -9.8));
 		m_portalManager.resetPortals();
 
 		DynamicLevel dynamic = new DynamicLevel();
 		dynamic.load(LevelReader.read("level1.lvl"));
 
 		loadLevel(dynamic);
-		// loadLevel(new TestLevel());
 	}
 
 	private InputManager makeInputManager() {

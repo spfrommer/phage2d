@@ -5,8 +5,8 @@ import java.lang.reflect.Field;
 import engine.core.framework.component.DataComponent;
 
 /**
- * A Decoder that can only handle DataComponents that contain public primitive fields and Strings - works using
- * Reflection.
+ * A Decoder that can only handle DataComponents that contain public primitive
+ * fields and Strings - works using Reflection.
  */
 public class BasicDataDecoder implements DataDecoder {
 
@@ -19,7 +19,8 @@ public class BasicDataDecoder implements DataDecoder {
 		for (int i = 0; i < fields.length; i++) {
 			Field field = fields[i];
 			Class<?> fieldType = field.getType();
-			String typeName = fieldType.getName().toUpperCase().replace(".", "");
+			String typeName = fieldType.getName().toUpperCase()
+					.replace(".", "");
 			FieldType type = FieldType.valueOf(typeName);
 			try {
 				switch (type) {
@@ -53,7 +54,9 @@ public class BasicDataDecoder implements DataDecoder {
 				default:
 					throw new RuntimeException("No type for: " + typeName);
 				}
-			} catch (IllegalArgumentException | IllegalAccessException e) {
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 			}
 		}

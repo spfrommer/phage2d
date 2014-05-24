@@ -37,19 +37,19 @@ import engine.core.implementation.physics.data.PhysicsData;
 public class TestLevel implements Level {
 	public List<Entity> getBalls() {
 		ArrayList<Entity> balls = new ArrayList<Entity>();
-		balls.add(EntityFactory.makeBall(new Vector(-100, 0)));
+		// balls.add(EntityFactory.makeBall(new Vector(-100, 0)));
 		balls.add(EntityFactory.makeBall(new Vector(0, 0)));
-		balls.add(EntityFactory.makeBall(new Vector(100, 0)));
+		// balls.add(EntityFactory.makeBall(new Vector(100, 0)));
 		return balls;
 	}
 
 	public List<Entity> getPortals(PortalManager portalManager) {
 		ArrayList<Entity> portals = new ArrayList<Entity>();
-		portals.add(EntityFactory.makePortal(new Vector(150, -300),
-				portalManager));
-		portals.add(EntityFactory.makePortal(new Vector(200, -300),
-				portalManager));
-		portals.add(EntityFactory.makePortal(new Vector(250, -300),
+		// portals.add(EntityFactory.makePortal(new Vector(-500, -150),
+		// portalManager));
+		// portals.add(EntityFactory.makePortal(new Vector(-500, -250),
+		// portalManager));
+		portals.add(EntityFactory.makePortal(new Vector(300, -200),
 				portalManager));
 		return portals;
 	}
@@ -57,13 +57,17 @@ public class TestLevel implements Level {
 	public List<Entity> getPlatforms() {
 		ArrayList<Entity> platforms = new ArrayList<Entity>();
 
-		addSquarePlatform(new Vector(-100, -100), platforms);
-		addSquarePlatform(new Vector(0, -150), platforms);
-		addSquarePlatform(new Vector(100, -200), platforms);
+		addSquarePlatform(new Vector(0, -50), platforms);
+		addSquarePlatform(new Vector(50, -50), platforms);
+		addSquarePlatform(new Vector(100, 0), platforms);
 
-		addSquarePlatform(new Vector(200, -50), platforms);
-		addSquarePlatform(new Vector(250, -100), platforms);
-		addSquarePlatform(new Vector(300, -150), platforms);
+		addSquarePlatform(new Vector(50, 200), platforms);
+		addSquarePlatform(new Vector(350, 150), platforms);
+
+		// addSquarePlatform(new Vector(50, -200), platforms);
+
+		// addSquarePlatform(new Vector(200, -300), platforms);
+		// addSquarePlatform(new Vector(150, -350), platforms);
 
 		return platforms;
 	}
@@ -113,7 +117,9 @@ public class TestLevel implements Level {
 		}
 		try {
 			printDocument(doc, System.out);
-		} catch (IOException | TransformerException e) {
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (TransformerException e) {
 			e.printStackTrace();
 		}
 	}
