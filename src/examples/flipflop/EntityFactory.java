@@ -15,18 +15,35 @@ import engine.core.implementation.physics.logic.handler.ListenerCollisionHandler
 import engine.core.implementation.rendering.logic.TextureRenderingLogic;
 
 public class EntityFactory {
-	public static Entity makePortal(Vector position, double rotation,
-			CollisionListener listener) {
+	public static Entity makePortal(Vector position) {
 		Entity portal = new Entity();
 
 		PhysicsData physics = ComponentFactory.addPhysicsData(portal, position,
 				0, new Rectangle(50, 50));
 		physics.setMassType(Mass.Type.INFINITE);
-		physics.setRotation(rotation);
 
 		ComponentFactory.addTextureData(portal,
 				new Texture(ImageUtils.getID("portal.png"), 50, 50));
-		ComponentFactory.addNameData(portal, "platform");
+		ComponentFactory.addNameData(portal, "portal");
+		ComponentFactory.addPhysicsWrappers(portal);
+		ComponentFactory.addLayerData(portal, 2);
+		ListenerCollisionHandlerLogic handler = new ListenerCollisionHandlerLogic(
+				portal);
+		portal.addComponent(handler);
+		portal.addComponent(new TextureRenderingLogic(portal));
+		return portal;
+	}
+
+	public static Entity makePortal(Vector position, CollisionListener listener) {
+		Entity portal = new Entity();
+
+		PhysicsData physics = ComponentFactory.addPhysicsData(portal, position,
+				0, new Rectangle(50, 50));
+		physics.setMassType(Mass.Type.INFINITE);
+
+		ComponentFactory.addTextureData(portal,
+				new Texture(ImageUtils.getID("portal.png"), 50, 50));
+		ComponentFactory.addNameData(portal, "portal");
 		ComponentFactory.addPhysicsWrappers(portal);
 		ComponentFactory.addLayerData(portal, 2);
 		ListenerCollisionHandlerLogic handler = new ListenerCollisionHandlerLogic(
@@ -41,14 +58,14 @@ public class EntityFactory {
 		Entity player = new Entity();
 
 		PhysicsData physics = ComponentFactory.addPhysicsData(player, position,
-				0, new Circle(20));
+				0, new Circle(23));
 		physics.setGravity(100);
 		physics.setCollisionFriction(0);
 		physics.setRestitution(0.01);
 		physics.setRotationalFriction(100);
 
 		ComponentFactory.addTextureData(player,
-				new Texture(ImageUtils.getID("blueblob.png"), 40, 40));
+				new Texture(ImageUtils.getID("blueblob.png"), 46, 46));
 		ComponentFactory.addNameData(player, "player");
 		ComponentFactory.addPhysicsWrappers(player);
 		ComponentFactory.addLayerData(player, 2);
