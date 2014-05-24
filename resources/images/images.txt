@@ -21,3 +21,4 @@ phage2dlogo.png
 lwjgllogo.png
 dyn4jlogo.png
 portal.png
+slflogo.png

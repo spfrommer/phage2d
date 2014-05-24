@@ -47,13 +47,14 @@ public abstract class Client {
 
 	private static final boolean DUMP_MESSAGES = false;
 
-	public Client(CommandInterpreter interpreter, String host, int port, DecoderMapper decoder) {
+	public Client(CommandInterpreter interpreter, String host, int port,
+			DecoderMapper decoder) {
 		ImageUtils.initMapping();
 
 		PhageSplash splash = new PhageSplash();
 
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -91,15 +92,15 @@ public abstract class Client {
 		try {
 			m_socket = new Socket(host, port);
 
-			m_serverWriter = new MessageWriter(new ByteWriterInterpreter(new ByteWriter(m_socket.getOutputStream()),
-					m_interpreter));
+			m_serverWriter = new MessageWriter(new ByteWriterInterpreter(
+					new ByteWriter(m_socket.getOutputStream()), m_interpreter));
 			m_messageBuffer = new MessageBuffer();
 			m_messageBuffer.addWriter(m_serverWriter);
 
 			m_network.bufferAddWriter(m_serverWriter);
 
-			m_serverReader = new MessageReader(new ByteReaderInterpreter(new ByteReader(m_socket.getInputStream()),
-					m_interpreter));
+			m_serverReader = new MessageReader(new ByteReaderInterpreter(
+					new ByteReader(m_socket.getInputStream()), m_interpreter));
 
 			Message idMessage = m_serverReader.readMessage();
 			m_id = idMessage.getParameters()[0].getIntValue();
