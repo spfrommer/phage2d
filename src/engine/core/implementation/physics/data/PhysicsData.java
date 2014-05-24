@@ -129,6 +129,24 @@ public class PhysicsData extends DataComponent {
 	}
 
 	/**
+	 * sets the restitution, or elasticity.
+	 * 
+	 * @param restitution
+	 */
+	public void setRestitution(double restitution) {
+		m_fixture.setRestitution(restitution);
+	}
+
+	/**
+	 * Gets the restitution, or elasticity.
+	 * 
+	 * @return
+	 */
+	public double getRestitution() {
+		return m_fixture.getRestitution();
+	}
+
+	/**
 	 * Sets the linear velocity of this object
 	 * 
 	 * @param velocity

@@ -113,6 +113,7 @@ public class Platformer extends Game {
 		PhysicsData physics = ComponentFactory.addPhysicsData(player, position, 0, new Circle(25));
 		physics.setGravity(100);
 		physics.setCollisionFriction(10);
+		physics.setRestitution(0.5);
 
 		ComponentFactory.addTextureData(player, new Texture(ImageUtils.getID("blueblob.png"), 50, 50));
 		ComponentFactory.addNameData(player, "player");

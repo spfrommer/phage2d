@@ -35,7 +35,7 @@ public class PlatformerControllerLogic extends ControllerLogic {
 
 		float strafe = left - right;
 
-		if (Math.abs(m_physics.getVelocity().getY()) < 0.1)
+		if (Math.abs(m_physics.getVelocity().getY()) < 110)
 			m_physics.applyForce(new Vector(0, jump * 100000000));
 
 		m_physics.applyTorque(strafe * 20000000);

@@ -49,8 +49,16 @@ public abstract class Client {
 
 	public Client(CommandInterpreter interpreter, String host, int port, DecoderMapper decoder) {
 		ImageUtils.initMapping();
-		m_interpreter = interpreter;
 
+		PhageSplash splash = new PhageSplash();
+
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		m_interpreter = interpreter;
 		Display display = setupDisplay();
 
 		m_system = new EntitySystem();

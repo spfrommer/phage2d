@@ -17,3 +17,6 @@ blueblob.png
 palmtree1.png
 palmtree2.png
 palmtree3.png
+phage2dlogo.png
+lwjgllogo.png
+dyn4jlogo.png

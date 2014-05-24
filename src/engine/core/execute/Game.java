@@ -28,6 +28,14 @@ public abstract class Game {
 	public Game() {
 		ImageUtils.initMapping();
 
+		PhageSplash splash = new PhageSplash();
+
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		m_display = setupDisplay();
 
 		m_system = new EntitySystem();
