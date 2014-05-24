@@ -25,7 +25,7 @@ public abstract class Game {
 	private Camera m_camera;
 	private Display m_display;
 
-	public Game() {
+	public Game(int width, int height) {
 		ImageUtils.initMapping();
 
 		PhageSplash splash = new PhageSplash();
@@ -36,7 +36,7 @@ public abstract class Game {
 			e.printStackTrace();
 		}
 
-		m_display = setupDisplay();
+		m_display = setupDisplay(width, height);
 
 		m_system = new EntitySystem();
 		m_rendering = new BasicRenderingActivity(m_system);
@@ -57,8 +57,8 @@ public abstract class Game {
 		m_rendering = rendering;
 	}
 
-	private LWJGLDisplay setupDisplay() {
-		LWJGLDisplay display = new LWJGLDisplay(700, 700);
+	private LWJGLDisplay setupDisplay(int width, int height) {
+		LWJGLDisplay display = new LWJGLDisplay(width, height);
 		display.init();
 
 		SingleViewPortLayout layout = new SingleViewPortLayout(display);
