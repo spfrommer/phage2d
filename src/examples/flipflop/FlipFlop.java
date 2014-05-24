@@ -21,18 +21,15 @@ public class FlipFlop extends Game {
 	private CameraActivity m_camera;
 	private ControllerActivity m_controller;
 
-	private Entity m_ball1;
-	private Entity m_ball2;
-	private Entity m_ball3;
-
-	private Entity m_portal1;
-	private Entity m_portal2;
-	private Entity m_portal3;
-
-	private PortalManager m_portalManager = new PortalManager();
+	private PortalManager m_portalManager;
 
 	public static void main(String[] args) {
 		new FlipFlop().start();
+	}
+
+	public FlipFlop() {
+		super();
+		m_portalManager = new PortalManager(this.getEntitySystem());
 	}
 
 	@Override
@@ -54,17 +51,7 @@ public class FlipFlop extends Game {
 
 	@Override
 	public void onStart() {
-		this.getEntitySystem().addEntity(
-				EntityFactory.makeBackground(15000, 6000));
-		addBalls();
-		addPortals();
-		addSquarePlatform(new Vector(-100, -100));
-		addSquarePlatform(new Vector(0, -150));
-		addSquarePlatform(new Vector(100, -200));
-
-		addSquarePlatform(new Vector(200, -50));
-		addSquarePlatform(new Vector(250, -100));
-		addSquarePlatform(new Vector(300, -150));
+		loadLevel(new StaticLevel());
 
 		m_portalManager
 				.addPortalsSatisfiedListener(new PortalsSatisfiedListener() {
@@ -87,52 +74,27 @@ public class FlipFlop extends Game {
 
 	}
 
+	private void loadLevel(Level level) {
+		this.getEntitySystem().addEntity(
+				EntityFactory.makeBackground(15000, 6000));
+
+		for (Entity portal : level.getPortals(m_portalManager)) {
+			m_portalManager.addPortal(portal);
+			this.getEntitySystem().addEntity(portal);
+		}
+
+		for (Entity platform : level.getPlatforms())
+			this.getEntitySystem().addEntity(platform);
+
+		for (Entity ball : level.getBalls())
+			this.getEntitySystem().addEntity(ball);
+	}
+
 	private void nextLevel() {
 		this.getEntitySystem().removeAllEntities();
 		m_portalManager.resetPortals();
 
-		this.getEntitySystem().addEntity(
-				EntityFactory.makeBackground(15000, 6000));
-		addBalls();
-		addPortals();
-		addSquarePlatform(new Vector(-100, -100));
-		addSquarePlatform(new Vector(0, -150));
-		addSquarePlatform(new Vector(100, -200));
-
-		addSquarePlatform(new Vector(200, -50));
-		addSquarePlatform(new Vector(250, -100));
-		addSquarePlatform(new Vector(300, -150));
-	}
-
-	private void addSquarePlatform(Vector position) {
-		this.getEntitySystem().addEntity(
-				EntityFactory.makePlatform(position, 50, 50));
-	}
-
-	private void addBalls() {
-		m_ball1 = EntityFactory.makeBall(new Vector(-100, 0));
-		m_ball2 = EntityFactory.makeBall(new Vector(0, 0));
-		m_ball3 = EntityFactory.makeBall(new Vector(100, 0));
-
-		this.getEntitySystem().addEntity(m_ball1);
-		this.getEntitySystem().addEntity(m_ball2);
-		this.getEntitySystem().addEntity(m_ball3);
-	}
-
-	private void addPortals() {
-		m_portal1 = EntityFactory.makePortal(new Vector(150, -300), 0,
-				m_portalManager);
-		m_portalManager.addPortal(m_portal1);
-		m_portal2 = EntityFactory.makePortal(new Vector(200, -300), 0,
-				m_portalManager);
-		m_portalManager.addPortal(m_portal2);
-		m_portal3 = EntityFactory.makePortal(new Vector(250, -300), 0,
-				m_portalManager);
-		m_portalManager.addPortal(m_portal3);
-
-		this.getEntitySystem().addEntity(m_portal1);
-		this.getEntitySystem().addEntity(m_portal2);
-		this.getEntitySystem().addEntity(m_portal3);
+		loadLevel(new StaticLevel());
 	}
 
 	private InputManager makeInputManager() {

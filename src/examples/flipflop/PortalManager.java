@@ -6,13 +6,19 @@ import java.util.List;
 import java.util.Map;
 
 import engine.core.framework.Entity;
+import engine.core.framework.EntitySystem;
 import engine.core.implementation.physics.base.CollisionListener;
 
 public class PortalManager implements CollisionListener {
+	private EntitySystem m_system;
 
 	private Map<Entity, Boolean> m_portals = new HashMap<Entity, Boolean>();
 
 	private List<PortalsSatisfiedListener> m_portalListeners = new ArrayList<PortalsSatisfiedListener>();
+
+	public PortalManager(EntitySystem system) {
+		m_system = system;
+	}
 
 	public void addPortalsSatisfiedListener(PortalsSatisfiedListener listener) {
 		m_portalListeners.add(listener);
@@ -42,6 +48,7 @@ public class PortalManager implements CollisionListener {
 	public void collided(Entity portal, Entity entity) {
 		if (m_portals.containsKey(portal)) {
 			m_portals.put(portal, true);
+			m_system.removeEntity(entity);
 		}
 		if (portalsSatisfied()) {
 			for (PortalsSatisfiedListener listener : m_portalListeners)
