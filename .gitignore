@@ -1,0 +1,5 @@
+*.class
+.directory
+bin
+doc
+output.log

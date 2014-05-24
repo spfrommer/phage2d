@@ -1,0 +1,146 @@
+<xml>
+  <keys>
+    <key id="0" name="NONE"/>
+    <key id="1" name="ESCAPE"/>
+    <key id="2" char="1"/>
+    <key id="3" char="2"/>
+    <key id="4" char="3"/>
+    <key id="5" char="4"/>
+    <key id="6" char="5"/>
+    <key id="7" char="6"/>
+    <key id="8" char="7"/>
+    <key id="9" char="8"/>
+    <key id="10" char="9"/>
+    <key id="11" char="0"/>
+    <key id="12" name="MINUS" char="-"/>
+    <key id="13" name="EQUALS" char="="/>
+    <key id="14" name="BACK"/>
+    <key id="15" name="TAB"/>
+    <key id="17" char="W"/>
+    <key id="16" char="Q"/>
+    <key id="19" char="R"/>
+    <key id="18" char="E"/>
+    <key id="21" char="Y"/>
+    <key id="20" char="T"/>
+    <key id="23" char="I"/>
+    <key id="22" char="U"/>
+    <key id="25" char="P"/>
+    <key id="24" char="O"/>
+    <key id="27" name="RBRACKET" char="]"/>
+    <key id="26" name="LBRACKET" char="["/>
+    <key id="29" name="LCONTROL"/>
+    <key id="28" name="RETURN"/>
+    <key id="31" char="S"/>
+    <key id="30" char="A"/>
+    <key id="34" char="G"/>
+    <key id="35" char="H"/>
+    <key id="32" char="D"/>
+    <key id="33" char="F"/>
+    <key id="38" char="L"/>
+    <key id="39" name="SEMICOLON" char=";"/>
+    <key id="36" char="J"/>
+    <key id="37" char="K"/>
+
+    <key id="43" name="BACKSLASH" char="\"/>
+    <key id="40" name="APOSTROPHE" char="'"/>
+    <key id="41" name="GRAVE" char="`"/>
+    <key id="46" char="C"/>
+    <key id="47" char="V"/>
+    <key id="44" char="Z"/>
+    <key id="45" char="X"/>
+    <key id="51" name="COMMA" char=","/>
+    <key id="50" char="M"/>
+    <key id="49" char="N"/>
+    <key id="48" char="B"/>
+    <key id="55" name="MULTIPLY"/>
+
+    <key id="53" name="SLASH" char="/"/>
+    <key id="52" name="PERIOD" char="."/>
+    <key id="59" name="F1"/>
+    <key id="58" name="CAPS"/>
+    <key id="57" name="SPACE" char=" "/>
+    <key id="56" name="LMENU"/>
+    <key id="63" name="F5"/>
+    <key id="62" name="F4"/>
+    <key id="61" name="F3"/>
+    <key id="60" name="F2"/>
+    <key id="68" name="F10"/>
+    <key id="69" name="NUMLOCK"/>
+    <key id="70" name="SCROLL"/>
+    <key id="71" name="NUMPAD7"/>
+    <key id="64" name="F6"/>
+    <key id="65" name="F7"/>
+    <key id="66" name="F8"/>
+    <key id="67" name="F9"/>
+    <key id="76" name="NUMPAD5"/>
+    <key id="77" name="NUMPAD6"/>
+    <key id="78" name="ADD"/>
+    <key id="79" name="NUMPAD1"/>
+    <key id="72" name="NUMPAD8"/>
+    <key id="73" name="NUMPAD9"/>
+    <key id="74" name="SUBTRACT"/>
+    <key id="75" name="NUMPAD4"/>
+    <key id="87" name="F11"/>
+    <key id="81" name="NUMPAD3"/>
+    <key id="80" name="NUMPAD2"/>
+    <key id="83" name="DECIMAL"/>
+    <key id="82" name="NUMPAD0"/>
+    <key id="88" name="F12"/>
+    <key id="102" name="F15"/>
+    <key id="100" name="F13"/>
+    <key id="101" name="F14"/>
+    <key id="112" name="KANA"/>
+    <key id="125" name="YEN" char="¥"/>
+    <key id="123" name="NOCONVERT"/>
+    <key id="121" name="CONVERT"/>
+    <key id="141" name="NUMPADEQUALS"/>
+    <key id="156" name="NUMPADENTER"/>
+    <key id="157" name="RCONTROL"/>
+    <key id="144" name="CIRCUMFLEX" char="^"/>
+    <key id="145" name="AT" char="@"/>
+    <key id="146" name="COLON" char=":"/>
+    <key id="147" name="UNDERLINE" char="_"/>
+    <key id="148" name="KANJI"/>
+    <key id="149" name="STOP"/>
+    <key id="150" name="AX"/>
+    <key id="151" name="UNLABLED"/>
+    <key id="184" name="RMENU"/>
+    <key id="179" name="NUMPADCOMMA"/>
+    <key id="183" name="SYSRQ"/>
+    <key id="181" name="DIVIDE"/>
+    <key id="205" name="RIGHT"/>
+    <key id="207" name="END"/>
+    <key id="201" name="PRIOR"/>
+    <key id="200" name="UP"/>
+    <key id="203" name="LEFT"/>
+    <key id="197" name="PAUSE"/>
+    <key id="199" name="HOME"/>
+    <key id="220" name="RMETA"/>
+    <key id="221" name="APPS"/>
+    <key id="222" name="POWER"/>
+    <key id="223" name="SLEEP"/>
+    <key id="219" name="LMETA"/>
+    <key id="208" name="DOWN"/>
+    <key id="209" name="NEXT"/>
+    <key id="210" name="INSERT"/>
+    <key id="211" name="DELETE"/>
+
+    <multikey id="300" name="SHIFT">
+      <key id="42" name="LSHIFT"/>
+      <key id="54" name="RSHIFT"/>
+    </multikey>
+
+    <key id="301" name="QUESTION" char ="?"/>
+    <key id="302" name="LPARENTS" char="("/>
+    <key id="303" name="RPARENTS" char=")"/>
+    <key id="304" name="QUOTE" char="&quot;"/>
+    <key id="305" name="EXCLAMATION" char="!"/>
+    <key id="306" name="POUND" char="#"/>
+    <key id="307" name="DOLLAR" char="$"/>
+    <key id="308" name="PERCENT" char="%"/>
+    <key id="309" name="AMPERSAND" char="&amp;"/>
+    <key id="310" name="ASTERISK" char="*"/>
+    <key id="311" name="TILDE" char="~"/>
+
+  </keys>
+</xml>

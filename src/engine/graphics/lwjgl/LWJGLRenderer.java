@@ -1,0 +1,489 @@
+package engine.graphics.lwjgl;
+
+import java.awt.Point;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.PathIterator;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Stack;
+
+import org.lwjgl.LWJGLException;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.GL11;
+
+import utils.shape.ShapeUtils;
+import engine.graphics.Color;
+import engine.graphics.PostProcessor;
+import engine.graphics.Renderable;
+import engine.graphics.Renderer;
+import engine.graphics.font.Font;
+import engine.graphics.font.Font.Glyph;
+import engine.graphics.lwjgl.shader.FragmentShader;
+import engine.graphics.lwjgl.shader.Program;
+import engine.graphics.lwjgl.shader.Shader.ShaderCompileException;
+import engine.graphics.lwjgl.shader.Uniform;
+import engine.graphics.lwjgl.shader.VertexShader;
+import engine.graphics.lwjgl.vector.Vector2f;
+import engine.graphics.lwjgl.vector.Vector3f;
+
+public class LWJGLRenderer implements Renderer {
+	private static LWJGLRenderer s_instance;
+	private static Program s_defaultProgram;
+	private static int s_displayWidth;
+	private static int s_displayHeight;
+
+	private ArrayList<PostProcessor> m_postProcessors = new ArrayList<PostProcessor>();
+
+	private ArrayList<LWJGLPointLight> m_pointLights = new ArrayList<LWJGLPointLight>();
+
+	private HashMap<BufferedImage, LWJGLTexture> m_textures = new HashMap<BufferedImage, LWJGLTexture>();
+	private Color m_color = new Color(1f, 1f, 1f, 1f);
+	private Shape m_clip = null;
+	private Font m_font;
+	private Stack<Program> m_programStack = new Stack<Program>();
+	private Program m_program;
+
+	private LWJGLRenderer() {}
+
+	public void addPostProcessor(PostProcessor p) {
+		m_postProcessors.add(p);
+	}
+
+	public void removePostProcessor(PostProcessor p) {
+		m_postProcessors.remove(p);
+	}
+
+	public ArrayList<PostProcessor> getPostProcessors() {
+		return m_postProcessors;
+	}
+
+	public void render(Renderable r) {
+		for (LWJGLPointLight light : m_pointLights) {
+			light.apply();
+			GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
+			r.render(this);
+			light.clear();
+		}
+	}
+
+	public void pushProgram() {
+		m_programStack.push(m_program);
+	}
+	public void popProgram() {
+		Program p = m_programStack.pop();
+		p.use();
+	}
+	
+	public void setCurrentProgram(Program p) {
+		m_program = p;
+	}	
+
+	/*
+	 * Color functions
+	 */
+
+	@Override
+	public void setColor(Color color) {
+		Uniform colorUni = m_program.getUniform("color");
+		colorUni.setValue(color.toVector4f());
+		
+		m_color = color;
+	}
+
+	@Override
+	public Color getColor() {
+		return m_color;
+	}
+
+	/*
+	 * Clip functions 
+	 */
+	@Override
+	public void setClip(Shape clip) {
+		m_clip = clip;
+		if (clip == null) {
+			GL11.glDisable(GL11.GL_STENCIL_TEST);
+			return;
+		} else {
+			GL11.glEnable(GL11.GL_STENCIL_TEST);
+		}
+		GL11.glColorMask(false, false, false, false);
+		GL11.glDepthMask(false);
+		GL11.glStencilFunc(GL11.GL_NEVER, 1, 0xFF);
+		GL11.glStencilOp(GL11.GL_REPLACE, GL11.GL_KEEP, GL11.GL_KEEP);
+
+		GL11.glStencilMask(0xFF);
+		GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
+		// Draw clip here
+		fill(clip);
+
+		// Back to normal rendering mode
+		GL11.glColorMask(true, true, true, true);
+		GL11.glDepthMask(true);
+		GL11.glStencilMask(0x00);
+		// draw where stencil's value is 0
+		// GL11.glStencilFunc(GL11.GL_EQUAL, 0, 0xFF);
+		/* (nothing to draw) */
+		// draw only where stencil's value is 1
+		GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
+	}
+
+	@Override
+	public Shape getClip() {
+		return m_clip;
+	}
+
+	/*
+	 * Drawing functions
+	 */
+
+	@Override
+	public void fillRect(int x, int y, int width, int height) {
+		GL11.glBegin(GL11.GL_QUADS);
+
+		GL11.glTexCoord2f(0, 0);
+		GL11.glVertex2i(x, y);
+
+		GL11.glTexCoord2f(0, 1);
+		GL11.glVertex2i(x, y + height);
+
+		GL11.glTexCoord2f(1, 1);
+		GL11.glVertex2i(x + width, y + height);
+
+		GL11.glTexCoord2f(1, 0);
+		GL11.glVertex2i(x + width, y);
+		GL11.glEnd();
+	}
+	@Override
+	public void drawRect(int x, int y, int width, int height) {
+		GL11.glBegin(GL11.GL_LINE_LOOP);
+
+		GL11.glTexCoord2f(0, 0);
+		GL11.glVertex2i(x, y);
+
+		GL11.glTexCoord2f(0, 1);
+		GL11.glVertex2i(x, y + height);
+
+		GL11.glTexCoord2f(1, 1);
+		GL11.glVertex2i(x + width, y + height);
+
+		GL11.glTexCoord2f(1, 0);
+		GL11.glVertex2i(x + width, y);
+		
+		GL11.glEnd();
+	}
+
+	@Override
+	public void drawLine(int x1, int y1, int x2, int y2) {
+		GL11.glBegin(GL11.GL_LINES);
+		GL11.glVertex2i(x1, y1);
+		GL11.glVertex2i(x2, y2);
+		GL11.glEnd();
+	}
+
+	@Override
+	public void drawLineLoop(ArrayList<Point> points) {
+		GL11.glBegin(GL11.GL_LINE_LOOP);
+		for (int i = 0; i < points.size(); i++) {
+			Point point = points.get(i);
+			GL11.glVertex2d(point.getX(), point.getY());
+		}
+		GL11.glEnd();
+	}
+
+	@Override
+	public void fill(Shape shape) {
+		ArrayList<Point2D> points = ShapeUtils.getPoints(shape);
+		GL11.glBegin(GL11.GL_TRIANGLE_FAN);
+		for (Point2D point : points) {
+			GL11.glVertex2f((float) point.getX(), (float) point.getY());
+		}
+		GL11.glEnd();
+	}
+
+	@Override
+	public void draw(Shape shape) {
+		PathIterator iterator = shape.getPathIterator(new AffineTransform());
+		ArrayList<Point> points = new ArrayList<Point>();
+		float[] coords = new float[6];
+		while (!iterator.isDone()) {
+			iterator.currentSegment(coords);
+			int x = (int) coords[0];
+			int y = (int) coords[1];
+			points.add(new Point(x, y));
+			iterator.next();
+		}
+		drawLineLoop(points);
+	}
+
+	/*
+	 * Light functions
+	 */
+	@Override
+	public void drawPointLight(int x, int y, Color c, Vector3f attenuation) {
+		Point2D transformed = new Point();
+		getTransform().transform(new Point(x, y), transformed);
+		Vector2f trans = new Vector2f((float) transformed.getX(), (float) transformed.getY());
+		m_pointLights.add(new LWJGLPointLight(trans, c, attenuation));
+	}
+
+	/*
+	 * Image drawing functions/helper functions
+	*/
+
+	public LWJGLTexture getTexture(BufferedImage image) {
+		if (m_textures.containsKey(image))
+			return m_textures.get(image);
+		LWJGLTexture texture = new LWJGLTexture();
+		texture.setImage(image);
+		texture.load();
+		m_textures.put(image, texture);
+		return texture;
+	}
+
+	@Override
+	public void drawImage(BufferedImage img, int x, int y, int width, int height) {
+		LWJGLTexture texture = getTexture(img);
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		texture.bind();
+		fillRect(x, y, width, height);
+		texture.unbind();
+	}
+
+	@Override
+	public void drawImage(BufferedImage img, int x, int y) {
+		drawImage(img, x, y, img.getWidth(), img.getHeight());
+	}
+
+	@Override
+	public void drawImage(BufferedImage img, AffineTransform trans) {
+		pushTransform();
+		transform(trans);
+		drawImage(img, 0, 0);
+		popTransform();
+	}
+
+	/*
+	 * String drawing functions
+	 */
+
+	@Override
+	public void setFont(Font font) {
+		m_font = font;
+	}
+
+	@Override
+	public Font getFont() {
+		return m_font;
+	}
+
+	@Override
+	public void drawString(String str, int x, int y) {
+		Font font = getFont();
+		
+		pushTransform();
+		translate(x, y);
+		
+		char[] chars = str.toCharArray();
+		for (char c : chars) {
+			if (c == '\n' || c == '\t') continue;
+			Glyph g  = font.getGlyph(c);
+			g.renderAndTranslate(this);
+		}
+		
+		popTransform();
+	}
+
+	/*
+	 * Transform functions
+	 * 
+	 */
+
+	@Override
+	public void translate(int x, int y) {
+		GL11.glTranslatef(x, y, 0);
+	}
+
+	@Override
+	public void rotate(float theta) {
+		// Rotate theta around the z axis
+		GL11.glRotated(Math.toDegrees(theta), 0, 0, 1);
+	}
+
+	@Override
+	public void rotate(float theta, int x, int y) {
+		pushTransform();
+		translate(x, y);
+		rotate(theta);
+		popTransform();
+	}
+
+	@Override
+	public void scale(float sx, float sy) {
+		GL11.glScaled(sx, sy, 0);
+	}
+
+	/*
+	 * Functions for getting and setting affinetransforms as well as pop/pushing
+	 */
+
+	@Override
+	public void transform(AffineTransform trans) {
+		FloatBuffer buf = LWJGLUtils.toBuffer(LWJGLUtils.toMatrix(trans));
+		GL11.glMultMatrix(buf);
+	}
+
+	public static float[][] getMatrix() {
+		float mat[] = new float[16];
+		ByteBuffer temp = ByteBuffer.allocateDirect(64);
+		temp.order(ByteOrder.nativeOrder());
+		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, (FloatBuffer) temp.asFloatBuffer());
+		temp.asFloatBuffer().get(mat);
+		float M[][] = new float[4][4];
+		for (int i = 0; i < 16; i++) {
+			// if (i % 4 == 0) {System.out.println("");}
+			int n = i / 4;
+			int m = i - 4 * n;
+			M[m][n] = mat[i];
+			// System.out.println("M[" + m + "," + n + "] = " + M[m][n]);
+		}
+		// System.out.println("");
+		return M;
+	}
+
+	@Override
+	public void setTransform(AffineTransform trans) {
+		FloatBuffer buf = LWJGLUtils.toBuffer(LWJGLUtils.toMatrix(trans));
+		GL11.glLoadMatrix(buf);
+	}
+
+	@Override
+	public AffineTransform getTransform() {
+		float[][] m = getMatrix();
+		AffineTransform trans = new AffineTransform((double) m[0][0], (double) m[1][0], (double) m[0][1], (double) m[1][1], (double) m[0][3],
+				(double) m[1][3]);
+		return trans;
+	}
+
+	@Override
+	public void pushTransform() {
+		GL11.glPushMatrix();
+	}
+
+	@Override
+	public void popTransform() {
+		GL11.glPopMatrix();
+	}
+
+	public void update(int targetFPS) {
+		for (PostProcessor p : m_postProcessors) {
+			GL11.glLoadIdentity();
+			// TODO: Fix post processors
+			// p.run(this);
+		}
+		Display.sync(targetFPS);
+		Display.update();
+		// Clear the lights
+		m_pointLights.clear();
+
+		GL11.glLoadIdentity();
+
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+		GL11.glLoadIdentity();
+		doFrameSetup();
+	}
+	
+	//Runs all setup commands needed to render the next frame
+	public void doFrameSetup() {
+		s_defaultProgram.use();
+		LWJGLTexture.s_default.bind();
+		//Reset the color uniform
+		setColor(m_color);
+	}
+
+	public static LWJGLRenderer instance() {
+		if (s_instance == null) {
+			s_instance = new LWJGLRenderer();
+		}
+		return s_instance;
+	}
+
+	/*
+	 * Static opengl setup functions
+	 * TODO: Move to display system
+	 */
+
+	public static void initDisplay(int width, int height) {
+		Display.setVSyncEnabled(true);
+		try {
+			Display.create();
+		} catch (LWJGLException e) {
+			e.printStackTrace();
+		}
+		GL11.glMatrixMode(GL11.GL_PROJECTION);
+		GL11.glLoadIdentity();
+		GL11.glOrtho(0, width, height, 0, 1, -1);
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		s_displayWidth = width;
+		s_displayHeight = height;
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		setupBlending();
+		initLighting(s_displayWidth, s_displayHeight);
+		//Initialize s_defaultProgram
+		s_defaultProgram = new Program();
+		
+		try {
+			FragmentShader fragment = new FragmentShader();
+			fragment.setSource(new File(LWJGLRenderer.class.getResource("/shaders/default.frag").toURI()));
+			VertexShader vertex = new VertexShader();
+			vertex.setSource(new File(LWJGLRenderer.class.getResource("/shaders/default.vert").toURI()));
+			fragment.compile();
+			vertex.compile();
+			
+			s_defaultProgram.attachShader(fragment);
+			s_defaultProgram.attachShader(vertex);
+			s_defaultProgram.link();
+			s_defaultProgram.validate();
+		} catch (ShaderCompileException e) {
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		//Setup for the first frame
+		instance().doFrameSetup();
+	}
+
+	public static void setupBlending() {
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+	}
+
+	public static void initLighting(int width, int height) {
+		LWJGLPointLight.init(width, height);
+	}
+
+	public static void initDisplayWithoutCanvas(int width, int height) {
+		try {
+			Display.setDisplayMode(new DisplayMode(width, height));
+		} catch (LWJGLException e) {
+			e.printStackTrace();
+		}
+		initDisplay(width, height);
+	}
+
+	public static void destroyDisplay() {
+		Display.destroy();
+	}
+
+
+}
