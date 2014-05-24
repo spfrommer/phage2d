@@ -53,7 +53,7 @@ public abstract class Client {
 		PhageSplash splash = new PhageSplash();
 
 		try {
-			Thread.sleep(200);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -68,6 +68,7 @@ public abstract class Client {
 		m_host = host;
 		m_port = port;
 		m_display = display;
+		splash.setVisible(false);
 	}
 
 	public void start() {

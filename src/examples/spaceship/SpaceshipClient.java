@@ -111,7 +111,7 @@ public class SpaceshipClient extends Client {
 		declarations.add(new MessageDeclaration("inputmousey"));
 		declarations.add(new MessageDeclaration("inputleftmousedown"));
 		declarations.add(new MessageDeclaration("inputrightmousedown"));
-		SpaceshipClient client = new SpaceshipClient(new CommandInterpreter(declarations), "playroom-1", Server.PORT);
+		SpaceshipClient client = new SpaceshipClient(new CommandInterpreter(declarations), "localhost", Server.PORT);
 		client.start();
 	}
 }

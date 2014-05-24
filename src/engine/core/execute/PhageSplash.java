@@ -34,7 +34,8 @@ public class PhageSplash extends JFrame {
 		dyn4jLogo.setBounds(230, 100, 100, 50);
 		this.add(dyn4jLogo);
 
-		JLabel text = new JLabel("Powered by Phage2D Engine Â© 2014", JLabel.CENTER);
+		JLabel text = new JLabel("Powered by Phage2D Engine © 2014",
+				JLabel.CENTER);
 		text.setBounds(35, 250, 280, 50);
 		this.add(text);
 

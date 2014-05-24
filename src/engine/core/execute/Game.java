@@ -31,7 +31,7 @@ public abstract class Game {
 		PhageSplash splash = new PhageSplash();
 
 		try {
-			Thread.sleep(200);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -42,6 +42,7 @@ public abstract class Game {
 		m_rendering = new BasicRenderingActivity(m_system);
 
 		initProcesses();
+		splash.setVisible(false);
 	}
 
 	public void start() {
@@ -57,7 +58,7 @@ public abstract class Game {
 	}
 
 	private LWJGLDisplay setupDisplay() {
-		LWJGLDisplay display = new LWJGLDisplay(1024, 1024);
+		LWJGLDisplay display = new LWJGLDisplay(700, 700);
 		display.init();
 
 		SingleViewPortLayout layout = new SingleViewPortLayout(display);

@@ -63,6 +63,15 @@ public class EntitySystem {
 	}
 
 	/**
+	 * Removes all Entities from the system.
+	 */
+	public void removeAllEntities() {
+		int size = m_entities.size();
+		for (int i = 0; i < size; i++)
+			removeEntity(m_entities.get(0));
+	}
+
+	/**
 	 * Gets the SystemAspectManager of this EntitySystem
 	 * 
 	 * @return

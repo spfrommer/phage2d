@@ -9,6 +9,7 @@ import org.dyn4j.dynamics.World;
 import org.dyn4j.dynamics.contact.ContactConstraint;
 
 import utils.TwoWayHashMap;
+import utils.physics.Vector;
 import engine.core.framework.Aspect;
 import engine.core.framework.AspectActivity;
 import engine.core.framework.Entity;
@@ -43,20 +44,27 @@ public class PhysicsActivity extends AspectActivity {
 		m_world.addListener(new CollisionListener() {
 			@Override
 			public boolean collision(ContactConstraint arg0) {
-				Entity entity1 = m_idMapper.getBackward((Integer) arg0.getBody1().getUserData());
-				Entity entity2 = m_idMapper.getBackward((Integer) arg0.getBody2().getUserData());
+				Entity entity1 = m_idMapper.getBackward((Integer) arg0
+						.getBody1().getUserData());
+				Entity entity2 = m_idMapper.getBackward((Integer) arg0
+						.getBody2().getUserData());
 				boolean continue1 = true;
 				boolean continue2 = true;
 
-				ComponentType collisionHandlerType = TypeManager.getType(CollisionHandlerLogic.class);
+				ComponentType collisionHandlerType = TypeManager
+						.getType(CollisionHandlerLogic.class);
 
-				if (entity1.getAspect().encapsulates(new Aspect(collisionHandlerType))) {
-					continue1 = ((CollisionHandlerLogic) entity1.getComponent(collisionHandlerType))
+				if (entity1.getAspect().encapsulates(
+						new Aspect(collisionHandlerType))) {
+					continue1 = ((CollisionHandlerLogic) entity1
+							.getComponent(collisionHandlerType))
 							.handleCollision(entity2);
 				}
 
-				if (entity2.getAspect().encapsulates(new Aspect(collisionHandlerType))) {
-					continue2 = ((CollisionHandlerLogic) entity2.getComponent(collisionHandlerType))
+				if (entity2.getAspect().encapsulates(
+						new Aspect(collisionHandlerType))) {
+					continue2 = ((CollisionHandlerLogic) entity2
+							.getComponent(collisionHandlerType))
 							.handleCollision(entity1);
 				}
 
@@ -69,34 +77,38 @@ public class PhysicsActivity extends AspectActivity {
 			}
 
 			@Override
-			public boolean collision(Body arg0, BodyFixture arg1, Body arg2, BodyFixture arg3, Penetration arg4) {
+			public boolean collision(Body arg0, BodyFixture arg1, Body arg2,
+					BodyFixture arg3, Penetration arg4) {
 				return true;
 			}
 
 			@Override
-			public boolean collision(Body arg0, BodyFixture arg1, Body arg2, BodyFixture arg3, Manifold arg4) {
+			public boolean collision(Body arg0, BodyFixture arg1, Body arg2,
+					BodyFixture arg3, Manifold arg4) {
 				return true;
 			}
 		});
 	}
 
-	private static final long UPDATE_THRESHOLD = 4000000;
-	private static long elapsedTime = 0;
+	/**
+	 * Sets the gravity of the world. Default is 9.8 m/s in the negative y
+	 * direction.
+	 * 
+	 * @param vector
+	 */
+	public void setGravity(Vector vector) {
+		m_world.setGravity(vector.toPhysicsVector());
+	}
 
 	/**
-	 * Updates the world using the elapsed time.
+	 * Gets the gravity of the world. Default is 9.8 m/s in the negative y
+	 * direction.
 	 * 
-	 * @param timeNanos
-	 *            elapsed time in nanoseconds.
+	 * @return
 	 */
-	/*public void update(long timeNanos) {
-		elapsedTime += timeNanos;
-
-		while (elapsedTime > UPDATE_THRESHOLD) {
-			m_world.update(1);
-			elapsedTime -= UPDATE_THRESHOLD;
-		}
-	}*/
+	public Vector getGravity() {
+		return new Vector(m_world.getGravity());
+	}
 
 	/**
 	 * Updates the world.
@@ -107,7 +119,8 @@ public class PhysicsActivity extends AspectActivity {
 
 	@Override
 	public void entityAdded(Entity entity) {
-		PhysicsData physics = (PhysicsData) entity.getComponent(TypeManager.getType(PhysicsData.class));
+		PhysicsData physics = (PhysicsData) entity.getComponent(TypeManager
+				.getType(PhysicsData.class));
 		physics.addToWorld(m_world);
 
 		int id = physics.getID();
@@ -124,7 +137,8 @@ public class PhysicsActivity extends AspectActivity {
 
 	@Override
 	public void entityRemoved(Entity entity) {
-		PhysicsData physics = (PhysicsData) entity.getComponent(TypeManager.getType(PhysicsData.class));
+		PhysicsData physics = (PhysicsData) entity.getComponent(TypeManager
+				.getType(PhysicsData.class));
 		physics.removeFromWorld(m_world);
 	}
 }

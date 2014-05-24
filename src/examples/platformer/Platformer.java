@@ -18,7 +18,7 @@ import engine.core.implementation.control.activities.ControllerActivity;
 import engine.core.implementation.physics.activities.PhysicsActivity;
 import engine.core.implementation.physics.data.PhysicsData;
 import engine.core.implementation.rendering.activities.AnimationActivity;
-import engine.core.implementation.rendering.activities.DepthRenderingActivity;
+import engine.core.implementation.rendering.activities.ParallaxRenderingActivity;
 import engine.core.implementation.rendering.logic.TextureRenderingLogic;
 import engine.graphics.lwjgl.LWJGLKeyboard;
 import engine.inputs.BindingListener;
@@ -53,7 +53,7 @@ public class Platformer extends Game {
 		this.getEntitySystem().addEntity(m_player);
 
 		this.getViewport().getCamera().setZoom(0.2);
-		DepthRenderingActivity rendering = new DepthRenderingActivity(this.getEntitySystem(), this.getViewport()
+		ParallaxRenderingActivity rendering = new ParallaxRenderingActivity(this.getEntitySystem(), this.getViewport()
 				.getCamera());
 		rendering.loadEntities();
 		this.setRenderingActivity(rendering);

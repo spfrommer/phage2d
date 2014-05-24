@@ -25,7 +25,7 @@ public class LWJGLPointLight {
 	
 	public static void init(int width, int height) {
 		s_displayHeight = height;
-		s_pointProgram = new Program();
+		/*s_pointProgram = new Program();
 		FragmentShader fragment = new FragmentShader();
 		VertexShader vertex = new VertexShader();
 		try {
@@ -49,7 +49,7 @@ public class LWJGLPointLight {
 		
 		s_lightAttenuation = new Uniform(s_pointProgram, "lightAttenuation");
 		
-		s_diffuseTexture = new Uniform(s_pointProgram, "diffuseTexture");
+		s_diffuseTexture = new Uniform(s_pointProgram, "diffuseTexture");*/
 	}
 	
 	
