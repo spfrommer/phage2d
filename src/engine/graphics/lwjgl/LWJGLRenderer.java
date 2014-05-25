@@ -52,7 +52,8 @@ public class LWJGLRenderer implements Renderer {
 	private Stack<Program> m_programStack = new Stack<Program>();
 	private Program m_program;
 
-	private LWJGLRenderer() {}
+	private LWJGLRenderer() {
+	}
 
 	public void addPostProcessor(PostProcessor p) {
 		m_postProcessors.add(p);
@@ -78,14 +79,15 @@ public class LWJGLRenderer implements Renderer {
 	public void pushProgram() {
 		m_programStack.push(m_program);
 	}
+
 	public void popProgram() {
 		Program p = m_programStack.pop();
 		p.use();
 	}
-	
+
 	public void setCurrentProgram(Program p) {
 		m_program = p;
-	}	
+	}
 
 	/*
 	 * Color functions
@@ -95,7 +97,7 @@ public class LWJGLRenderer implements Renderer {
 	public void setColor(Color color) {
 		Uniform colorUni = m_program.getUniform("color");
 		colorUni.setValue(color.toVector4f());
-		
+
 		m_color = color;
 	}
 
@@ -105,7 +107,7 @@ public class LWJGLRenderer implements Renderer {
 	}
 
 	/*
-	 * Clip functions 
+	 * Clip functions
 	 */
 	@Override
 	public void setClip(Shape clip) {
@@ -163,6 +165,7 @@ public class LWJGLRenderer implements Renderer {
 		GL11.glVertex2i(x + width, y);
 		GL11.glEnd();
 	}
+
 	@Override
 	public void drawRect(int x, int y, int width, int height) {
 		GL11.glBegin(GL11.GL_LINE_LOOP);
@@ -178,7 +181,7 @@ public class LWJGLRenderer implements Renderer {
 
 		GL11.glTexCoord2f(1, 0);
 		GL11.glVertex2i(x + width, y);
-		
+
 		GL11.glEnd();
 	}
 
@@ -232,13 +235,14 @@ public class LWJGLRenderer implements Renderer {
 	public void drawPointLight(int x, int y, Color c, Vector3f attenuation) {
 		Point2D transformed = new Point();
 		getTransform().transform(new Point(x, y), transformed);
-		Vector2f trans = new Vector2f((float) transformed.getX(), (float) transformed.getY());
+		Vector2f trans = new Vector2f((float) transformed.getX(),
+				(float) transformed.getY());
 		m_pointLights.add(new LWJGLPointLight(trans, c, attenuation));
 	}
 
 	/*
 	 * Image drawing functions/helper functions
-	*/
+	 */
 
 	public LWJGLTexture getTexture(BufferedImage image) {
 		if (m_textures.containsKey(image))
@@ -289,23 +293,23 @@ public class LWJGLRenderer implements Renderer {
 	@Override
 	public void drawString(String str, int x, int y) {
 		Font font = getFont();
-		
+
 		pushTransform();
 		translate(x, y);
-		
+
 		char[] chars = str.toCharArray();
 		for (char c : chars) {
-			if (c == '\n' || c == '\t') continue;
-			Glyph g  = font.getGlyph(c);
+			if (c == '\n' || c == '\t')
+				continue;
+			Glyph g = font.getGlyph(c);
 			g.renderAndTranslate(this);
 		}
-		
+
 		popTransform();
 	}
 
 	/*
 	 * Transform functions
-	 * 
 	 */
 
 	@Override
@@ -346,7 +350,8 @@ public class LWJGLRenderer implements Renderer {
 		float mat[] = new float[16];
 		ByteBuffer temp = ByteBuffer.allocateDirect(64);
 		temp.order(ByteOrder.nativeOrder());
-		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, (FloatBuffer) temp.asFloatBuffer());
+		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX,
+				(FloatBuffer) temp.asFloatBuffer());
 		temp.asFloatBuffer().get(mat);
 		float M[][] = new float[4][4];
 		for (int i = 0; i < 16; i++) {
@@ -369,8 +374,9 @@ public class LWJGLRenderer implements Renderer {
 	@Override
 	public AffineTransform getTransform() {
 		float[][] m = getMatrix();
-		AffineTransform trans = new AffineTransform((double) m[0][0], (double) m[1][0], (double) m[0][1], (double) m[1][1], (double) m[0][3],
-				(double) m[1][3]);
+		AffineTransform trans = new AffineTransform((double) m[0][0],
+				(double) m[1][0], (double) m[0][1], (double) m[1][1],
+				(double) m[0][3], (double) m[1][3]);
 		return trans;
 	}
 
@@ -402,12 +408,12 @@ public class LWJGLRenderer implements Renderer {
 		GL11.glLoadIdentity();
 		doFrameSetup();
 	}
-	
-	//Runs all setup commands needed to render the next frame
+
+	// Runs all setup commands needed to render the next frame
 	public void doFrameSetup() {
 		s_defaultProgram.use();
 		LWJGLTexture.s_default.bind();
-		//Reset the color uniform
+		// Reset the color uniform
 		setColor(m_color);
 	}
 
@@ -419,8 +425,7 @@ public class LWJGLRenderer implements Renderer {
 	}
 
 	/*
-	 * Static opengl setup functions
-	 * TODO: Move to display system
+	 * Static opengl setup functions TODO: Move to display system
 	 */
 
 	public static void initDisplay(int width, int height) {
@@ -439,17 +444,19 @@ public class LWJGLRenderer implements Renderer {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		setupBlending();
 		initLighting(s_displayWidth, s_displayHeight);
-		//Initialize s_defaultProgram
+		// Initialize s_defaultProgram
 		s_defaultProgram = new Program();
-		
+
 		try {
 			FragmentShader fragment = new FragmentShader();
-			fragment.setSource(new File(LWJGLRenderer.class.getResource("/shaders/default.frag").toURI()));
+			fragment.setSource(new File(LWJGLRenderer.class.getResource(
+					"/shaders/default.frag").toURI()));
 			VertexShader vertex = new VertexShader();
-			vertex.setSource(new File(LWJGLRenderer.class.getResource("/shaders/default.vert").toURI()));
+			vertex.setSource(new File(LWJGLRenderer.class.getResource(
+					"/shaders/default.vert").toURI()));
 			fragment.compile();
 			vertex.compile();
-			
+
 			s_defaultProgram.attachShader(fragment);
 			s_defaultProgram.attachShader(vertex);
 			s_defaultProgram.link();
@@ -459,7 +466,7 @@ public class LWJGLRenderer implements Renderer {
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
-		//Setup for the first frame
+		// Setup for the first frame
 		instance().doFrameSetup();
 	}
 
@@ -484,6 +491,5 @@ public class LWJGLRenderer implements Renderer {
 	public static void destroyDisplay() {
 		Display.destroy();
 	}
-
 
 }

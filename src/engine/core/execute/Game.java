@@ -1,5 +1,7 @@
 package engine.core.execute;
 
+import java.awt.geom.AffineTransform;
+
 import utils.image.ImageUtils;
 import utils.timers.AbsoluteTimer;
 import engine.core.framework.EntitySystem;
@@ -41,7 +43,9 @@ public abstract class Game {
 		m_system = new EntitySystem();
 		m_rendering = new BasicRenderingActivity(m_system);
 
+		onInit();
 		initProcesses();
+
 		splash.setVisible(false);
 	}
 
@@ -118,6 +122,10 @@ public abstract class Game {
 
 		m_rendering.render(r);
 
+		r.setTransform(new AffineTransform());
+
+		renderGui(r);
+
 		display.getRenderer().setColor(Color.WHITE);
 		display.render();
 		display.update(DESIRED_FPS);
@@ -131,9 +139,13 @@ public abstract class Game {
 		return m_system;
 	}
 
+	public abstract void renderGui(Renderer renderer);
+
 	public abstract void onStart();
 
 	public abstract void onStop();
+
+	public abstract void onInit();
 
 	public abstract void initProcesses();
 

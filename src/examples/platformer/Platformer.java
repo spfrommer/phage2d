@@ -20,6 +20,7 @@ import engine.core.implementation.physics.data.PhysicsData;
 import engine.core.implementation.rendering.activities.AnimationActivity;
 import engine.core.implementation.rendering.activities.ParallaxRenderingActivity;
 import engine.core.implementation.rendering.logic.TextureRenderingLogic;
+import engine.graphics.Renderer;
 import engine.graphics.lwjgl.LWJGLKeyboard;
 import engine.inputs.BindingListener;
 import engine.inputs.InputManager;
@@ -75,6 +76,11 @@ public class Platformer extends Game {
 
 	@Override
 	public void onStop() {
+
+	}
+
+	@Override
+	public void onInit() {
 
 	}
 
@@ -186,5 +192,11 @@ public class Platformer extends Game {
 	public static void main(String[] args) {
 		Platformer platformer = new Platformer();
 		platformer.start();
+	}
+
+	@Override
+	public void renderGui(Renderer renderer) {
+		// TODO Auto-generated method stub
+
 	}
 }

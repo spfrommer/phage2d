@@ -1,15 +1,39 @@
 package examples.flipflop;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
+
+import sound.SoundPlayer;
+import sound.SoundResource;
+import sound.SoundSystem;
+import sound.decode.GenericDecoder;
+import test.SoundTest;
 import utils.physics.Vector;
 import engine.core.execute.Game;
+import engine.core.framework.Aspect;
 import engine.core.framework.Entity;
+import engine.core.framework.SystemAspectManager;
+import engine.core.framework.component.type.TypeManager;
 import engine.core.implementation.camera.activities.CameraActivity;
 import engine.core.implementation.camera.activities.KeyboardCameraActivity;
 import engine.core.implementation.camera.activities.MovementProfile;
 import engine.core.implementation.control.activities.ControllerActivity;
 import engine.core.implementation.physics.activities.PhysicsActivity;
+import engine.core.implementation.physics.data.PhysicsData;
 import engine.core.implementation.rendering.activities.AnimationActivity;
 import engine.core.implementation.rendering.activities.ParallaxRenderingActivity;
+import engine.graphics.Color;
+import engine.graphics.Renderer;
+import engine.graphics.font.BMFont;
+import engine.graphics.font.BMFontXMLLoader;
 import engine.graphics.lwjgl.LWJGLKeyboard;
 import engine.inputs.BindingListener;
 import engine.inputs.InputManager;
@@ -24,6 +48,10 @@ public class FlipFlop extends Game {
 
 	private PortalManager m_portalManager;
 
+	private SoundResource m_wind;
+	private SoundResource m_rain;
+	private SoundResource m_waterDrop;
+
 	public static void main(String[] args) {
 		new FlipFlop().start();
 	}
@@ -31,6 +59,19 @@ public class FlipFlop extends Game {
 	public FlipFlop() {
 		super(1000, 500);
 		m_portalManager = new PortalManager(this.getEntitySystem());
+	}
+
+	@Override
+	public void onInit() {
+		m_waterDrop = new SoundResource(
+				SoundTest.class.getResource("/sounds/waterdrop.mp3"),
+				new GenericDecoder());
+		m_wind = new SoundResource(
+				SoundTest.class.getResource("/sounds/wind.mp3"),
+				new GenericDecoder());
+		m_rain = new SoundResource(
+				SoundTest.class.getResource("/sounds/rain.mp3"),
+				new GenericDecoder());
 	}
 
 	@Override
@@ -52,8 +93,7 @@ public class FlipFlop extends Game {
 
 	@Override
 	public void onStart() {
-		WorldFactory.addWorld1(this.getEntitySystem());
-		loadLevel(new TestLevel());
+		nextLevel();
 
 		m_portalManager
 				.addPortalsSatisfiedListener(new PortalsSatisfiedListener() {
@@ -76,6 +116,54 @@ public class FlipFlop extends Game {
 
 	}
 
+	private ArrayList<WorldListener> m_listeners = new ArrayList<WorldListener>();
+
+	private interface WorldListener {
+		public void worldChanged();
+	}
+
+	private void loadWorld(int number) {
+		for (WorldListener listener : m_listeners)
+			listener.worldChanged();
+
+		if (number == 0) {
+			WorldFactory.setWorld0(getEntitySystem());
+			try {
+				final AudioInputStream input = m_rain.openStream();
+				final SoundPlayer player = new SoundPlayer(input.getFormat());
+				player.open(SoundSystem.s_getDefaultSpeaker());
+				player.start();
+				player.play(input);
+				m_listeners.add(new WorldListener() {
+					@Override
+					public void worldChanged() {
+						player.pause(input);
+					}
+				});
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if (number == 1) {
+			WorldFactory.setWorld1(getEntitySystem());
+			try {
+				final AudioInputStream input = m_wind.openStream();
+				final SoundPlayer player = new SoundPlayer(input.getFormat());
+				player.open(SoundSystem.s_getDefaultSpeaker());
+				player.start();
+				player.play(input);
+				m_listeners.add(new WorldListener() {
+					@Override
+					public void worldChanged() {
+						player.pause(input);
+					}
+				});
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	private void loadLevel(Level level) {
 		for (Entity portal : level.getPortals(m_portalManager)) {
 			m_portalManager.addPortal(portal);
@@ -89,16 +177,88 @@ public class FlipFlop extends Game {
 			this.getEntitySystem().addEntity(ball);
 	}
 
+	private int m_nextLevel = 0;
+
 	private void nextLevel() {
 		this.getEntitySystem().removeAllEntities();
 		m_physics.setGravity(new Vector(0, -9.8));
 		m_portalManager.resetPortals();
 
-		DynamicLevel dynamic = new DynamicLevel();
-		dynamic.load(LevelReader.read("level3.lvl"));
+		loadWorld((int) (m_nextLevel / 3));
 
-		WorldFactory.addWorld1(getEntitySystem());
+		fadingMessage("Level " + (m_nextLevel + 1));
+
+		DynamicLevel dynamic = new DynamicLevel();
+		try {
+			dynamic.load(LevelReader.read("level" + m_nextLevel + ".lvl"));
+		} catch (Exception e) {
+			System.exit(0);
+		}
 		loadLevel(dynamic);
+		m_nextLevel++;
+	}
+
+	private Vector m_position;
+	private String m_string;
+	private double m_fade;
+
+	private void fadingMessage(String text) {
+		m_position = new Vector(500, 300);
+		m_string = text;
+		m_fade = 1;
+
+		Thread t = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (m_fade > 0) {
+					m_fade -= 0.02;
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				m_string = null;
+			}
+		});
+		t.start();
+	}
+
+	@Override
+	public void renderGui(Renderer renderer) {
+		String string = m_string;
+		if (m_position != null && string != null) {
+			try {
+				List<BMFont> fonts = BMFontXMLLoader.loadFonts(new File(
+						FlipFlop.class.getResource("/themes/basic/ptsans.fnt")
+								.toURI()));
+				renderer.setFont(fonts.get(0));
+			} catch (SAXException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ParserConfigurationException e) {
+				e.printStackTrace();
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+			renderer.setColor(new Color(1, 1, 1, (float) m_fade));
+			renderer.drawString(string, (int) m_position.getX(),
+					(int) m_position.getY());
+		}
+	}
+
+	private boolean velocitiesZero() {
+		SystemAspectManager manager = this.getEntitySystem().getAspectManager();
+		manager.loadAspect(new Aspect(TypeManager.getType(PhysicsData.class)));
+		for (Entity e : manager.getEntities(new Aspect(TypeManager
+				.getType(PhysicsData.class)))) {
+			PhysicsData data = (PhysicsData) e.getComponent(TypeManager
+					.getType(PhysicsData.class));
+			if (data.getVelocity().length() > 150)
+				return false;
+		}
+		return true;
 	}
 
 	private InputManager makeInputManager() {
@@ -115,27 +275,47 @@ public class FlipFlop extends Game {
 		manager.addBindingListener("Up", new BindingListener() {
 			@Override
 			public void onAction(String binding, float value) {
-				m_physics.setGravity(new Vector(0, 9.8));
+				if (value > 0.1 && velocitiesZero()) {
+					m_physics.setGravity(new Vector(0, 9.8));
+					playBallSound();
+				}
 			}
 		});
 		manager.addBindingListener("Down", new BindingListener() {
 			@Override
 			public void onAction(String binding, float value) {
-				m_physics.setGravity(new Vector(0, -9.8));
+				if (value > 0.1 && velocitiesZero()) {
+					m_physics.setGravity(new Vector(0, -9.8));
+					playBallSound();
+				}
 			}
 		});
 		manager.addBindingListener("Right", new BindingListener() {
 			@Override
 			public void onAction(String binding, float value) {
-				m_physics.setGravity(new Vector(9.8, 0));
+				if (value > 0.1 && velocitiesZero()) {
+					m_physics.setGravity(new Vector(9.8, 0));
+					playBallSound();
+				}
 			}
 		});
 		manager.addBindingListener("Left", new BindingListener() {
 			@Override
 			public void onAction(String binding, float value) {
-				m_physics.setGravity(new Vector(-9.8, 0));
+				if (value > 0.1 && velocitiesZero()) {
+					m_physics.setGravity(new Vector(-9.8, 0));
+					playBallSound();
+				}
 			}
 		});
 		return manager;
+	}
+
+	private void playBallSound() {
+		try {
+			SoundSystem.s_getPlayer(m_waterDrop, 0.5f).start();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

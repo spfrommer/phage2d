@@ -8,8 +8,16 @@ gun1.png
 gun2.png
 terrain1.jpg
 terrain2.png
+terrain3.jpg
+terrain4.jpg
+terrain5.jpg
 jetpack1.png
 jetpack2.png
+lenscircle.png
+lensflare.png
+marbleblock.jpg
+minecraftblock.png
+sandbrick.jpeg
 ship1.png
 ship1thrust.png
 explosion.png
@@ -21,4 +29,5 @@ phage2dlogo.png
 lwjgllogo.png
 dyn4jlogo.png
 portal.png
+portal2.png
 slflogo.png
