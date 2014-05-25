@@ -14,6 +14,7 @@ import engine.graphics.lwjgl.LWJGLKeyboard;
 import engine.inputs.BindingListener;
 import engine.inputs.InputManager;
 import engine.inputs.keyboard.KeyTrigger;
+import examples.flipflop.worlds.WorldFactory;
 
 public class FlipFlop extends Game {
 	private PhysicsActivity m_physics;
@@ -28,7 +29,7 @@ public class FlipFlop extends Game {
 	}
 
 	public FlipFlop() {
-		super();
+		super(1000, 500);
 		m_portalManager = new PortalManager(this.getEntitySystem());
 	}
 
@@ -51,6 +52,7 @@ public class FlipFlop extends Game {
 
 	@Override
 	public void onStart() {
+		WorldFactory.addWorld1(this.getEntitySystem());
 		loadLevel(new TestLevel());
 
 		m_portalManager
@@ -61,7 +63,7 @@ public class FlipFlop extends Game {
 					}
 				});
 
-		this.getViewport().getCamera().setZoom(0.2);
+		this.getViewport().getCamera().setZoom(0.15);
 		ParallaxRenderingActivity rendering = new ParallaxRenderingActivity(
 				this.getEntitySystem(), this.getViewport().getCamera());
 		rendering.loadEntities();
@@ -75,9 +77,6 @@ public class FlipFlop extends Game {
 	}
 
 	private void loadLevel(Level level) {
-		this.getEntitySystem().addEntity(
-				EntityFactory.makeBackground(15000, 6000));
-
 		for (Entity portal : level.getPortals(m_portalManager)) {
 			m_portalManager.addPortal(portal);
 			this.getEntitySystem().addEntity(portal);
@@ -96,8 +95,9 @@ public class FlipFlop extends Game {
 		m_portalManager.resetPortals();
 
 		DynamicLevel dynamic = new DynamicLevel();
-		dynamic.load(LevelReader.read("level1.lvl"));
+		dynamic.load(LevelReader.read("level3.lvl"));
 
+		WorldFactory.addWorld1(getEntitySystem());
 		loadLevel(dynamic);
 	}
 

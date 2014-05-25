@@ -34,6 +34,21 @@ public class EntityFactory {
 		return portal;
 	}
 
+	public static Entity makeScenery(String imageName, Vector position,
+			double width, double height) {
+		Entity background = new Entity();
+
+		ComponentFactory.addShellData(background, position, 0);
+
+		ComponentFactory.addTextureData(background,
+				new Texture(ImageUtils.getID(imageName), width, height));
+		ComponentFactory.addShellWrappers(background);
+		ComponentFactory.addNameData(background, "background");
+		ComponentFactory.addLayerData(background, 1);
+		background.addComponent(new TextureRenderingLogic(background));
+		return background;
+	}
+
 	public static Entity makePortal(Vector position, CollisionListener listener) {
 		Entity portal = new Entity();
 
@@ -90,13 +105,14 @@ public class EntityFactory {
 		return platform;
 	}
 
-	public static Entity makeBackground(double width, double height) {
+	public static Entity makeBackground(String imageName, double width,
+			double height) {
 		Entity background = new Entity();
 
 		ComponentFactory.addShellData(background, new Vector(0, 0), 0);
 
 		ComponentFactory.addTextureData(background,
-				new Texture(ImageUtils.getID("terrain2.png"), width, height));
+				new Texture(ImageUtils.getID(imageName), width, height));
 		ComponentFactory.addShellWrappers(background);
 		ComponentFactory.addNameData(background, "background");
 		ComponentFactory.addLayerData(background, 0);
