@@ -129,7 +129,6 @@ public class EntityFactory {
 		PhysicsData physics = ComponentFactory.addPhysicsData(platform,
 				position, 0, new Rectangle(width, height));
 		physics.setMassType(Mass.Type.INFINITE);
-
 		ComponentFactory.addTextureData(platform,
 				new Texture(ImageUtils.getID(PLATFORM_IMAGE), width, height));
 		ComponentFactory.addNameData(platform, "platform");

@@ -18,7 +18,7 @@ public class Camera {
 	private double m_currentDisplayWidth = 0;
 	private double m_currentDisplayHeight = 0;
 
-	private double m_minZoom = 0.05; // how far we can go out
+	private double m_minZoom = 0.03; // how far we can go out
 	private double m_maxZoom = 5; // how far we can go in
 
 	public void setViewPort(ViewPort port) {
@@ -67,6 +67,10 @@ public class Camera {
 		notifyTransformChange();
 	}
 
+	public double getZoom() {
+		return m_zoom;
+	}
+
 	public void incrementX(double x) {
 		m_x += x;
 		notifyTransformChange();
@@ -91,17 +95,28 @@ public class Camera {
 
 		at.translate(m_currentDisplayWidth / 2, m_currentDisplayHeight / 2);
 
-		at.translate(-m_x, m_y /* this should be -m_y, but because I'm flipping the axis after applying camera (for zoom compatability) I'm making it m_y*/);
+		at.translate(-m_x, m_y /*
+								 * this should be -m_y, but because I'm flipping
+								 * the axis after applying camera (for zoom
+								 * compatability) I'm making it m_y
+								 */);
 
 		return at;
 	}
-	public void addListener(CameraListener cl) { m_listeners.add(cl); }
-	public void removeListener(CameraListener cl) { m_listeners.remove(cl); }
-	
-	private void notifyTransformChange() {
-		for (CameraListener cl : m_listeners) cl.transformChanged(this);
+
+	public void addListener(CameraListener cl) {
+		m_listeners.add(cl);
 	}
-	
+
+	public void removeListener(CameraListener cl) {
+		m_listeners.remove(cl);
+	}
+
+	private void notifyTransformChange() {
+		for (CameraListener cl : m_listeners)
+			cl.transformChanged(this);
+	}
+
 	public interface CameraListener {
 		public void transformChanged(Camera c);
 	}

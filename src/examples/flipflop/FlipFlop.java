@@ -12,7 +12,6 @@ import org.xml.sax.SAXException;
 
 import sound.PlaylistPlayer;
 import sound.PlaylistPlayer.PlaylistPlayerListener;
-import sound.SoundPlayer;
 import sound.SoundResource;
 import sound.SoundSystem;
 import sound.decode.GenericDecoder;
@@ -26,6 +25,7 @@ import engine.core.framework.component.type.TypeManager;
 import engine.core.implementation.camera.activities.CameraActivity;
 import engine.core.implementation.camera.activities.KeyboardCameraActivity;
 import engine.core.implementation.camera.activities.MovementProfile;
+import engine.core.implementation.camera.base.Camera;
 import engine.core.implementation.control.activities.ControllerActivity;
 import engine.core.implementation.physics.activities.PhysicsActivity;
 import engine.core.implementation.physics.data.PhysicsData;
@@ -43,8 +43,10 @@ import engine.inputs.keyboard.KeyTrigger;
 public class FlipFlop extends Game {
 	private PhysicsActivity m_physics;
 	private AnimationActivity m_animation;
-	private CameraActivity m_camera;
 	private ControllerActivity m_controller;
+	private CameraActivity m_camera;
+
+	private static final double DEFAULT_CAM_ZOOM = 0.15;
 
 	private PortalManager m_portalManager;
 
@@ -117,6 +119,7 @@ public class FlipFlop extends Game {
 
 	@Override
 	public void onStart() {
+		this.getViewport().getCamera().setZoom(DEFAULT_CAM_ZOOM);
 		nextLevel();
 
 		m_portalManager
@@ -137,8 +140,6 @@ public class FlipFlop extends Game {
 						t.start();
 					}
 				});
-
-		this.getViewport().getCamera().setZoom(0.15);
 		ParallaxRenderingActivity rendering = new ParallaxRenderingActivity(
 				this.getEntitySystem(), this.getViewport().getCamera());
 		rendering.loadEntities();
@@ -151,6 +152,8 @@ public class FlipFlop extends Game {
 
 	}
 
+	private PlaylistPlayer m_worldSound;
+
 	private void loadWorld(int number) {
 		if (number != m_lastWorld) {
 			for (WorldListener listener : m_listeners)
@@ -160,108 +163,83 @@ public class FlipFlop extends Game {
 
 		if (number == 0) {
 			WorldFactory.setWorld0(getEntitySystem());
+			m_worldSound = loopAudio(m_rain);
 
-			try {
-				final AudioInputStream input = m_rain.openStream();
-				final SoundPlayer player = new SoundPlayer(input.getFormat());
-				player.open(SoundSystem.s_getDefaultSpeaker());
-				player.start();
-				player.play(input);
-				m_listeners.add(new WorldListener() {
-
-					@Override
-					public void worldChanged() {
-						player.pause(input);
-					}
-				});
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			m_listeners.add(new WorldListener() {
+				@Override
+				public void worldChanged() {
+					m_worldSound.pause();
+				}
+			});
 
 		}
 		if (number == 1) {
 			WorldFactory.setWorld1(getEntitySystem());
+			m_worldSound = loopAudio(m_wind);
 
-			try {
-				final AudioInputStream input = m_wind.openStream();
-				final SoundPlayer player = new SoundPlayer(input.getFormat());
-				player.open(SoundSystem.s_getDefaultSpeaker());
-				player.start();
-				player.play(input);
-				m_listeners.add(new WorldListener() {
-
-					@Override
-					public void worldChanged() {
-						player.pause(input);
-					}
-				});
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
+			m_listeners.add(new WorldListener() {
+				@Override
+				public void worldChanged() {
+					m_worldSound.pause();
+				}
+			});
 		}
 		if (number == 2) {
 			WorldFactory.setWorld2(getEntitySystem());
+			m_worldSound = loopAudio(m_techno);
 
-			try {
-				final AudioInputStream input = m_techno.openStream();
-				final PlaylistPlayer player = new PlaylistPlayer(
-						input.getFormat());
-				player.open(SoundSystem.s_getDefaultSpeaker());
-				player.add(input);
-				player.addListener(new PlaylistPlayerListener() {
-					@Override
-					public void streamEnded(PlaylistPlayer player,
-							AudioInputStream done) {
-						try {
-							player.add(m_techno.openStream());
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-
-					@Override
-					public void startedPlaying(PlaylistPlayer player,
-							AudioInputStream n) {
-
-					}
-
-				});
-				player.start();
-
-				m_listeners.add(new WorldListener() {
-
-					@Override
-					public void worldChanged() {
-						player.pause();
-					}
-				});
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
+			m_listeners.add(new WorldListener() {
+				@Override
+				public void worldChanged() {
+					m_worldSound.pause();
+				}
+			});
 		}
 		if (number == 3) {
 			WorldFactory.setWorld3(getEntitySystem());
+			m_worldSound = loopAudio(m_wind);
 
-			try {
-				final AudioInputStream input = m_wind.openStream();
-				final SoundPlayer player = new SoundPlayer(input.getFormat());
-				player.open(SoundSystem.s_getDefaultSpeaker());
-				player.start();
-				player.play(input);
-				m_listeners.add(new WorldListener() {
-
-					@Override
-					public void worldChanged() {
-						player.pause(input);
-					}
-				});
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
+			m_listeners.add(new WorldListener() {
+				@Override
+				public void worldChanged() {
+					m_worldSound.pause();
+				}
+			});
 		}
+	}
+
+	private PlaylistPlayer loopAudio(final SoundResource resource) {
+		AudioInputStream input = null;
+		try {
+			input = resource.openStream();
+
+			PlaylistPlayer player = new PlaylistPlayer(input.getFormat());
+			player.open(SoundSystem.s_getDefaultSpeaker());
+			player.add(input);
+			player.addListener(new PlaylistPlayerListener() {
+				@Override
+				public void streamEnded(PlaylistPlayer player,
+						AudioInputStream done) {
+					try {
+						player.add(resource.openStream());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+
+				@Override
+				public void startedPlaying(PlaylistPlayer player,
+						AudioInputStream n) {
+
+				}
+
+			});
+			player.start();
+			return player;
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		return null;
 	}
 
 	private void loadLevel(Level level) {
@@ -301,6 +279,27 @@ public class FlipFlop extends Game {
 		}
 		loadLevel(dynamic);
 		m_nextLevel++;
+
+		zoomCam();
+	}
+
+	private void zoomCam() {
+		Thread t = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				Camera cam = FlipFlop.this.getViewport().getCamera();
+				cam.setZoom(0.05);
+				while (cam.getZoom() < DEFAULT_CAM_ZOOM) {
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					cam.incrementZoom(0.0015);
+				}
+			}
+		});
+		t.start();
 	}
 
 	private void fadingMessage(String text) {
