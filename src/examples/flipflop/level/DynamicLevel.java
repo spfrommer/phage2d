@@ -1,4 +1,4 @@
-package examples.flipflop;
+package examples.flipflop.level;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -19,6 +19,8 @@ import utils.physics.Vector;
 import engine.core.framework.Entity;
 import engine.core.framework.component.type.TypeManager;
 import engine.core.implementation.physics.logic.handler.ListenerCollisionHandlerLogic;
+import examples.flipflop.EntityFactory;
+import examples.flipflop.PortalManager;
 
 public class DynamicLevel implements Level {
 	private List<Entity> m_balls;
@@ -28,7 +30,7 @@ public class DynamicLevel implements Level {
 	public DynamicLevel() {
 	}
 
-	public void load(String name) {
+	public void load(String xml) {
 		m_balls = new ArrayList<Entity>();
 		m_portals = new ArrayList<Entity>();
 		m_platforms = new ArrayList<Entity>();
@@ -38,7 +40,7 @@ public class DynamicLevel implements Level {
 		Document doc = null;
 		try {
 			dBuilder = dbFactory.newDocumentBuilder();
-			doc = dBuilder.parse(new ByteArrayInputStream(name.getBytes()));
+			doc = dBuilder.parse(new ByteArrayInputStream(xml.getBytes()));
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		} catch (SAXException e) {

@@ -1,4 +1,4 @@
-package examples.flipflop;
+package examples.flipflop.level;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -27,6 +27,8 @@ import engine.core.framework.Entity;
 import engine.core.framework.EntitySystem;
 import engine.core.framework.component.type.TypeManager;
 import engine.core.implementation.physics.data.PhysicsData;
+import examples.flipflop.EntityFactory;
+import examples.flipflop.PortalManager;
 
 /**
  * A Level used for building new levels. Experiment with the different functions

@@ -131,7 +131,7 @@ public abstract class Game {
 		display.update(DESIRED_FPS);
 	}
 
-	protected ViewPort getViewport() {
+	protected ViewPort getViewPort() {
 		return m_viewport;
 	}
 

@@ -67,9 +67,9 @@ public class Platformer extends Game {
 		m_player = makePlayer(new Vector(0, 0));
 		this.getEntitySystem().addEntity(m_player);
 
-		this.getViewport().getCamera().setZoom(0.2);
+		this.getViewPort().getCamera().setZoom(0.2);
 		ParallaxRenderingActivity rendering = new ParallaxRenderingActivity(
-				this.getEntitySystem(), this.getViewport().getCamera());
+				this.getEntitySystem(), this.getViewPort().getCamera());
 		rendering.loadEntities();
 		this.setRenderingActivity(rendering);
 	}
@@ -97,7 +97,7 @@ public class Platformer extends Game {
 	public void updateProcesses(int ticks) {
 		m_physics.update(ticks);
 		m_animation.update(ticks);
-		m_camera.control(this.getViewport().getCamera(), ticks);
+		m_camera.control(this.getViewPort().getCamera(), ticks);
 		m_controller.update(ticks);
 	}
 

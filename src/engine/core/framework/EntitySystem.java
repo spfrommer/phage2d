@@ -72,6 +72,15 @@ public class EntitySystem {
 	}
 
 	/**
+	 * Gets all the Entities in the system.
+	 * 
+	 * @return
+	 */
+	public List<Entity> getAllEntities() {
+		return m_entities;
+	}
+
+	/**
 	 * Gets the SystemAspectManager of this EntitySystem
 	 * 
 	 * @return
@@ -79,4 +88,5 @@ public class EntitySystem {
 	public SystemAspectManager getAspectManager() {
 		return m_manager;
 	}
+
 }

@@ -59,7 +59,7 @@ public class EntityFactory {
 		physics.setMassType(Mass.Type.INFINITE);
 
 		ComponentFactory.addTextureData(portal,
-				new Texture(ImageUtils.getID("portal.png"), 50, 50));
+				new Texture(ImageUtils.getID("portal1.png"), 50, 50));
 		ComponentFactory.addNameData(portal, "portal");
 		ComponentFactory.addPhysicsWrappers(portal);
 		ComponentFactory.addLayerData(portal, 2);
@@ -113,7 +113,7 @@ public class EntityFactory {
 
 		ComponentFactory.addTextureData(player,
 				new Texture(ImageUtils.getID("blueblob.png"), 46, 46));
-		ComponentFactory.addNameData(player, "player");
+		ComponentFactory.addNameData(player, "ball");
 		ComponentFactory.addPhysicsWrappers(player);
 		ComponentFactory.addLayerData(player, 2);
 		player.addComponent(new TextureRenderingLogic(player));

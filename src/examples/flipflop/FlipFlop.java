@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.xml.parsers.ParserConfigurationException;
@@ -26,6 +27,7 @@ import engine.core.implementation.camera.activities.CameraActivity;
 import engine.core.implementation.camera.activities.KeyboardCameraActivity;
 import engine.core.implementation.camera.activities.MovementProfile;
 import engine.core.implementation.camera.base.Camera;
+import engine.core.implementation.camera.base.ViewPort;
 import engine.core.implementation.control.activities.ControllerActivity;
 import engine.core.implementation.physics.activities.PhysicsActivity;
 import engine.core.implementation.physics.data.PhysicsData;
@@ -36,9 +38,16 @@ import engine.graphics.Renderer;
 import engine.graphics.font.BMFontXMLLoader;
 import engine.graphics.font.Font;
 import engine.graphics.lwjgl.LWJGLKeyboard;
+import engine.graphics.lwjgl.LWJGLMouse;
 import engine.inputs.BindingListener;
 import engine.inputs.InputManager;
 import engine.inputs.keyboard.KeyTrigger;
+import examples.flipflop.gui.Editor;
+import examples.flipflop.level.DynamicLevel;
+import examples.flipflop.level.Level;
+import examples.flipflop.level.LevelReader;
+import examples.flipflop.level.LevelWriter;
+import examples.flipflop.level.MirrorLevel;
 
 public class FlipFlop extends Game {
 	private PhysicsActivity m_physics;
@@ -47,8 +56,7 @@ public class FlipFlop extends Game {
 	private CameraActivity m_camera;
 
 	private static final double DEFAULT_CAM_ZOOM = 0.15;
-
-	private PortalManager m_portalManager;
+	private static final boolean EDITOR_ENABLED = true;
 
 	private SoundResource m_waterDrop;
 	private SoundResource m_wind;
@@ -58,9 +66,14 @@ public class FlipFlop extends Game {
 
 	// game states
 	private boolean m_goToNextLevel = false;
-	private int m_nextLevel = 0;
-	int m_lastWorld = 0;
+	private int m_nextLevel = 13;
+	int m_lastWorld = -1;
+	private PlaylistPlayer m_worldSound;
 	private ArrayList<WorldListener> m_listeners = new ArrayList<WorldListener>();
+
+	public PortalManager portalManager;
+	public ArrayList<Entity> entityAdd = new ArrayList<Entity>();
+	public ArrayList<Entity> entityRemove = new ArrayList<Entity>();
 
 	// for fading message
 	private Vector m_position;
@@ -73,12 +86,13 @@ public class FlipFlop extends Game {
 	}
 
 	public static void main(String[] args) {
-		new FlipFlop().start();
+		FlipFlop f = new FlipFlop();
+		f.start();
 	}
 
 	public FlipFlop() {
 		super(1000, 500, "images-flipflop.txt");
-		m_portalManager = new PortalManager(this.getEntitySystem());
+		portalManager = new PortalManager(this.getEntitySystem());
 	}
 
 	@Override
@@ -113,8 +127,16 @@ public class FlipFlop extends Game {
 	public void updateProcesses(int ticks) {
 		m_physics.update(ticks);
 		m_animation.update(ticks);
-		m_camera.control(this.getViewport().getCamera(), ticks);
+		m_camera.control(this.getViewPort().getCamera(), ticks);
 		m_controller.update(ticks);
+
+		for (Entity entity : entityAdd)
+			this.getEntitySystem().addEntity(entity);
+		for (Entity entity : entityRemove)
+			this.getEntitySystem().removeEntity(entity);
+		entityAdd.clear();
+		entityRemove.clear();
+
 		if (m_goToNextLevel) {
 			startNextLevel();
 			m_goToNextLevel = false;
@@ -123,10 +145,10 @@ public class FlipFlop extends Game {
 
 	@Override
 	public void onStart() {
-		this.getViewport().getCamera().setZoom(DEFAULT_CAM_ZOOM);
+		this.getViewPort().getCamera().setZoom(DEFAULT_CAM_ZOOM);
 		startNextLevel();
 
-		m_portalManager
+		portalManager
 				.addPortalsSatisfiedListener(new PortalsSatisfiedListener() {
 					@Override
 					public void portalsSatisfied() {
@@ -145,7 +167,7 @@ public class FlipFlop extends Game {
 					}
 				});
 		ParallaxRenderingActivity rendering = new ParallaxRenderingActivity(
-				this.getEntitySystem(), this.getViewport().getCamera());
+				this.getEntitySystem(), this.getViewPort().getCamera());
 		rendering.loadEntities();
 		this.setRenderingActivity(rendering);
 		makeInputManager();
@@ -156,39 +178,52 @@ public class FlipFlop extends Game {
 
 	}
 
-	private PlaylistPlayer m_worldSound;
+	public List<Entity> getEntities() {
+		return super.getEntitySystem().getAllEntities();
+	}
 
 	private void loadWorld(int number) {
 		if (number != m_lastWorld) {
 			for (WorldListener listener : m_listeners)
 				listener.worldChanged();
-			m_lastWorld = number;
-		}
 
+			m_listeners.add(new WorldListener() {
+				@Override
+				public void worldChanged() {
+					System.out.println("Stopping " + m_worldSound.hashCode());
+					m_worldSound.pause();
+				}
+			});
+		}
 		if (number == 0) {
 			WorldFactory.setWorld0(getEntitySystem());
-			m_worldSound = loopAudio(m_rain);
-
+			System.out.println(number + "," + m_lastWorld);
+			if (number != m_lastWorld) {
+				m_worldSound = loopAudio(m_rain);
+				System.out.println("Starting: " + m_worldSound.hashCode());
+			}
 		}
 		if (number == 1) {
 			WorldFactory.setWorld1(getEntitySystem());
-			m_worldSound = loopAudio(m_wind);
+			if (number != m_lastWorld)
+				m_worldSound = loopAudio(m_wind);
 		}
 		if (number == 2) {
 			WorldFactory.setWorld2(getEntitySystem());
-			m_worldSound = loopAudio(m_techno);
+			if (number != m_lastWorld)
+				m_worldSound = loopAudio(m_wind);
 		}
 		if (number == 3) {
 			WorldFactory.setWorld3(getEntitySystem());
-			m_worldSound = loopAudio(m_city);
+			if (number != m_lastWorld)
+				m_worldSound = loopAudio(m_city);
 		}
-
-		m_listeners.add(new WorldListener() {
-			@Override
-			public void worldChanged() {
-				m_worldSound.pause();
-			}
-		});
+		if (number == 4) {
+			WorldFactory.setWorld4(getEntitySystem());
+			if (number != m_lastWorld)
+				m_worldSound = loopAudio(m_city);
+		}
+		m_lastWorld = number;
 	}
 
 	private PlaylistPlayer loopAudio(final SoundResource resource) {
@@ -226,8 +261,8 @@ public class FlipFlop extends Game {
 	}
 
 	private void loadLevel(Level level) {
-		for (Entity portal : level.getPortals(m_portalManager)) {
-			m_portalManager.addPortal(portal);
+		for (Entity portal : level.getPortals(portalManager)) {
+			portalManager.addPortal(portal);
 			this.getEntitySystem().addEntity(portal);
 		}
 
@@ -241,11 +276,10 @@ public class FlipFlop extends Game {
 	private void startNextLevel() {
 		this.getEntitySystem().removeAllEntities();
 		m_physics.setGravity(new Vector(0, -9.8));
-		m_portalManager.resetPortals();
+		portalManager.resetPortals();
 
 		int world = (int) (m_nextLevel / 3);
 		loadWorld(world);
-
 		if (!LevelReader.levelExists("level" + m_nextLevel + ".lvl")) {
 			fadingMessage("You Win!");
 			return;
@@ -260,7 +294,13 @@ public class FlipFlop extends Game {
 			e.printStackTrace();
 			System.exit(0);
 		}
+
 		loadLevel(dynamic);
+
+		if (EDITOR_ENABLED) {
+			Editor editor = new Editor(this);
+			editor.loadSystem();
+		}
 		m_nextLevel++;
 
 		zoomCam();
@@ -271,7 +311,7 @@ public class FlipFlop extends Game {
 			@Override
 			public void run() {
 				try {
-					Camera cam = FlipFlop.this.getViewport().getCamera();
+					Camera cam = FlipFlop.this.getViewPort().getCamera();
 					cam.setZoom(0.09);
 
 					Thread.sleep(1500);
@@ -353,7 +393,10 @@ public class FlipFlop extends Game {
 	}
 
 	private InputManager makeInputManager() {
-		InputManager manager = new InputManager();
+		ViewPort port = getViewPort();
+		LWJGLMouse mouse = new LWJGLMouse(port.getViewShape());
+
+		final InputManager manager = new InputManager();
 		manager.addBinding("Up", new KeyTrigger(LWJGLKeyboard.instance()
 				.getKey('i')));
 		manager.addBinding("Down", new KeyTrigger(LWJGLKeyboard.instance()
@@ -362,6 +405,8 @@ public class FlipFlop extends Game {
 				.getKey('l')));
 		manager.addBinding("Left", new KeyTrigger(LWJGLKeyboard.instance()
 				.getKey('j')));
+		manager.addBinding("Print", new KeyTrigger(LWJGLKeyboard.instance()
+				.getKey('=')));
 
 		manager.addBindingListener("Up", new BindingListener() {
 			@Override
@@ -399,7 +444,31 @@ public class FlipFlop extends Game {
 				}
 			}
 		});
+		manager.addBindingListener("Print", new BindingListener() {
+			@Override
+			public void onAction(String binding, float value) {
+				if (value > 0.1) {
+					MirrorLevel mirror = new MirrorLevel();
+					mirror.load(FlipFlop.this);
+					LevelWriter.print(mirror);
+				}
+			}
+		});
 		return manager;
+	}
+
+	/**
+	 * Rounds to 50s
+	 * 
+	 * @param num
+	 * @return
+	 */
+	private float round(int num) {
+		int temp = num % 50;
+		if (temp < 25)
+			return num - temp;
+		else
+			return num + 50 - temp;
 	}
 
 	private void playBallSound() {

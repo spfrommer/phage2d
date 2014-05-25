@@ -18,7 +18,7 @@ public class Camera {
 	private double m_currentDisplayWidth = 0;
 	private double m_currentDisplayHeight = 0;
 
-	private double m_minZoom = 0.03; // how far we can go out
+	private double m_minZoom = 0.08; // how far we can go out
 	private double m_maxZoom = 5; // how far we can go in
 
 	public void setViewPort(ViewPort port) {

@@ -70,4 +70,11 @@ public class WorldFactory {
 		system.addEntity(EntityFactory.makeScenery("statue2.png", new Vector(
 				1500, -500), 500, 1000));
 	}
+
+	public static void setWorld4(EntitySystem system) {
+		EntityFactory.PLATFORM_IMAGE = "marbleblock.jpg";
+
+		system.addEntity(EntityFactory.makeBackground("terrain5.jpg",
+				new Vector(0, 1000), 15000, 6000));
+	}
 }
