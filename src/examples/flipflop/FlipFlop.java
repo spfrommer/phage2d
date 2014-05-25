@@ -208,7 +208,7 @@ public class FlipFlop extends Game {
 	private double m_fade;
 
 	private void fadingMessage(String text) {
-		m_position = new Vector(400, 400);
+		m_position = new Vector(450, 250);
 		m_string = text;
 		m_fade = 1;
 
