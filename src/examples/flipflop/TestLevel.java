@@ -77,7 +77,7 @@ public class TestLevel implements Level {
 	}
 
 	public static void main(String[] args) {
-		ImageUtils.initMapping();
+		ImageUtils.initMapping("images-all.txt");
 
 		TestLevel level = new TestLevel();
 

@@ -27,8 +27,8 @@ public abstract class Game {
 	private Camera m_camera;
 	private Display m_display;
 
-	public Game(int width, int height) {
-		ImageUtils.initMapping();
+	public Game(int width, int height, String images) {
+		ImageUtils.initMapping(images);
 
 		PhageSplash splash = new PhageSplash();
 
@@ -79,7 +79,7 @@ public abstract class Game {
 		return display;
 	}
 
-	private final int DESIRED_FPS = 50;
+	private final int DESIRED_FPS = 60;
 	private double fpsSum = 0;
 	private int fpsSumCounter = 0;
 

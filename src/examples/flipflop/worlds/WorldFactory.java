@@ -42,4 +42,18 @@ public class WorldFactory {
 		system.addEntity(EntityFactory.makeScenery("lenscircle.png",
 				new Vector(-200, 500), 50, 50, 4));
 	}
+
+	public static void setWorld2(EntitySystem system) {
+		EntityFactory.PLATFORM_IMAGE = "minecraftblock.png";
+
+		system.addEntity(EntityFactory.makeBackground("terrain4.jpg", 15000,
+				6000));
+	}
+
+	public static void setWorld3(EntitySystem system) {
+		EntityFactory.PLATFORM_IMAGE = "marbleblock.jpg";
+
+		system.addEntity(EntityFactory.makeBackground("terrain5.jpg", 15000,
+				6000));
+	}
 }

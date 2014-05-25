@@ -48,8 +48,8 @@ public abstract class Client {
 	private static final boolean DUMP_MESSAGES = false;
 
 	public Client(CommandInterpreter interpreter, String host, int port,
-			DecoderMapper decoder) {
-		ImageUtils.initMapping();
+			DecoderMapper decoder, String images) {
+		ImageUtils.initMapping(images);
 
 		PhageSplash splash = new PhageSplash();
 

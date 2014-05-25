@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.xml.parsers.ParserConfigurationException;
@@ -32,8 +31,8 @@ import engine.core.implementation.rendering.activities.AnimationActivity;
 import engine.core.implementation.rendering.activities.ParallaxRenderingActivity;
 import engine.graphics.Color;
 import engine.graphics.Renderer;
-import engine.graphics.font.BMFont;
 import engine.graphics.font.BMFontXMLLoader;
+import engine.graphics.font.Font;
 import engine.graphics.lwjgl.LWJGLKeyboard;
 import engine.inputs.BindingListener;
 import engine.inputs.InputManager;
@@ -57,7 +56,7 @@ public class FlipFlop extends Game {
 	}
 
 	public FlipFlop() {
-		super(1000, 500);
+		super(1000, 500, "images-flipflop.txt");
 		m_portalManager = new PortalManager(this.getEntitySystem());
 	}
 
@@ -128,6 +127,7 @@ public class FlipFlop extends Game {
 
 		if (number == 0) {
 			WorldFactory.setWorld0(getEntitySystem());
+
 			try {
 				final AudioInputStream input = m_rain.openStream();
 				final SoundPlayer player = new SoundPlayer(input.getFormat());
@@ -135,6 +135,7 @@ public class FlipFlop extends Game {
 				player.start();
 				player.play(input);
 				m_listeners.add(new WorldListener() {
+
 					@Override
 					public void worldChanged() {
 						player.pause(input);
@@ -143,9 +144,11 @@ public class FlipFlop extends Game {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+
 		}
 		if (number == 1) {
 			WorldFactory.setWorld1(getEntitySystem());
+
 			try {
 				final AudioInputStream input = m_wind.openStream();
 				final SoundPlayer player = new SoundPlayer(input.getFormat());
@@ -153,6 +156,7 @@ public class FlipFlop extends Game {
 				player.start();
 				player.play(input);
 				m_listeners.add(new WorldListener() {
+
 					@Override
 					public void worldChanged() {
 						player.pause(input);
@@ -161,6 +165,49 @@ public class FlipFlop extends Game {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+
+		}
+		if (number == 2) {
+			WorldFactory.setWorld2(getEntitySystem());
+
+			try {
+				final AudioInputStream input = m_wind.openStream();
+				final SoundPlayer player = new SoundPlayer(input.getFormat());
+				player.open(SoundSystem.s_getDefaultSpeaker());
+				player.start();
+				player.play(input);
+				m_listeners.add(new WorldListener() {
+
+					@Override
+					public void worldChanged() {
+						player.pause(input);
+					}
+				});
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
+		if (number == 3) {
+			WorldFactory.setWorld3(getEntitySystem());
+
+			try {
+				final AudioInputStream input = m_wind.openStream();
+				final SoundPlayer player = new SoundPlayer(input.getFormat());
+				player.open(SoundSystem.s_getDefaultSpeaker());
+				player.start();
+				player.play(input);
+				m_listeners.add(new WorldListener() {
+
+					@Override
+					public void worldChanged() {
+						player.pause(input);
+					}
+				});
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
 		}
 	}
 
@@ -192,7 +239,7 @@ public class FlipFlop extends Game {
 			return;
 		}
 
-		fadingMessage("World " + world + " Level " + (m_nextLevel + 1));
+		fadingMessage("World " + (world + 1) + " Level " + (m_nextLevel + 1));
 		DynamicLevel dynamic = new DynamicLevel();
 		try {
 			dynamic.load(LevelReader.read("level" + m_nextLevel + ".lvl"));
@@ -229,15 +276,20 @@ public class FlipFlop extends Game {
 		t.start();
 	}
 
+	private static Font font = null;
+
 	@Override
 	public void renderGui(Renderer renderer) {
 		String string = m_string;
 		if (m_position != null && string != null) {
 			try {
-				List<BMFont> fonts = BMFontXMLLoader.loadFonts(new File(
-						FlipFlop.class.getResource("/themes/basic/ptsans.fnt")
-								.toURI()));
-				renderer.setFont(fonts.get(0));
+				if (font == null) {
+					font = BMFontXMLLoader.loadFonts(
+							new File(FlipFlop.class.getResource(
+									"/themes/basic/ptsans.fnt").toURI()))
+							.get(0);
+				}
+				renderer.setFont(font);
 			} catch (SAXException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -264,6 +316,7 @@ public class FlipFlop extends Game {
 				return false;
 		}
 		return true;
+
 	}
 
 	private InputManager makeInputManager() {
@@ -322,5 +375,6 @@ public class FlipFlop extends Game {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 	}
 }

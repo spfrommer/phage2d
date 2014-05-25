@@ -28,7 +28,7 @@ import engine.inputs.keyboard.KeyTrigger;
 
 public class Platformer extends Game {
 	public Platformer() {
-		super(1000, 500);
+		super(1000, 500, "images-all.txt");
 	}
 
 	private PhysicsActivity m_physics;

@@ -43,8 +43,9 @@ public class SpaceshipClient extends Client {
 		s_decoder.addMapping(TextureData.class, new TextureDecoder());
 	}
 
-	public SpaceshipClient(CommandInterpreter interpreter, String server, int port) {
-		super(interpreter, server, port, s_decoder);
+	public SpaceshipClient(CommandInterpreter interpreter, String server,
+			int port) {
+		super(interpreter, server, port, s_decoder, "images-all.txt");
 		this.getViewPort().getCamera().setZoom(0.2);
 	}
 
@@ -56,7 +57,8 @@ public class SpaceshipClient extends Client {
 	@Override
 	public void initProcesses() {
 		m_cam = new ChaseCameraActivity(this.getEntitySystem(), this.getID());
-		// m_cam = new KeyboardCameraProcess(this.getEntitySystem(), LWJGLKeyboard.instance(), new MovementProfile(10,
+		// m_cam = new KeyboardCameraProcess(this.getEntitySystem(),
+		// LWJGLKeyboard.instance(), new MovementProfile(10,
 		// 0.01));
 	}
 
@@ -69,30 +71,42 @@ public class SpaceshipClient extends Client {
 		InputManager inputManager = new InputManager();
 		LWJGLMouse mouse = new LWJGLMouse(getViewPort().getViewShape());
 		ViewPort port = getViewPort();
-		addNetworkBinding(inputManager, new KeyTrigger(LWJGLKeyboard.instance().getKey('k')), "Backwards",
-				"inputbackwards", id);
-		addNetworkBinding(inputManager, new KeyTrigger(LWJGLKeyboard.instance().getKey('i')), "Forwards",
-				"inputforwards", id);
-		addNetworkBinding(inputManager, new KeyTrigger(LWJGLKeyboard.instance().getKey('j')), "Left", "inputleft", id);
-		addNetworkBinding(inputManager, new KeyTrigger(LWJGLKeyboard.instance().getKey('l')), "Right", "inputright", id);
-		addNetworkBinding(inputManager, new KeyTrigger(LWJGLKeyboard.instance().getKey('t')), "t", "inputT", id);
-		addNetworkBinding(inputManager, new MouseWorldXTrigger(mouse, port), "MouseWorldX", "inputmousex", id);
-		addNetworkBinding(inputManager, new MouseWorldYTrigger(mouse, port), "MouseWorldY", "inputmousey", id);
-		addNetworkBinding(inputManager, new MouseButtonTrigger(mouse.getMouseButton(MouseButton.LEFT_NAME)),
-				"LeftMouse", "inputleftmousedown", id);
-		addNetworkBinding(inputManager, new MouseButtonTrigger(mouse.getMouseButton(MouseButton.RIGHT_NAME)),
-				"RightMouse", "inputrightmousedown", id);
+		addNetworkBinding(inputManager, new KeyTrigger(LWJGLKeyboard.instance()
+				.getKey('k')), "Backwards", "inputbackwards", id);
+		addNetworkBinding(inputManager, new KeyTrigger(LWJGLKeyboard.instance()
+				.getKey('i')), "Forwards", "inputforwards", id);
+		addNetworkBinding(inputManager, new KeyTrigger(LWJGLKeyboard.instance()
+				.getKey('j')), "Left", "inputleft", id);
+		addNetworkBinding(inputManager, new KeyTrigger(LWJGLKeyboard.instance()
+				.getKey('l')), "Right", "inputright", id);
+		addNetworkBinding(inputManager, new KeyTrigger(LWJGLKeyboard.instance()
+				.getKey('t')), "t", "inputT", id);
+		addNetworkBinding(inputManager, new MouseWorldXTrigger(mouse, port),
+				"MouseWorldX", "inputmousex", id);
+		addNetworkBinding(inputManager, new MouseWorldYTrigger(mouse, port),
+				"MouseWorldY", "inputmousey", id);
+		addNetworkBinding(
+				inputManager,
+				new MouseButtonTrigger(mouse
+						.getMouseButton(MouseButton.LEFT_NAME)), "LeftMouse",
+				"inputleftmousedown", id);
+		addNetworkBinding(
+				inputManager,
+				new MouseButtonTrigger(mouse
+						.getMouseButton(MouseButton.RIGHT_NAME)), "RightMouse",
+				"inputrightmousedown", id);
 		return inputManager;
 	}
 
-	private void addNetworkBinding(InputManager inputManager, InputTrigger trigger, String binding,
-			final String command, final int id) {
+	private void addNetworkBinding(InputManager inputManager,
+			InputTrigger trigger, String binding, final String command,
+			final int id) {
 		inputManager.addBinding(binding, trigger);
 		inputManager.addBindingListener(binding, new BindingListener() {
 			@Override
 			public void onAction(String binding, float value) {
-				Message message = new Message(command, new MessageParameter[] { new MessageParameter(id),
-						new MessageParameter(value) });
+				Message message = new Message(command, new MessageParameter[] {
+						new MessageParameter(id), new MessageParameter(value) });
 
 				SpaceshipClient.this.writeMessage(message);
 			}
@@ -111,7 +125,8 @@ public class SpaceshipClient extends Client {
 		declarations.add(new MessageDeclaration("inputmousey"));
 		declarations.add(new MessageDeclaration("inputleftmousedown"));
 		declarations.add(new MessageDeclaration("inputrightmousedown"));
-		SpaceshipClient client = new SpaceshipClient(new CommandInterpreter(declarations), "localhost", Server.PORT);
+		SpaceshipClient client = new SpaceshipClient(new CommandInterpreter(
+				declarations), "localhost", Server.PORT);
 		client.start();
 	}
 }

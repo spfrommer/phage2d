@@ -17,9 +17,10 @@ public class ImageUtils {
 	private ImageUtils() {
 	}
 
-	public static void initMapping() {
+	public static void initMapping(String file) {
 		try {
-			File images = new File(ImageUtils.class.getResource("/images/images.txt").toURI());
+			File images = new File(ImageUtils.class.getResource(
+					"/images/" + file).toURI());
 			BufferedReader br = new BufferedReader(new FileReader(images));
 			int idCounter = 0;
 
@@ -29,7 +30,7 @@ public class ImageUtils {
 				s_imagePool.put(idCounter, readImage("/images/" + line));
 				idCounter++;
 			}
-			
+
 			br.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -37,11 +38,13 @@ public class ImageUtils {
 	}
 
 	public static Image scaleImage(Image image, double width, double height) {
-		return image.getScaledInstance((int) width, (int) height, Image.SCALE_SMOOTH);
+		return image.getScaledInstance((int) width, (int) height,
+				Image.SCALE_SMOOTH);
 	}
 
 	public static Image scaleToHeight(Image image, double height) {
-		int scaledWidth = (int) ((height / image.getHeight(null)) * image.getWidth(null));
+		int scaledWidth = (int) ((height / image.getHeight(null)) * image
+				.getWidth(null));
 		int scaledHeight = (int) height;
 		Image scaledImage = scaleImage(image, scaledWidth, scaledHeight);
 		return scaledImage;
@@ -60,8 +63,10 @@ public class ImageUtils {
 	}
 
 	public static BufferedImage cloneImage(BufferedImage source) {
-		if (source == null) return null;
-		BufferedImage b = new BufferedImage(source.getWidth(), source.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		if (source == null)
+			return null;
+		BufferedImage b = new BufferedImage(source.getWidth(),
+				source.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		Graphics g = b.getGraphics();
 		g.drawImage(source, 0, 0, null);
 		g.dispose();
@@ -71,7 +76,8 @@ public class ImageUtils {
 	public static BufferedImage readImage(String name) {
 		BufferedImage image = null;
 		try {
-			image = ImageIO.read(new File(ImageUtils.class.getResource(name).toURI()));
+			image = ImageIO.read(new File(ImageUtils.class.getResource(name)
+					.toURI()));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
