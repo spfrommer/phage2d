@@ -184,10 +184,15 @@ public class FlipFlop extends Game {
 		m_physics.setGravity(new Vector(0, -9.8));
 		m_portalManager.resetPortals();
 
-		loadWorld((int) (m_nextLevel / 3));
+		int world = (int) (m_nextLevel / 3);
+		loadWorld(world);
 
-		fadingMessage("Level " + (m_nextLevel + 1));
+		if (!LevelReader.levelExists("level" + m_nextLevel + ".lvl")) {
+			fadingMessage("You Win!");
+			return;
+		}
 
+		fadingMessage("World " + world + " Level " + (m_nextLevel + 1));
 		DynamicLevel dynamic = new DynamicLevel();
 		try {
 			dynamic.load(LevelReader.read("level" + m_nextLevel + ".lvl"));
@@ -203,7 +208,7 @@ public class FlipFlop extends Game {
 	private double m_fade;
 
 	private void fadingMessage(String text) {
-		m_position = new Vector(500, 300);
+		m_position = new Vector(400, 400);
 		m_string = text;
 		m_fade = 1;
 
