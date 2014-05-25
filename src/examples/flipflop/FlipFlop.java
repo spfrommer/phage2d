@@ -56,20 +56,22 @@ public class FlipFlop extends Game {
 	private CameraActivity m_camera;
 
 	private static final double DEFAULT_CAM_ZOOM = 0.15;
-	private static final boolean EDITOR_ENABLED = true;
+	private static final boolean EDITOR_ENABLED = false;
 
 	private SoundResource m_waterDrop;
 	private SoundResource m_wind;
 	private SoundResource m_rain;
 	private SoundResource m_techno;
 	private SoundResource m_city;
+	private SoundResource m_violin;
 
 	// game states
 	private boolean m_goToNextLevel = false;
-	private int m_nextLevel = 13;
+	private int m_nextLevel = 10;
 	int m_lastWorld = -1;
 	private PlaylistPlayer m_worldSound;
 	private ArrayList<WorldListener> m_listeners = new ArrayList<WorldListener>();
+	private boolean m_restart = false;
 
 	public PortalManager portalManager;
 	public ArrayList<Entity> entityAdd = new ArrayList<Entity>();
@@ -112,6 +114,9 @@ public class FlipFlop extends Game {
 		m_city = new SoundResource(
 				SoundTest.class.getResource("/sounds/city.mp3"),
 				new GenericDecoder());
+		m_violin = new SoundResource(
+				SoundTest.class.getResource("/sounds/violin.mp3"),
+				new GenericDecoder());
 	}
 
 	@Override
@@ -136,6 +141,12 @@ public class FlipFlop extends Game {
 			this.getEntitySystem().removeEntity(entity);
 		entityAdd.clear();
 		entityRemove.clear();
+
+		if (m_restart) {
+			m_nextLevel--;
+			startNextLevel();
+			m_restart = false;
+		}
 
 		if (m_goToNextLevel) {
 			startNextLevel();
@@ -190,17 +201,14 @@ public class FlipFlop extends Game {
 			m_listeners.add(new WorldListener() {
 				@Override
 				public void worldChanged() {
-					System.out.println("Stopping " + m_worldSound.hashCode());
 					m_worldSound.pause();
 				}
 			});
 		}
 		if (number == 0) {
 			WorldFactory.setWorld0(getEntitySystem());
-			System.out.println(number + "," + m_lastWorld);
 			if (number != m_lastWorld) {
 				m_worldSound = loopAudio(m_rain);
-				System.out.println("Starting: " + m_worldSound.hashCode());
 			}
 		}
 		if (number == 1) {
@@ -221,7 +229,7 @@ public class FlipFlop extends Game {
 		if (number == 4) {
 			WorldFactory.setWorld4(getEntitySystem());
 			if (number != m_lastWorld)
-				m_worldSound = loopAudio(m_city);
+				m_worldSound = loopAudio(m_violin);
 		}
 		m_lastWorld = number;
 	}
@@ -407,6 +415,8 @@ public class FlipFlop extends Game {
 				.getKey('j')));
 		manager.addBinding("Print", new KeyTrigger(LWJGLKeyboard.instance()
 				.getKey('=')));
+		manager.addBinding("Restart", new KeyTrigger(LWJGLKeyboard.instance()
+				.getKey('r')));
 
 		manager.addBindingListener("Up", new BindingListener() {
 			@Override
@@ -451,6 +461,14 @@ public class FlipFlop extends Game {
 					MirrorLevel mirror = new MirrorLevel();
 					mirror.load(FlipFlop.this);
 					LevelWriter.print(mirror);
+				}
+			}
+		});
+		manager.addBindingListener("Restart", new BindingListener() {
+			@Override
+			public void onAction(String binding, float value) {
+				if (value > 0.1) {
+					m_restart = true;
 				}
 			}
 		});

@@ -61,8 +61,10 @@ public class Editor extends JFrame {
 		reset.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				for (EntityPanel panel : m_panels)
+				for (EntityPanel panel : m_panels) {
 					panel.inputPosition();
+					panel.zeroVelocity();
+				}
 			}
 		});
 		entity.add(ball);
@@ -72,7 +74,7 @@ public class Editor extends JFrame {
 		bar.add(reset);
 		this.setJMenuBar(bar);
 
-		this.setSize(300, 800);
+		this.setSize(250, 800);
 		this.setVisible(true);
 	}
 

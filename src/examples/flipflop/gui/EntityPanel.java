@@ -79,9 +79,16 @@ public class EntityPanel extends JPanel {
 	 * Takes coordinates from field and puts them into Entity.
 	 */
 	public void inputPosition() {
+		if (!m_system.getEntities().contains(m_entity))
+			m_system.entityAdd.add(m_entity);
+
 		m_physics.setPosition(new Vector(m_physics.getPosition().getX(), Double
 				.parseDouble(yfield.getText())));
 		m_physics.setPosition(new Vector(Double.parseDouble(xfield.getText()),
 				m_physics.getPosition().getY()));
+	}
+
+	public void zeroVelocity() {
+		m_physics.setVelocity(new Vector(0, 0));
 	}
 }

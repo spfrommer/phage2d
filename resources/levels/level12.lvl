@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <level>
-    <ball x="100.0" y="0.0"/>
-    <ball x="0.0" y="0.0"/>
-    <ball x="200.0" y="0.0"/>
-    <portal height="50.0" width="50.0" x="-300.0" y="150.0"/>
-    <portal height="50.0" width="50.0" x="50.0" y="500.0"/>
-    <portal height="50.0" width="50.0" x="150.0" y="-500.0"/>
-    <platform height="50.0" width="50.0" x="0.0" y="-50.0"/>
-    <platform height="50.0" width="50.0" x="100.0" y="-50.0"/>
+    <ball x="99.99993690861028" y="-252.00499999856154"/>
+    <ball x="199.99995333899597" y="-1.9996094595121758"/>
+    <ball x="99.99997135383038" y="298.00039054048443"/>
+    <ball x="-4.52042596086473E-6" y="-52.004999997661805"/>
+    <portal x="-300.0" y="150.0"/>
+    <portal x="50.0" y="1000.0"/>
+    <portal x="-50.0" y="-50.0"/>
+    <portal x="-300.0" y="900.0"/>
+    <platform height="50.0" width="50.0" x="0.0" y="-100.0"/>
+    <platform height="50.0" width="50.0" x="100.0" y="-300.0"/>
     <platform height="50.0" width="50.0" x="200.0" y="-50.0"/>
     <platform height="50.0" width="50.0" x="0.0" y="200.0"/>
     <platform height="50.0" width="50.0" x="100.0" y="250.0"/>
     <platform height="50.0" width="50.0" x="150.0" y="450.0"/>
     <platform height="50.0" width="50.0" x="200.0" y="300.0"/>
+    <platform height="50.0" width="50.0" x="100.0" y="1000.0"/>
+    <platform height="50.0" width="50.0" x="0.0" y="1000.0"/>
+    <platform height="50.0" width="50.0" x="-350.0" y="0.0"/>
+    <platform height="50.0" width="50.0" x="-400.0" y="-50.0"/>
+    <platform height="50.0" width="50.0" x="-100.0" y="950.0"/>
+    <platform height="50.0" width="50.0" x="400.0" y="950.0"/>
+    <platform height="50.0" width="50.0" x="150.0" y="300.0"/>
+    <platform height="50.0" width="50.0" x="450.0" y="250.0"/>
+    <platform height="50.0" width="50.0" x="350.0" y="1000.0"/>
+    <platform height="50.0" width="50.0" x="-50.0" y="1000.0"/>
 </level>

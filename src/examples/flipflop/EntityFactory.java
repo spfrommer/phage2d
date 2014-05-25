@@ -60,6 +60,14 @@ public class EntityFactory {
 
 		ComponentFactory.addTextureData(portal,
 				new Texture(ImageUtils.getID("portal1.png"), 50, 50));
+		AnimationData animation = new AnimationData(portal);
+		List<Texture> frames = new ArrayList<Texture>();
+		for (int i = 1; i <= 9; i++)
+			frames.add(new Texture(ImageUtils.getID("portal" + i + ".png"), 50,
+					50));
+		Animator animator = new Animator(frames, 1);
+		animation.addAnimator("activation", animator);
+		portal.addComponent(animation);
 		ComponentFactory.addNameData(portal, "portal");
 		ComponentFactory.addPhysicsWrappers(portal);
 		ComponentFactory.addLayerData(portal, 2);
@@ -109,6 +117,7 @@ public class EntityFactory {
 		physics.setGravity(100);
 		physics.setCollisionFriction(0);
 		physics.setRestitution(0.01);
+		physics.setRotationalVelocity(50);
 		physics.setRotationalFriction(100);
 
 		ComponentFactory.addTextureData(player,

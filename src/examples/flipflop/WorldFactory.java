@@ -72,9 +72,9 @@ public class WorldFactory {
 	}
 
 	public static void setWorld4(EntitySystem system) {
-		EntityFactory.PLATFORM_IMAGE = "marbleblock.jpg";
+		EntityFactory.PLATFORM_IMAGE = "cloudblock.png";
 
-		system.addEntity(EntityFactory.makeBackground("terrain5.jpg",
+		system.addEntity(EntityFactory.makeBackground("terrain6.jpg",
 				new Vector(0, 1000), 15000, 6000));
 	}
 }

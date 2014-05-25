@@ -33,7 +33,7 @@ public abstract class Game {
 		PhageSplash splash = new PhageSplash();
 
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(3000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

@@ -1,8 +1,10 @@
+cloudblock.png
 darkpanel.jpg
 terrain2.png
 terrain3.jpg
 terrain4.jpg
 terrain5.jpg
+terrain6.jpg
 lenscircle.png
 lensflare.png
 marbleblock.jpg

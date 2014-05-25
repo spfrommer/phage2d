@@ -2,6 +2,7 @@ bullet1.png
 bullet2.png
 chassis1.png
 chassis2.png
+cloudblock.png
 darkmetal.jpg
 darkpanel.jpg
 gun1.png
@@ -11,6 +12,7 @@ terrain2.png
 terrain3.jpg
 terrain4.jpg
 terrain5.jpg
+terrain6.jpg
 jetpack1.png
 jetpack2.png
 lenscircle.png
