@@ -121,9 +121,14 @@ public class FlipFlop extends Game {
 		public void worldChanged();
 	}
 
+	int m_lastWorld = 0;
+
 	private void loadWorld(int number) {
-		for (WorldListener listener : m_listeners)
-			listener.worldChanged();
+		if (number != m_lastWorld) {
+			for (WorldListener listener : m_listeners)
+				listener.worldChanged();
+			m_lastWorld = number;
+		}
 
 		if (number == 0) {
 			WorldFactory.setWorld0(getEntitySystem());
