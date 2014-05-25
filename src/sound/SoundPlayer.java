@@ -55,7 +55,7 @@ public class SoundPlayer implements Runnable {
 	
 	public void play(AudioInputStream audio) {
 		if (m_output == null) throw new RuntimeException("Must open to speaker before play(AudioInputStream)");
-		if (!audio.getFormat().equals(m_output.getFormat())) throw new RuntimeException("Format not compatible with Player");
+		if (!audio.getFormat().matches(m_output.getFormat())) throw new RuntimeException("Format not compatible with Player");
 		m_mixer.add(audio);
 	}
 	public void pause(AudioInputStream audio) {
@@ -75,12 +75,12 @@ public class SoundPlayer implements Runnable {
 		byte[] data = new byte[4096];
 	    int nBytesRead = 0;
 	    while (nBytesRead != -1) {
-	        try {
-				nBytesRead = m_mixer.read(data, 0, data.length);
-		        if (nBytesRead != -1) m_output.write(data, 0, nBytesRead);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+	    	try {
+	    		nBytesRead = m_mixer.read(data, 0, data.length);
+	    		if (nBytesRead != -1) m_output.write(data, 0, nBytesRead);
+	    	} catch (IOException e) {
+	    		e.printStackTrace();
+	    	}
 			if (Thread.interrupted() || (m_mixer.getStreams().size() == 0 && m_exitOnFinished)) break;
 	    }
 	    m_output.stop();
