@@ -19,7 +19,7 @@ public class EntityFactory {
 		Entity portal = new Entity();
 
 		PhysicsData physics = ComponentFactory.addPhysicsData(portal, position,
-				0, new Rectangle(50, 50));
+				0, new Circle(25));
 		physics.setMassType(Mass.Type.INFINITE);
 		physics.setRotationalFriction(0);
 		physics.setRotationalVelocity(5);

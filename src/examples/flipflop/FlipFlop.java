@@ -10,6 +10,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import sound.PlaylistPlayer;
+import sound.PlaylistPlayer.PlaylistPlayerListener;
 import sound.SoundPlayer;
 import sound.SoundResource;
 import sound.SoundSystem;
@@ -47,9 +49,10 @@ public class FlipFlop extends Game {
 
 	private PortalManager m_portalManager;
 
+	private SoundResource m_waterDrop;
 	private SoundResource m_wind;
 	private SoundResource m_rain;
-	private SoundResource m_waterDrop;
+	private SoundResource m_techno;
 
 	public static void main(String[] args) {
 		new FlipFlop().start();
@@ -70,6 +73,9 @@ public class FlipFlop extends Game {
 				new GenericDecoder());
 		m_rain = new SoundResource(
 				SoundTest.class.getResource("/sounds/rain.mp3"),
+				new GenericDecoder());
+		m_techno = new SoundResource(
+				SoundTest.class.getResource("/sounds/techno.wav"),
 				new GenericDecoder());
 	}
 
@@ -176,16 +182,36 @@ public class FlipFlop extends Game {
 			WorldFactory.setWorld2(getEntitySystem());
 
 			try {
-				final AudioInputStream input = m_wind.openStream();
-				final SoundPlayer player = new SoundPlayer(input.getFormat());
+				final AudioInputStream input = m_techno.openStream();
+				final PlaylistPlayer player = new PlaylistPlayer(
+						input.getFormat());
 				player.open(SoundSystem.s_getDefaultSpeaker());
+				player.add(input);
+				player.addListener(new PlaylistPlayerListener() {
+					@Override
+					public void streamEnded(PlaylistPlayer player,
+							AudioInputStream done) {
+						try {
+							player.add(m_techno.openStream());
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+
+					@Override
+					public void startedPlaying(PlaylistPlayer player,
+							AudioInputStream n) {
+
+					}
+
+				});
 				player.start();
-				player.play(input);
+
 				m_listeners.add(new WorldListener() {
 
 					@Override
 					public void worldChanged() {
-						player.pause(input);
+						player.pause();
 					}
 				});
 			} catch (IOException e) {
@@ -229,7 +255,7 @@ public class FlipFlop extends Game {
 			this.getEntitySystem().addEntity(ball);
 	}
 
-	private int m_nextLevel = 0;
+	private int m_nextLevel = 7;
 
 	private void nextLevel() {
 		this.getEntitySystem().removeAllEntities();
