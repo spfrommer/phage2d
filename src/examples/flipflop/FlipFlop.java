@@ -53,6 +53,22 @@ public class FlipFlop extends Game {
 	private SoundResource m_rain;
 	private SoundResource m_techno;
 
+	// game states
+	private boolean m_goToNextLevel = false;
+	private int m_nextLevel = 0;
+	int m_lastWorld = 0;
+	private ArrayList<WorldListener> m_listeners = new ArrayList<WorldListener>();
+
+	// for fading message
+	private Vector m_position;
+	private String m_string;
+	private double m_fade;
+	private static Font font = null;
+
+	private interface WorldListener {
+		public void worldChanged();
+	}
+
 	public static void main(String[] args) {
 		new FlipFlop().start();
 	}
@@ -93,6 +109,10 @@ public class FlipFlop extends Game {
 		m_animation.update(ticks);
 		m_camera.control(this.getViewport().getCamera(), ticks);
 		m_controller.update(ticks);
+		if (m_goToNextLevel) {
+			nextLevel();
+			m_goToNextLevel = false;
+		}
 	}
 
 	@Override
@@ -103,7 +123,18 @@ public class FlipFlop extends Game {
 				.addPortalsSatisfiedListener(new PortalsSatisfiedListener() {
 					@Override
 					public void portalsSatisfied() {
-						nextLevel();
+						Thread t = new Thread(new Runnable() {
+							@Override
+							public void run() {
+								try {
+									Thread.sleep(1000);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+								m_goToNextLevel = true;
+							}
+						});
+						t.start();
 					}
 				});
 
@@ -119,14 +150,6 @@ public class FlipFlop extends Game {
 	public void onStop() {
 
 	}
-
-	private ArrayList<WorldListener> m_listeners = new ArrayList<WorldListener>();
-
-	private interface WorldListener {
-		public void worldChanged();
-	}
-
-	int m_lastWorld = 0;
 
 	private void loadWorld(int number) {
 		if (number != m_lastWorld) {
@@ -254,8 +277,6 @@ public class FlipFlop extends Game {
 			this.getEntitySystem().addEntity(ball);
 	}
 
-	private int m_nextLevel = 10;
-
 	private void nextLevel() {
 		this.getEntitySystem().removeAllEntities();
 		m_physics.setGravity(new Vector(0, -9.8));
@@ -282,10 +303,6 @@ public class FlipFlop extends Game {
 		m_nextLevel++;
 	}
 
-	private Vector m_position;
-	private String m_string;
-	private double m_fade;
-
 	private void fadingMessage(String text) {
 		m_position = new Vector(450, 250);
 		m_string = text;
@@ -307,8 +324,6 @@ public class FlipFlop extends Game {
 		});
 		t.start();
 	}
-
-	private static Font font = null;
 
 	@Override
 	public void renderGui(Renderer renderer) {
