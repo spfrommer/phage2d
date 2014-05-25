@@ -54,6 +54,7 @@ public class FlipFlop extends Game {
 	private SoundResource m_wind;
 	private SoundResource m_rain;
 	private SoundResource m_techno;
+	private SoundResource m_city;
 
 	// game states
 	private boolean m_goToNextLevel = false;
@@ -94,6 +95,9 @@ public class FlipFlop extends Game {
 		m_techno = new SoundResource(
 				SoundTest.class.getResource("/sounds/techno.wav"),
 				new GenericDecoder());
+		m_city = new SoundResource(
+				SoundTest.class.getResource("/sounds/city.mp3"),
+				new GenericDecoder());
 	}
 
 	@Override
@@ -112,7 +116,7 @@ public class FlipFlop extends Game {
 		m_camera.control(this.getViewport().getCamera(), ticks);
 		m_controller.update(ticks);
 		if (m_goToNextLevel) {
-			nextLevel();
+			startNextLevel();
 			m_goToNextLevel = false;
 		}
 	}
@@ -120,7 +124,7 @@ public class FlipFlop extends Game {
 	@Override
 	public void onStart() {
 		this.getViewport().getCamera().setZoom(DEFAULT_CAM_ZOOM);
-		nextLevel();
+		startNextLevel();
 
 		m_portalManager
 				.addPortalsSatisfiedListener(new PortalsSatisfiedListener() {
@@ -165,47 +169,26 @@ public class FlipFlop extends Game {
 			WorldFactory.setWorld0(getEntitySystem());
 			m_worldSound = loopAudio(m_rain);
 
-			m_listeners.add(new WorldListener() {
-				@Override
-				public void worldChanged() {
-					m_worldSound.pause();
-				}
-			});
-
 		}
 		if (number == 1) {
 			WorldFactory.setWorld1(getEntitySystem());
 			m_worldSound = loopAudio(m_wind);
-
-			m_listeners.add(new WorldListener() {
-				@Override
-				public void worldChanged() {
-					m_worldSound.pause();
-				}
-			});
 		}
 		if (number == 2) {
 			WorldFactory.setWorld2(getEntitySystem());
 			m_worldSound = loopAudio(m_techno);
-
-			m_listeners.add(new WorldListener() {
-				@Override
-				public void worldChanged() {
-					m_worldSound.pause();
-				}
-			});
 		}
 		if (number == 3) {
 			WorldFactory.setWorld3(getEntitySystem());
-			m_worldSound = loopAudio(m_wind);
-
-			m_listeners.add(new WorldListener() {
-				@Override
-				public void worldChanged() {
-					m_worldSound.pause();
-				}
-			});
+			m_worldSound = loopAudio(m_city);
 		}
+
+		m_listeners.add(new WorldListener() {
+			@Override
+			public void worldChanged() {
+				m_worldSound.pause();
+			}
+		});
 	}
 
 	private PlaylistPlayer loopAudio(final SoundResource resource) {
@@ -255,7 +238,7 @@ public class FlipFlop extends Game {
 			this.getEntitySystem().addEntity(ball);
 	}
 
-	private void nextLevel() {
+	private void startNextLevel() {
 		this.getEntitySystem().removeAllEntities();
 		m_physics.setGravity(new Vector(0, -9.8));
 		m_portalManager.resetPortals();
@@ -287,15 +270,18 @@ public class FlipFlop extends Game {
 		Thread t = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				Camera cam = FlipFlop.this.getViewport().getCamera();
-				cam.setZoom(0.05);
-				while (cam.getZoom() < DEFAULT_CAM_ZOOM) {
-					try {
+				try {
+					Camera cam = FlipFlop.this.getViewport().getCamera();
+					cam.setZoom(0.09);
+
+					Thread.sleep(1500);
+
+					while (cam.getZoom() < DEFAULT_CAM_ZOOM) {
 						Thread.sleep(10);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+						cam.incrementZoom(0.0015);
 					}
-					cam.incrementZoom(0.0015);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
 			}
 		});
@@ -310,15 +296,16 @@ public class FlipFlop extends Game {
 		Thread t = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				while (m_fade > 0) {
-					m_fade -= 0.02;
-					try {
+				try {
+					Thread.sleep(1000);
+					while (m_fade > 0) {
+						m_fade -= 0.02;
 						Thread.sleep(50);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
 					}
+					m_string = null;
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
-				m_string = null;
 			}
 		});
 		t.start();
