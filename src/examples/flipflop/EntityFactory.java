@@ -1,5 +1,8 @@
 package examples.flipflop;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.dyn4j.geometry.Circle;
 import org.dyn4j.geometry.Mass;
 import org.dyn4j.geometry.Rectangle;
@@ -12,6 +15,8 @@ import engine.core.framework.Entity;
 import engine.core.implementation.physics.base.CollisionListener;
 import engine.core.implementation.physics.data.PhysicsData;
 import engine.core.implementation.physics.logic.handler.ListenerCollisionHandlerLogic;
+import engine.core.implementation.rendering.base.Animator;
+import engine.core.implementation.rendering.data.AnimationData;
 import engine.core.implementation.rendering.logic.TextureRenderingLogic;
 
 public class EntityFactory {
@@ -25,12 +30,42 @@ public class EntityFactory {
 		physics.setRotationalVelocity(5);
 
 		ComponentFactory.addTextureData(portal,
-				new Texture(ImageUtils.getID("portal2.png"), 50, 50));
+				new Texture(ImageUtils.getID("portal1.png"), 50, 50));
+
+		AnimationData animation = new AnimationData(portal);
+		List<Texture> frames = new ArrayList<Texture>();
+		for (int i = 1; i <= 9; i++)
+			frames.add(new Texture(ImageUtils.getID("portal" + i + ".png"), 50,
+					50));
+		Animator animator = new Animator(frames, 1);
+		animation.addAnimator("activation", animator);
+		portal.addComponent(animation);
+
 		ComponentFactory.addNameData(portal, "portal");
 		ComponentFactory.addPhysicsWrappers(portal);
 		ComponentFactory.addLayerData(portal, 2);
 		ListenerCollisionHandlerLogic handler = new ListenerCollisionHandlerLogic(
 				portal);
+		portal.addComponent(handler);
+		portal.addComponent(new TextureRenderingLogic(portal));
+		return portal;
+	}
+
+	public static Entity makePortal(Vector position, CollisionListener listener) {
+		Entity portal = new Entity();
+
+		PhysicsData physics = ComponentFactory.addPhysicsData(portal, position,
+				0, new Rectangle(50, 50));
+		physics.setMassType(Mass.Type.INFINITE);
+
+		ComponentFactory.addTextureData(portal,
+				new Texture(ImageUtils.getID("portal.png"), 50, 50));
+		ComponentFactory.addNameData(portal, "portal");
+		ComponentFactory.addPhysicsWrappers(portal);
+		ComponentFactory.addLayerData(portal, 2);
+		ListenerCollisionHandlerLogic handler = new ListenerCollisionHandlerLogic(
+				portal);
+		handler.addListener(listener);
 		portal.addComponent(handler);
 		portal.addComponent(new TextureRenderingLogic(portal));
 		return portal;
@@ -85,26 +120,6 @@ public class EntityFactory {
 		return player;
 	}
 
-	public static Entity makePortal(Vector position, CollisionListener listener) {
-		Entity portal = new Entity();
-
-		PhysicsData physics = ComponentFactory.addPhysicsData(portal, position,
-				0, new Rectangle(50, 50));
-		physics.setMassType(Mass.Type.INFINITE);
-
-		ComponentFactory.addTextureData(portal,
-				new Texture(ImageUtils.getID("portal.png"), 50, 50));
-		ComponentFactory.addNameData(portal, "portal");
-		ComponentFactory.addPhysicsWrappers(portal);
-		ComponentFactory.addLayerData(portal, 2);
-		ListenerCollisionHandlerLogic handler = new ListenerCollisionHandlerLogic(
-				portal);
-		handler.addListener(listener);
-		portal.addComponent(handler);
-		portal.addComponent(new TextureRenderingLogic(portal));
-		return portal;
-	}
-
 	public static String PLATFORM_IMAGE = "";
 
 	public static Entity makePlatform(Vector position, double width,
@@ -129,6 +144,21 @@ public class EntityFactory {
 		Entity background = new Entity();
 
 		ComponentFactory.addShellData(background, new Vector(0, 0), 0);
+
+		ComponentFactory.addTextureData(background,
+				new Texture(ImageUtils.getID(imageName), width, height));
+		ComponentFactory.addShellWrappers(background);
+		ComponentFactory.addNameData(background, "background");
+		ComponentFactory.addLayerData(background, 0);
+		background.addComponent(new TextureRenderingLogic(background));
+		return background;
+	}
+
+	public static Entity makeBackground(String imageName, Vector position,
+			double width, double height) {
+		Entity background = new Entity();
+
+		ComponentFactory.addShellData(background, position, 0);
 
 		ComponentFactory.addTextureData(background,
 				new Texture(ImageUtils.getID(imageName), width, height));

@@ -7,7 +7,10 @@ import java.util.Map;
 
 import engine.core.framework.Entity;
 import engine.core.framework.EntitySystem;
+import engine.core.framework.component.type.TypeManager;
 import engine.core.implementation.physics.base.CollisionListener;
+import engine.core.implementation.rendering.data.AnimationData;
+import engine.core.implementation.rendering.data.TextureData;
 
 public class PortalManager implements CollisionListener {
 	private EntitySystem m_system;
@@ -46,6 +49,12 @@ public class PortalManager implements CollisionListener {
 
 	@Override
 	public void collided(Entity portal, Entity entity) {
+		AnimationData animation = (AnimationData) portal
+				.getComponent(TypeManager.getType(AnimationData.class));
+		TextureData texture = (TextureData) portal.getComponent(TypeManager
+				.getType(TextureData.class));
+		animation.getAnimator("activation").animate(texture.texture);
+
 		if (m_portals.containsKey(portal)) {
 			m_portals.put(portal, true);
 			m_system.removeEntity(entity);

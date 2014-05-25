@@ -39,7 +39,6 @@ import engine.graphics.lwjgl.LWJGLKeyboard;
 import engine.inputs.BindingListener;
 import engine.inputs.InputManager;
 import engine.inputs.keyboard.KeyTrigger;
-import examples.flipflop.worlds.WorldFactory;
 
 public class FlipFlop extends Game {
 	private PhysicsActivity m_physics;
@@ -255,7 +254,7 @@ public class FlipFlop extends Game {
 			this.getEntitySystem().addEntity(ball);
 	}
 
-	private int m_nextLevel = 7;
+	private int m_nextLevel = 10;
 
 	private void nextLevel() {
 		this.getEntitySystem().removeAllEntities();
@@ -270,11 +269,13 @@ public class FlipFlop extends Game {
 			return;
 		}
 
-		fadingMessage("World " + (world + 1) + " Level " + (m_nextLevel + 1));
+		fadingMessage("World " + (world + 1) + " Level "
+				+ (m_nextLevel % 3 + 1));
 		DynamicLevel dynamic = new DynamicLevel();
 		try {
 			dynamic.load(LevelReader.read("level" + m_nextLevel + ".lvl"));
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.exit(0);
 		}
 		loadLevel(dynamic);

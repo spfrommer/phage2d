@@ -1,6 +1,5 @@
 package engine.core.implementation.rendering.base;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import utils.image.Texture;
@@ -16,7 +15,7 @@ public class Animator {
 	private long m_ticksElapsed = 0;
 	private int m_currentFrame = 0;
 
-	public Animator(ArrayList<Texture> animationSequence, int ticksPerFrame) {
+	public Animator(List<Texture> animationSequence, int ticksPerFrame) {
 		m_animationSequence = animationSequence;
 		m_ticksPerFrame = ticksPerFrame;
 	}
@@ -30,7 +29,8 @@ public class Animator {
 	public void updateAnimation(int ticks) {
 		if (m_toAnimate != null && m_currentFrame < m_animationSequence.size()) {
 			m_ticksElapsed += ticks;
-			while (m_ticksElapsed >= m_ticksPerFrame && m_currentFrame < m_animationSequence.size()) {
+			while (m_ticksElapsed >= m_ticksPerFrame
+					&& m_currentFrame < m_animationSequence.size()) {
 				Texture frame = m_animationSequence.get(m_currentFrame);
 				m_toAnimate.setImageID(frame.getImageID());
 				m_toAnimate.setWidth(frame.getWidth());
@@ -38,15 +38,16 @@ public class Animator {
 				m_currentFrame++;
 				m_ticksElapsed -= m_ticksPerFrame;
 			}
-			/*m_timeSinceLastUpdate += timeNanos;
-			while (m_timeSinceLastUpdate >= m_frameIntervalNanos && m_currentFrame < m_animationSequence.size()) {
-				Texture frame = m_animationSequence.get(m_currentFrame);
-				m_toAnimate.setImageID(frame.getImageID());
-				m_toAnimate.setWidth(frame.getWidth());
-				m_toAnimate.setHeight(frame.getHeight());
-				m_currentFrame++;
-				m_timeSinceLastUpdate -= m_frameIntervalNanos;
-			}*/
+			/*
+			 * m_timeSinceLastUpdate += timeNanos; while (m_timeSinceLastUpdate
+			 * >= m_frameIntervalNanos && m_currentFrame <
+			 * m_animationSequence.size()) { Texture frame =
+			 * m_animationSequence.get(m_currentFrame);
+			 * m_toAnimate.setImageID(frame.getImageID());
+			 * m_toAnimate.setWidth(frame.getWidth());
+			 * m_toAnimate.setHeight(frame.getHeight()); m_currentFrame++;
+			 * m_timeSinceLastUpdate -= m_frameIntervalNanos; }
+			 */
 		}
 	}
 }

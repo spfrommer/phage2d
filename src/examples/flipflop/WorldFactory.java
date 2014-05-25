@@ -1,8 +1,7 @@
-package examples.flipflop.worlds;
+package examples.flipflop;
 
 import utils.physics.Vector;
 import engine.core.framework.EntitySystem;
-import examples.flipflop.EntityFactory;
 
 public class WorldFactory {
 	public static void setWorld0(EntitySystem system) {
@@ -53,7 +52,22 @@ public class WorldFactory {
 	public static void setWorld3(EntitySystem system) {
 		EntityFactory.PLATFORM_IMAGE = "marbleblock.jpg";
 
-		system.addEntity(EntityFactory.makeBackground("terrain5.jpg", 15000,
-				6000));
+		system.addEntity(EntityFactory.makeBackground("terrain5.jpg",
+				new Vector(0, 1000), 15000, 6000));
+
+		system.addEntity(EntityFactory.makeScenery("statue3.png", new Vector(
+				-1500, -500), 500, 1000));
+		system.addEntity(EntityFactory.makeScenery("statue1.png", new Vector(
+				-1000, -500), 500, 1000));
+		system.addEntity(EntityFactory.makeScenery("statue2.png", new Vector(
+				-500, -500), 500, 1000));
+		system.addEntity(EntityFactory.makeScenery("statue3.png", new Vector(0,
+				-500), 500, 1000));
+		system.addEntity(EntityFactory.makeScenery("statue1.png", new Vector(
+				500, -500), 500, 1000));
+		system.addEntity(EntityFactory.makeScenery("statue3.png", new Vector(
+				1000, -500), 500, 1000));
+		system.addEntity(EntityFactory.makeScenery("statue2.png", new Vector(
+				1500, -500), 500, 1000));
 	}
 }
