@@ -9,9 +9,9 @@ import sound.SoundSystem;
 import sound.decode.GenericDecoder;
 
 public class SoundTest {
-	public static void main(String[] args) throws IOException, LineUnavailableException {
+	public static void main(String[] args) throws IOException {
 		SoundResource music = new SoundResource(SoundTest.class.getResource("/sounds/music_sample.mp3"), new GenericDecoder());
-		//Resource volume
+
 		SoundSystem.s_getPlayer(music, 1f).start();
 	}
 }
