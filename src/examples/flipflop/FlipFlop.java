@@ -56,7 +56,7 @@ public class FlipFlop extends Game {
 	private CameraActivity m_camera;
 
 	private static final double DEFAULT_CAM_ZOOM = 0.15;
-	private static final boolean EDITOR_ENABLED = false;
+	private static final boolean EDITOR_ENABLED = true;
 
 	private SoundResource m_waterDrop;
 	private SoundResource m_wind;
@@ -67,7 +67,7 @@ public class FlipFlop extends Game {
 
 	// game states
 	private boolean m_goToNextLevel = false;
-	private int m_nextLevel = 10;
+	private int m_nextLevel = 0;
 	int m_lastWorld = -1;
 	private PlaylistPlayer m_worldSound;
 	private ArrayList<WorldListener> m_listeners = new ArrayList<WorldListener>();
