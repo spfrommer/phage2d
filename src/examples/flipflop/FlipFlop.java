@@ -56,7 +56,7 @@ public class FlipFlop extends Game {
 	private CameraActivity m_camera;
 
 	private static final double DEFAULT_CAM_ZOOM = 0.15;
-	private static final boolean EDITOR_ENABLED = true;
+	private static final boolean EDITOR_ENABLED = false;
 
 	private SoundResource m_waterDrop;
 	private SoundResource m_wind;
