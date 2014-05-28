@@ -10,10 +10,13 @@ public class SystemAspectManager {
 	private Map<Aspect, List<Entity>> m_aspectLists;
 	private List<AspectSystemListener> m_listeners;
 
-	SystemAspectManager(EntitySystem system) {
-		m_system = system;
+	{
 		m_aspectLists = new HashMap<Aspect, List<Entity>>();
 		m_listeners = new ArrayList<AspectSystemListener>();
+	}
+
+	SystemAspectManager(EntitySystem system) {
+		m_system = system;
 		system.addListener(new SystemListener() {
 			@Override
 			public void entityAdded(Entity entity) {

@@ -18,10 +18,12 @@ import engine.core.implementation.spawning.logic.SpawningLogic;
 public class SpawningActivity extends AspectActivity {
 	private ComponentType m_spawningType;
 
+	{
+		m_spawningType = TypeManager.getType(SpawningLogic.class);
+	}
+
 	public SpawningActivity(EntitySystem system) {
 		super(system, new Aspect(TypeManager.getType(SpawningLogic.class)));
-
-		m_spawningType = TypeManager.getType(SpawningLogic.class);
 	}
 
 	@Override

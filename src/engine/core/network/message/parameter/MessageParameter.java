@@ -4,9 +4,15 @@ public class MessageParameter {
 	private ParameterType m_type;
 
 	// one or the other
-	private int m_intValue = -1;
-	private double m_doubleValue = -1;
-	private String m_stringValue = "";
+	private int m_intValue;
+	private double m_doubleValue;
+	private String m_stringValue;
+
+	{
+		m_intValue = -1;
+		m_doubleValue = -1;
+		m_stringValue = "";
+	}
 
 	public MessageParameter() {
 		m_type = ParameterType.NULL;

@@ -6,10 +6,12 @@ import utils.TwoWayHashMap;
 import engine.core.network.message.MessageDeclaration;
 
 public class CommandInterpreter {
-	private TwoWayHashMap<String, Integer> commandIDs = new TwoWayHashMap<String, Integer>();
+	private TwoWayHashMap<String, Integer> commandIDs;
+	private static TwoWayHashMap<String, Integer> defaultIDs;
 
-	private static TwoWayHashMap<String, Integer> defaultIDs = new TwoWayHashMap<String, Integer>();
 	static {
+		defaultIDs = new TwoWayHashMap<String, Integer>();
+
 		defaultIDs.put("socketshutdown", 0);
 
 		defaultIDs.put("testmessage", 1);
@@ -21,6 +23,10 @@ public class CommandInterpreter {
 		defaultIDs.put("removeentity", 4);
 
 		defaultIDs.put("update", 5);
+	}
+
+	{
+		commandIDs = new TwoWayHashMap<String, Integer>();
 	}
 
 	public CommandInterpreter(ArrayList<MessageDeclaration> declarations) {

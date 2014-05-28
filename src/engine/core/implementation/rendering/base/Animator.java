@@ -12,8 +12,8 @@ public class Animator {
 	private Texture m_toAnimate;
 	private int m_ticksPerFrame;
 	// Ticks since last update
-	private long m_ticksElapsed = 0;
-	private int m_currentFrame = 0;
+	private long m_ticksElapsed;
+	private int m_currentFrame;
 
 	public Animator(List<Texture> animationSequence, int ticksPerFrame) {
 		m_animationSequence = animationSequence;
@@ -29,8 +29,7 @@ public class Animator {
 	public void updateAnimation(int ticks) {
 		if (m_toAnimate != null && m_currentFrame < m_animationSequence.size()) {
 			m_ticksElapsed += ticks;
-			while (m_ticksElapsed >= m_ticksPerFrame
-					&& m_currentFrame < m_animationSequence.size()) {
+			while (m_ticksElapsed >= m_ticksPerFrame && m_currentFrame < m_animationSequence.size()) {
 				Texture frame = m_animationSequence.get(m_currentFrame);
 				m_toAnimate.setImageID(frame.getImageID());
 				m_toAnimate.setWidth(frame.getWidth());

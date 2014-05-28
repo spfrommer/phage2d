@@ -25,12 +25,15 @@ public class Entity {
 	 */
 	private Map<ComponentType, Component> m_components;
 
+	{
+		m_aspect = new Aspect();
+		m_components = new HashMap<ComponentType, Component>();
+	}
+
 	/**
 	 * Constructs an empty Entity.
 	 */
 	public Entity() {
-		m_aspect = new Aspect();
-		m_components = new HashMap<ComponentType, Component>();
 	}
 
 	/**

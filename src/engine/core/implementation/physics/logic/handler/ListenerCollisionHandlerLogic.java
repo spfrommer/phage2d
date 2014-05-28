@@ -8,7 +8,11 @@ import engine.core.framework.component.Component;
 import engine.core.implementation.physics.base.CollisionListener;
 
 public class ListenerCollisionHandlerLogic extends CollisionHandlerLogic {
-	private List<CollisionListener> m_listeners = new ArrayList<CollisionListener>();
+	private List<CollisionListener> m_listeners;
+
+	{
+		m_listeners = new ArrayList<CollisionListener>();
+	}
 
 	public ListenerCollisionHandlerLogic() {
 

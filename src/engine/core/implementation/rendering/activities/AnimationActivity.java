@@ -19,9 +19,12 @@ import engine.core.implementation.rendering.data.AnimationData;
 public class AnimationActivity extends AspectActivity {
 	private ComponentType m_animationType;
 
+	{
+		m_animationType = TypeManager.getType(AnimationData.class);
+	}
+
 	public AnimationActivity(EntitySystem system) {
 		super(system, new Aspect(TypeManager.getType(AnimationData.class)));
-		m_animationType = TypeManager.getType(AnimationData.class);
 	}
 
 	public void update(int ticks) {

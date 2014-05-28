@@ -47,8 +47,12 @@ public abstract class Client {
 
 	private static final boolean DUMP_MESSAGES = false;
 
-	public Client(CommandInterpreter interpreter, String host, int port,
-			DecoderMapper decoder, String images) {
+	{
+		m_system = new EntitySystem();
+		m_rendering = new BasicRenderingActivity(m_system);
+	}
+
+	public Client(CommandInterpreter interpreter, String host, int port, DecoderMapper decoder, String images) {
 		ImageUtils.initMapping(images);
 
 		PhageSplash splash = new PhageSplash();
@@ -62,9 +66,7 @@ public abstract class Client {
 		m_interpreter = interpreter;
 		Display display = setupDisplay();
 
-		m_system = new EntitySystem();
 		m_network = new NetworkSyncActivity(m_system, decoder);
-		m_rendering = new BasicRenderingActivity(m_system);
 
 		m_host = host;
 		m_port = port;
@@ -92,15 +94,15 @@ public abstract class Client {
 		try {
 			m_socket = new Socket(host, port);
 
-			m_serverWriter = new MessageWriter(new ByteWriterInterpreter(
-					new ByteWriter(m_socket.getOutputStream()), m_interpreter));
+			m_serverWriter = new MessageWriter(new ByteWriterInterpreter(new ByteWriter(m_socket.getOutputStream()),
+					m_interpreter));
 			m_messageBuffer = new MessageBuffer();
 			m_messageBuffer.addWriter(m_serverWriter);
 
 			m_network.bufferAddWriter(m_serverWriter);
 
-			m_serverReader = new MessageReader(new ByteReaderInterpreter(
-					new ByteReader(m_socket.getInputStream()), m_interpreter));
+			m_serverReader = new MessageReader(new ByteReaderInterpreter(new ByteReader(m_socket.getInputStream()),
+					m_interpreter));
 
 			Message idMessage = m_serverReader.readMessage();
 			m_id = idMessage.getParameters()[0].getIntValue();

@@ -15,9 +15,14 @@ public class TypeManager {
 	/**
 	 * Current type integer
 	 */
-	private static int type_counter = 0;
+	private static int type_counter;
 
-	private static Map<Class<? extends Component>, ComponentType> types = new HashMap<Class<? extends Component>, ComponentType>();
+	private static Map<Class<? extends Component>, ComponentType> types;
+
+	static {
+		type_counter = 0;
+		types = new HashMap<Class<? extends Component>, ComponentType>();
+	}
 
 	/**
 	 * Will return one type per base component - extended components will still have the same type. eg, if

@@ -23,8 +23,8 @@ public class EntityPanel extends JPanel {
 	private NameData m_name;
 	private PhysicsData m_physics;
 
-	private JTextField xfield;
-	private JTextField yfield;
+	private JTextField m_xfield;
+	private JTextField m_yfield;
 
 	public EntityPanel(Entity entity, FlipFlop system, Editor editor) {
 		m_entity = entity;
@@ -34,8 +34,7 @@ public class EntityPanel extends JPanel {
 		GridLayout grid = new GridLayout(1, 3);
 		this.setLayout(grid);
 
-		m_name = (NameData) entity.getComponent(TypeManager
-				.getType(NameData.class));
+		m_name = (NameData) entity.getComponent(TypeManager.getType(NameData.class));
 
 		JLabel nameLabel = new JLabel(m_name.name);
 		this.add(nameLabel);
@@ -50,28 +49,27 @@ public class EntityPanel extends JPanel {
 		});
 		this.add(delete);
 
-		m_physics = (PhysicsData) entity.getComponent(TypeManager
-				.getType(PhysicsData.class));
+		m_physics = (PhysicsData) entity.getComponent(TypeManager.getType(PhysicsData.class));
 
 		if (m_physics != null) {
-			xfield = new JTextField("" + (int) m_physics.getPosition().getX());
+			m_xfield = new JTextField("" + (int) m_physics.getPosition().getX());
 
-			yfield = new JTextField("" + (int) m_physics.getPosition().getY());
-			xfield.addActionListener(new ActionListener() {
+			m_yfield = new JTextField("" + (int) m_physics.getPosition().getY());
+			m_xfield.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					inputPosition();
 				}
 			});
-			this.add(xfield);
+			this.add(m_xfield);
 
-			yfield.addActionListener(new ActionListener() {
+			m_yfield.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					inputPosition();
 				}
 			});
-			this.add(yfield);
+			this.add(m_yfield);
 		}
 	}
 
@@ -82,10 +80,8 @@ public class EntityPanel extends JPanel {
 		if (!m_system.getEntities().contains(m_entity))
 			m_system.entityAdd.add(m_entity);
 
-		m_physics.setPosition(new Vector(m_physics.getPosition().getX(), Double
-				.parseDouble(yfield.getText())));
-		m_physics.setPosition(new Vector(Double.parseDouble(xfield.getText()),
-				m_physics.getPosition().getY()));
+		m_physics.setPosition(new Vector(m_physics.getPosition().getX(), Double.parseDouble(m_yfield.getText())));
+		m_physics.setPosition(new Vector(Double.parseDouble(m_xfield.getText()), m_physics.getPosition().getY()));
 	}
 
 	public void zeroVelocity() {

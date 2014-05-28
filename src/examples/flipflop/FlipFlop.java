@@ -55,33 +55,43 @@ public class FlipFlop extends Game {
 	private ControllerActivity m_controller;
 	private CameraActivity m_camera;
 
-	private static final double DEFAULT_CAM_ZOOM = 0.15;
-	private static final boolean EDITOR_ENABLED = false;
-
 	private SoundResource m_waterDrop;
 	private SoundResource m_wind;
 	private SoundResource m_rain;
-	private SoundResource m_techno;
 	private SoundResource m_city;
 	private SoundResource m_violin;
 
 	// game states
-	private boolean m_goToNextLevel = false;
-	private int m_nextLevel = 0;
-	int m_lastWorld = -1;
+	private boolean m_goToNextLevel;
+	private int m_nextLevel;
+	int m_lastWorld;
 	private PlaylistPlayer m_worldSound;
-	private ArrayList<WorldListener> m_listeners = new ArrayList<WorldListener>();
-	private boolean m_restart = false;
+	private ArrayList<WorldListener> m_listeners;
+	private boolean m_restart;
 
 	public PortalManager portalManager;
-	public ArrayList<Entity> entityAdd = new ArrayList<Entity>();
-	public ArrayList<Entity> entityRemove = new ArrayList<Entity>();
+	public ArrayList<Entity> entityAdd;
+	public ArrayList<Entity> entityRemove;
 
 	// for fading message
 	private Vector m_position;
 	private String m_string;
 	private double m_fade;
-	private static Font font = null;
+
+	private static Font font;
+	private static final double DEFAULT_CAM_ZOOM = 0.15;
+	private static final boolean EDITOR_ENABLED = false;
+
+	{
+		entityAdd = new ArrayList<Entity>();
+		entityRemove = new ArrayList<Entity>();
+		m_listeners = new ArrayList<WorldListener>();
+
+		m_restart = false;
+		m_goToNextLevel = false;
+		m_lastWorld = -1;
+		m_nextLevel = 0;
+	}
 
 	private interface WorldListener {
 		public void worldChanged();
@@ -102,7 +112,6 @@ public class FlipFlop extends Game {
 		m_waterDrop = new SoundResource(SoundTest.class.getResource("/sounds/waterdrop.mp3"), new GenericDecoder());
 		m_wind = new SoundResource(SoundTest.class.getResource("/sounds/wind.mp3"), new GenericDecoder());
 		m_rain = new SoundResource(SoundTest.class.getResource("/sounds/rain.mp3"), new GenericDecoder());
-		m_techno = new SoundResource(SoundTest.class.getResource("/sounds/techno.wav"), new GenericDecoder());
 		m_city = new SoundResource(SoundTest.class.getResource("/sounds/city.mp3"), new GenericDecoder());
 		m_violin = new SoundResource(SoundTest.class.getResource("/sounds/violin.mp3"), new GenericDecoder());
 	}
@@ -463,7 +472,6 @@ public class FlipFlop extends Game {
 	}
 
 	private void playBallSound() {
-		System.out.println("Playing sound");
 		try {
 			SoundSystem.s_getPlayer(m_waterDrop, 1f).start();
 		} catch (IOException e) {

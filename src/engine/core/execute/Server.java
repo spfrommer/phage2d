@@ -30,12 +30,14 @@ public abstract class Server {
 
 	private static final boolean DUMP_MESSAGES = false;
 
-	public Server(CommandInterpreter interpreter, final int port,
-			DecoderMapper decoder, String images) {
+	{
+		m_system = new EntitySystem();
+	}
+
+	public Server(CommandInterpreter interpreter, final int port, DecoderMapper decoder, String images) {
 		ImageUtils.initMapping(images);
 		m_interpreter = interpreter;
 
-		m_system = new EntitySystem();
 		initProcesses();
 		m_network = new NetworkSyncActivity(this.getEntitySystem(), decoder);
 		m_port = port;
@@ -63,14 +65,10 @@ public abstract class Server {
 			try {
 				while (true) {
 					Socket clientSocket = s.accept();
-					MessageWriter writer = new MessageWriter(
-							new ByteWriterInterpreter(new ByteWriter(
-									clientSocket.getOutputStream()),
-									m_interpreter));
-					MessageReader reader = new MessageReader(
-							new ByteReaderInterpreter(new ByteReader(
-									clientSocket.getInputStream()),
-									m_interpreter));
+					MessageWriter writer = new MessageWriter(new ByteWriterInterpreter(new ByteWriter(
+							clientSocket.getOutputStream()), m_interpreter));
+					MessageReader reader = new MessageReader(new ByteReaderInterpreter(new ByteReader(
+							clientSocket.getInputStream()), m_interpreter));
 					Thread t = new Thread(new ClientHandler(reader, writer));
 					t.start();
 				}
@@ -139,8 +137,8 @@ public abstract class Server {
 
 		@Override
 		public void run() {
-			Message clientIDMessage = new Message("setclientid",
-					new MessageParameter[] { new MessageParameter(m_clientID) });
+			Message clientIDMessage = new Message("setclientid", new MessageParameter[] { new MessageParameter(
+					m_clientID) });
 			try {
 				m_writer.writeMessage(clientIDMessage);
 			} catch (IOException e) {

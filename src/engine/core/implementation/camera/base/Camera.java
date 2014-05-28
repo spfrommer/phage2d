@@ -8,18 +8,25 @@ import java.util.HashSet;
  * 
  */
 public class Camera {
-	private HashSet<CameraListener> m_listeners = new HashSet<CameraListener>();
+	private HashSet<CameraListener> m_listeners;
 
-	private double m_x = 0;
-	private double m_y = 0;
-	private double m_zoom = 0.3;
-	private double m_initialDisplayWidth = 0;
-	private double m_initialDisplayHeight = 0;
-	private double m_currentDisplayWidth = 0;
-	private double m_currentDisplayHeight = 0;
+	private double m_x;
+	private double m_y;
+	private double m_zoom;
+	private double m_initialDisplayWidth;
+	private double m_initialDisplayHeight;
+	private double m_currentDisplayWidth;
+	private double m_currentDisplayHeight;
 
-	private double m_minZoom = 0.08; // how far we can go out
-	private double m_maxZoom = 5; // how far we can go in
+	private double m_minZoom; // how far we can go out
+	private double m_maxZoom; // how far we can go in
+
+	{
+		m_zoom = 0.3;
+		m_minZoom = 0.08;
+		m_maxZoom = 5;
+		m_listeners = new HashSet<CameraListener>();
+	}
 
 	public void setViewPort(ViewPort port) {
 		port.addResizeListener(new ResizeListener() {

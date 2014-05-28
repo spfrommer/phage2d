@@ -8,10 +8,17 @@ public class EntitySystem {
 	private List<SystemListener> m_listeners;
 	private SystemAspectManager m_manager;
 
-	public EntitySystem() {
+	{
 		m_entities = new ArrayList<Entity>();
 		m_listeners = new ArrayList<SystemListener>();
 		m_manager = new SystemAspectManager(this);
+	}
+
+	/**
+	 * Constructs an empty EntitySystem.
+	 */
+	public EntitySystem() {
+
 	}
 
 	void addListener(SystemListener listener) {

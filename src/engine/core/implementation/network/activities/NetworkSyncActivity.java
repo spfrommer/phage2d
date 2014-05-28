@@ -75,6 +75,22 @@ public class NetworkSyncActivity extends AspectActivity {
 	 */
 	private DecoderMapper m_decoder;
 
+	{
+		m_messageBuffer = new ArrayList<Message>();
+		m_messageBufferLock = new ReentrantLock();
+
+		m_writerAddBuffer = new ArrayList<MessageWriter>();
+		m_writerRemoveBuffer = new ArrayList<MessageWriter>();
+		m_writerModifyLock = new ReentrantLock();
+
+		m_writers = new ArrayList<MessageWriter>();
+
+		m_idMapper = new TwoWayHashMap<Entity, Integer>();
+
+		m_syncType = TypeManager.getType(NetworkSyncLogic.class);
+		m_dataType = TypeManager.getType(NetworkData.class);
+	}
+
 	/**
 	 * Constructs a new NetworkSyncActivity
 	 * 
@@ -87,22 +103,7 @@ public class NetworkSyncActivity extends AspectActivity {
 	 */
 	public NetworkSyncActivity(EntitySystem system, DecoderMapper decoder) {
 		super(system, new Aspect(TypeManager.getType(NetworkSyncLogic.class), TypeManager.getType(NetworkData.class)));
-		m_messageBuffer = new ArrayList<Message>();
-		m_messageBufferLock = new ReentrantLock();
-
-		m_writerAddBuffer = new ArrayList<MessageWriter>();
-		m_writerRemoveBuffer = new ArrayList<MessageWriter>();
-		m_writerModifyLock = new ReentrantLock();
-
-		m_writers = new ArrayList<MessageWriter>();
-
-		m_idMapper = new TwoWayHashMap<Entity, Integer>();
-
 		m_decoder = decoder;
-
-		m_syncType = TypeManager.getType(NetworkSyncLogic.class);
-		m_dataType = TypeManager.getType(NetworkData.class);
-
 	}
 
 	@Override

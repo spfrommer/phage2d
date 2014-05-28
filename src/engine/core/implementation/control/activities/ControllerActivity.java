@@ -18,10 +18,12 @@ import engine.core.implementation.control.logic.ControllerLogic;
 public class ControllerActivity extends AspectActivity {
 	private ComponentType m_controllerType;
 
+	{
+		m_controllerType = TypeManager.getType(ControllerLogic.class);
+	}
+
 	public ControllerActivity(EntitySystem system) {
 		super(system, new Aspect(TypeManager.getType(ControllerLogic.class)));
-
-		m_controllerType = TypeManager.getType(ControllerLogic.class);
 	}
 
 	@Override

@@ -22,7 +22,11 @@ import examples.flipflop.FlipFlop;
 public class Editor extends JFrame {
 	private FlipFlop m_source;
 
-	private ArrayList<EntityPanel> m_panels = new ArrayList<EntityPanel>();
+	private ArrayList<EntityPanel> m_panels;
+
+	{
+		m_panels = new ArrayList<EntityPanel>();
+	}
 
 	public Editor(FlipFlop source) {
 		super("Editor");
@@ -34,8 +38,7 @@ public class Editor extends JFrame {
 		ball.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				m_source.entityAdd.add((EntityFactory
-						.makeBall(new Vector(0, 0))));
+				m_source.entityAdd.add((EntityFactory.makeBall(new Vector(0, 0))));
 				loadSystem();
 			}
 		});
@@ -43,8 +46,7 @@ public class Editor extends JFrame {
 		portal.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				m_source.entityAdd.add(EntityFactory.makePortal(
-						new Vector(0, 0), m_source.portalManager));
+				m_source.entityAdd.add(EntityFactory.makePortal(new Vector(0, 0), m_source.portalManager));
 				loadSystem();
 			}
 		});
@@ -52,8 +54,7 @@ public class Editor extends JFrame {
 		platform.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				m_source.entityAdd.add((EntityFactory.makePlatform(new Vector(
-						0, 0), 50, 50)));
+				m_source.entityAdd.add((EntityFactory.makePlatform(new Vector(0, 0), 50, 50)));
 				loadSystem();
 			}
 		});
@@ -86,10 +87,8 @@ public class Editor extends JFrame {
 		this.setLayout(layout);
 		for (int i = 0; i < entities.size(); i++) {
 			Entity e = entities.get(i);
-			NameData name = (NameData) e.getComponent(TypeManager
-					.getType(NameData.class));
-			if (name.name.equals("portal") || name.name.equals("platform")
-					|| name.name.equals("ball")) {
+			NameData name = (NameData) e.getComponent(TypeManager.getType(NameData.class));
+			if (name.name.equals("portal") || name.name.equals("platform") || name.name.equals("ball")) {
 				EntityPanel panel = new EntityPanel(e, m_source, this);
 				m_panels.add(panel);
 				this.add(panel);

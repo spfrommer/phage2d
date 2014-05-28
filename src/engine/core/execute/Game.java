@@ -27,6 +27,11 @@ public abstract class Game {
 	private Camera m_camera;
 	private Display m_display;
 
+	{
+		m_system = new EntitySystem();
+		m_rendering = new BasicRenderingActivity(m_system);
+	}
+
 	public Game(int width, int height, String images) {
 		ImageUtils.initMapping(images);
 
@@ -39,9 +44,6 @@ public abstract class Game {
 		}
 
 		m_display = setupDisplay(width, height);
-
-		m_system = new EntitySystem();
-		m_rendering = new BasicRenderingActivity(m_system);
 
 		onInit();
 		initProcesses();

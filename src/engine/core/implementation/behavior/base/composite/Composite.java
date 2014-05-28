@@ -10,6 +10,7 @@ import engine.core.implementation.behavior.base.Node;
  */
 public abstract class Composite implements Node {
 	private List<Node> m_children;
+
 	{
 		m_children = new ArrayList<Node>();
 	}
