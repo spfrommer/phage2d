@@ -13,7 +13,7 @@ import utils.image.ImageUtils;
  */
 public class PhageSplash extends JFrame {
 	public PhageSplash() {
-		// this.setUndecorated(true);
+		this.setUndecorated(true);
 		this.setLayout(null);
 		this.setSize(350, 300);
 		this.setLocationRelativeTo(null);
