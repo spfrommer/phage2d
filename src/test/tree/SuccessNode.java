@@ -6,8 +6,8 @@ import engine.core.implementation.behavior.base.leaf.LeafNode;
 
 public class SuccessNode extends LeafNode {
 	@Override
-	public void load(Entity entity) {
-
+	public boolean load(Entity entity) {
+		return true;
 	}
 
 	@Override

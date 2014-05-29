@@ -10,8 +10,9 @@ public interface Node {
 	 * Loads all required components from the Entity.
 	 * 
 	 * @param entity
+	 * @return whether all required Components could be loaded from the Entity
 	 */
-	public void load(Entity entity);
+	public boolean load(Entity entity);
 
 	/**
 	 * Updates the Node - a composite node will simply call this method on its children.

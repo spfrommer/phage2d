@@ -21,8 +21,12 @@ public class SequencerComposite extends CompositeNode {
 	}
 
 	@Override
-	public void load(Entity entity) {
-
+	public boolean load(Entity entity) {
+		for (Node n : this.getChildren()) {
+			if (n.load(entity) == false)
+				return false;
+		}
+		return true;
 	}
 
 	@Override
