@@ -43,7 +43,7 @@ public class EntityPanel extends JPanel {
 		delete.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				m_system.entityRemove.add(m_entity);
+				m_system.removeEntity(m_entity);
 				m_editor.loadSystem();
 			}
 		});
@@ -78,7 +78,7 @@ public class EntityPanel extends JPanel {
 	 */
 	public void inputPosition() {
 		if (!m_system.getEntities().contains(m_entity))
-			m_system.entityAdd.add(m_entity);
+			m_system.addEntity(m_entity);
 
 		m_physics.setPosition(new Vector(m_physics.getPosition().getX(), Double.parseDouble(m_yfield.getText())));
 		m_physics.setPosition(new Vector(Double.parseDouble(m_xfield.getText()), m_physics.getPosition().getY()));

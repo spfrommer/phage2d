@@ -38,7 +38,6 @@ import engine.graphics.Renderer;
 import engine.graphics.font.BMFontXMLLoader;
 import engine.graphics.font.Font;
 import engine.graphics.lwjgl.LWJGLKeyboard;
-import engine.graphics.lwjgl.LWJGLMouse;
 import engine.inputs.BindingListener;
 import engine.inputs.InputManager;
 import engine.inputs.keyboard.KeyTrigger;
@@ -71,9 +70,10 @@ public class FlipFlop extends Game {
 
 	private Editor m_editor;
 
-	public PortalManager portalManager;
-	public ArrayList<Entity> entityAdd;
-	public ArrayList<Entity> entityRemove;
+	private PortalManager m_portalManager;
+	// buffers which entities should be removed and added next tick
+	private ArrayList<Entity> m_entityAdd;
+	private ArrayList<Entity> m_entityRemove;
 
 	// for fading message
 	private Vector m_position;
@@ -82,11 +82,11 @@ public class FlipFlop extends Game {
 
 	private static Font font;
 	private static final double DEFAULT_CAM_ZOOM = 0.15;
-	private static final boolean EDITOR_ENABLED = true;
+	private static final boolean EDITOR_ENABLED = false;
 
 	{
-		entityAdd = new ArrayList<Entity>();
-		entityRemove = new ArrayList<Entity>();
+		m_entityAdd = new ArrayList<Entity>();
+		m_entityRemove = new ArrayList<Entity>();
 		m_listeners = new ArrayList<WorldListener>();
 
 		m_restart = false;
@@ -108,7 +108,7 @@ public class FlipFlop extends Game {
 
 	public FlipFlop() {
 		super(1000, 500, "images-flipflop.txt");
-		portalManager = new PortalManager(this.getEntitySystem());
+		m_portalManager = new PortalManager(this.getEntitySystem());
 	}
 
 	@Override
@@ -136,12 +136,12 @@ public class FlipFlop extends Game {
 		m_camera.control(this.getViewPort().getCamera(), ticks);
 		m_controller.update(ticks);
 
-		for (Entity entity : entityAdd)
+		for (Entity entity : m_entityAdd)
 			this.getEntitySystem().addEntity(entity);
-		for (Entity entity : entityRemove)
+		for (Entity entity : m_entityRemove)
 			this.getEntitySystem().removeEntity(entity);
-		entityAdd.clear();
-		entityRemove.clear();
+		m_entityAdd.clear();
+		m_entityRemove.clear();
 
 		if (m_restart) {
 			m_nextLevel--;
@@ -160,7 +160,7 @@ public class FlipFlop extends Game {
 		this.getViewPort().getCamera().setZoom(DEFAULT_CAM_ZOOM);
 		startNextLevel();
 
-		portalManager.addPortalsSatisfiedListener(new PortalsSatisfiedListener() {
+		m_portalManager.addPortalsSatisfiedListener(new PortalsSatisfiedListener() {
 			@Override
 			public void portalsSatisfied() {
 				Thread t = new Thread(new Runnable() {
@@ -267,8 +267,8 @@ public class FlipFlop extends Game {
 	}
 
 	private void loadLevel(Level level) {
-		for (Entity portal : level.getPortals(portalManager)) {
-			portalManager.addPortal(portal);
+		for (Entity portal : level.getPortals(m_portalManager)) {
+			m_portalManager.addPortal(portal);
 			this.getEntitySystem().addEntity(portal);
 		}
 
@@ -282,7 +282,7 @@ public class FlipFlop extends Game {
 	private void startNextLevel() {
 		this.getEntitySystem().removeAllEntities();
 		m_physics.setGravity(new Vector(0, -9.8));
-		portalManager.resetPortals();
+		m_portalManager.resetPortals();
 
 		int world = m_nextLevel / 3;
 		loadWorld(world);
@@ -382,6 +382,18 @@ public class FlipFlop extends Game {
 		}
 	}
 
+	public PortalManager getPortalManager() {
+		return m_portalManager;
+	}
+
+	public void addEntity(Entity entity) {
+		m_entityAdd.add(entity);
+	}
+
+	public void removeEntity(Entity entity) {
+		m_entityRemove.add(entity);
+	}
+
 	private boolean velocitiesZero() {
 		SystemAspectManager manager = this.getEntitySystem().getAspectManager();
 		manager.loadAspect(new Aspect(TypeManager.getType(PhysicsData.class)));
@@ -396,7 +408,6 @@ public class FlipFlop extends Game {
 
 	private InputManager makeInputManager() {
 		ViewPort port = getViewPort();
-		LWJGLMouse mouse = new LWJGLMouse(port.getViewShape());
 
 		final InputManager manager = new InputManager();
 		manager.addBinding("Up", new KeyTrigger(LWJGLKeyboard.instance().getKey('i')));
@@ -463,26 +474,11 @@ public class FlipFlop extends Game {
 		return manager;
 	}
 
-	/**
-	 * Rounds to 50s
-	 * 
-	 * @param num
-	 * @return
-	 */
-	private float round(int num) {
-		int temp = num % 50;
-		if (temp < 25)
-			return num - temp;
-		else
-			return num + 50 - temp;
-	}
-
 	private void playBallSound() {
 		try {
 			SoundSystem.s_getPlayer(m_waterDrop, 1f).start();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 }

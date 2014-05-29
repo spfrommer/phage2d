@@ -38,7 +38,7 @@ public class Editor extends JFrame {
 		ball.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				m_source.entityAdd.add((EntityFactory.makeBall(new Vector(0, 0))));
+				m_source.addEntity((EntityFactory.makeBall(new Vector(0, 0))));
 				loadSystem();
 			}
 		});
@@ -46,7 +46,7 @@ public class Editor extends JFrame {
 		portal.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				m_source.entityAdd.add(EntityFactory.makePortal(new Vector(0, 0), m_source.portalManager));
+				m_source.addEntity(EntityFactory.makePortal(new Vector(0, 0), m_source.getPortalManager()));
 				loadSystem();
 			}
 		});
@@ -54,7 +54,7 @@ public class Editor extends JFrame {
 		platform.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				m_source.entityAdd.add((EntityFactory.makePlatform(new Vector(0, 0), 50, 50)));
+				m_source.addEntity((EntityFactory.makePlatform(new Vector(0, 0), 50, 50)));
 				loadSystem();
 			}
 		});
