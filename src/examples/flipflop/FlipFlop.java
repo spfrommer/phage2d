@@ -69,6 +69,8 @@ public class FlipFlop extends Game {
 	private ArrayList<WorldListener> m_listeners;
 	private boolean m_restart;
 
+	private Editor m_editor;
+
 	public PortalManager portalManager;
 	public ArrayList<Entity> entityAdd;
 	public ArrayList<Entity> entityRemove;
@@ -80,7 +82,7 @@ public class FlipFlop extends Game {
 
 	private static Font font;
 	private static final double DEFAULT_CAM_ZOOM = 0.15;
-	private static final boolean EDITOR_ENABLED = false;
+	private static final boolean EDITOR_ENABLED = true;
 
 	{
 		entityAdd = new ArrayList<Entity>();
@@ -91,6 +93,8 @@ public class FlipFlop extends Game {
 		m_goToNextLevel = false;
 		m_lastWorld = -1;
 		m_nextLevel = 0;
+
+		m_editor = new Editor(this);
 	}
 
 	private interface WorldListener {
@@ -299,8 +303,10 @@ public class FlipFlop extends Game {
 		loadLevel(dynamic);
 
 		if (EDITOR_ENABLED) {
-			Editor editor = new Editor(this);
-			editor.loadSystem();
+			if (m_editor == null)
+				m_editor = new Editor(this);
+			m_editor.loadSystem();
+			m_editor.setVisible(true);
 		}
 		m_nextLevel++;
 

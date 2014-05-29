@@ -76,7 +76,6 @@ public class Editor extends JFrame {
 		this.setJMenuBar(bar);
 
 		this.setSize(250, 800);
-		this.setVisible(true);
 	}
 
 	public void loadSystem() {
