@@ -28,7 +28,6 @@ import engine.core.implementation.camera.activities.KeyboardCameraActivity;
 import engine.core.implementation.camera.activities.MovementProfile;
 import engine.core.implementation.camera.base.Camera;
 import engine.core.implementation.camera.base.ViewPort;
-import engine.core.implementation.control.activities.ControllerActivity;
 import engine.core.implementation.physics.activities.PhysicsActivity;
 import engine.core.implementation.physics.data.PhysicsData;
 import engine.core.implementation.rendering.activities.AnimationActivity;
@@ -51,7 +50,6 @@ import examples.flipflop.level.MirrorLevel;
 public class FlipFlop extends Game {
 	private PhysicsActivity m_physics;
 	private AnimationActivity m_animation;
-	private ControllerActivity m_controller;
 	private CameraActivity m_camera;
 
 	private SoundResource m_waterDrop;
@@ -126,7 +124,6 @@ public class FlipFlop extends Game {
 		m_animation = new AnimationActivity(this.getEntitySystem());
 		m_camera = new KeyboardCameraActivity(this.getEntitySystem(), LWJGLKeyboard.instance(), new MovementProfile(10,
 				0.01));
-		m_controller = new ControllerActivity(this.getEntitySystem());
 	}
 
 	@Override
@@ -134,7 +131,6 @@ public class FlipFlop extends Game {
 		m_physics.update(ticks);
 		m_animation.update(ticks);
 		m_camera.control(this.getViewPort().getCamera(), ticks);
-		m_controller.update(ticks);
 
 		for (Entity entity : m_entityAdd)
 			this.getEntitySystem().addEntity(entity);

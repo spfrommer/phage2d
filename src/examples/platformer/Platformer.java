@@ -11,7 +11,6 @@ import engine.core.execute.Game;
 import engine.core.factory.ComponentFactory;
 import engine.core.framework.Entity;
 import engine.core.implementation.behavior.activity.BehaviorActivity;
-import engine.core.implementation.behavior.base.composite.SequencerComposite;
 import engine.core.implementation.behavior.base.leaf.action.executor.ActionExecutorLeaf;
 import engine.core.implementation.behavior.logic.TreeLogic;
 import engine.core.implementation.camera.activities.CameraActivity;
@@ -136,11 +135,8 @@ public class Platformer extends Game {
 		player.addComponent(new JumpControllerLogic(player));
 
 		TreeLogic tree = new TreeLogic(player);
-		SequencerComposite root = new SequencerComposite();
-		tree.setRoot(root);
-		root.add(new ActionExecutorLeaf<JumpControllerLogic>(JumpControllerLogic.class));
+		tree.setRoot(new ActionExecutorLeaf<JumpControllerLogic>(JumpControllerLogic.class));
 		player.addComponent(tree);
-		// player.addComponent(new PlatformerControllerLogic(player, makeInputManager()));
 		return player;
 	}
 

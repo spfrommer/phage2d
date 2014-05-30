@@ -1,4 +1,4 @@
-package engine.core.implementation.control.logic;
+package engine.core.implementation.behavior.logic.controller;
 
 import engine.core.framework.Aspect;
 import engine.core.framework.Entity;
@@ -10,8 +10,8 @@ import engine.core.implementation.rendering.data.TextureData;
 import engine.inputs.InputManager;
 
 /**
- * Does the same as MouseControllerLogic, but plays an animation on the start and stop of the Entity, as specified by
- * the "start" and "stop" tags.
+ * A preset controller. Does the same as MouseControllerLogic, but plays an animation on the start and stop of the
+ * Entity, as specified by the "start" and "stop" tags.
  * 
  * @eng.dependencies TextureData, AnimationData
  */

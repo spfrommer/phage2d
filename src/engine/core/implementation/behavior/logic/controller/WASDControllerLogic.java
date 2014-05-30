@@ -1,20 +1,22 @@
-package engine.core.implementation.control.logic;
+package engine.core.implementation.behavior.logic.controller;
 
 import utils.physics.Vector;
 import engine.core.framework.Aspect;
 import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
+import engine.core.framework.component.LogicComponent;
 import engine.core.framework.component.type.TypeManager;
 import engine.core.implementation.behavior.base.ExecutionState;
+import engine.core.implementation.behavior.base.leaf.action.executor.ActionExecutable;
 import engine.core.implementation.physics.data.PhysicsData;
 import engine.inputs.InputManager;
 
 /**
- * Controls an Entity with simple WASD strafing.
+ * A preset controller. Controls an Entity with simple WASD strafing.
  * 
  * @eng.dependencies PhysicsData, InputManager
  */
-public class WASDControllerLogic extends ControllerLogic {
+public class WASDControllerLogic extends LogicComponent implements ActionExecutable {
 	private PhysicsData m_physics;
 	private InputManager m_inputManager;
 

@@ -4,16 +4,17 @@ import utils.physics.Vector;
 import engine.core.framework.Aspect;
 import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
+import engine.core.framework.component.LogicComponent;
 import engine.core.framework.component.type.TypeManager;
 import engine.core.implementation.behavior.base.ExecutionState;
-import engine.core.implementation.control.logic.ControllerLogic;
+import engine.core.implementation.behavior.base.leaf.action.executor.ActionExecutable;
 import engine.core.implementation.physics.data.PhysicsData;
 import engine.inputs.InputManager;
 
 /**
  * A controller for a bouncing ball.
  */
-public class PlatformerControllerLogic extends ControllerLogic {
+public class PlatformerControllerLogic extends LogicComponent implements ActionExecutable {
 	private PhysicsData m_physics;
 	private InputManager m_inputManager;
 
