@@ -8,7 +8,7 @@ import engine.core.framework.component.DataComponent;
  * Contains the rendering layer of this Entity.
  */
 public class LayerData extends DataComponent {
-	public int layer;
+	public double layer;
 
 	public LayerData() {
 		super();

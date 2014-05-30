@@ -72,7 +72,11 @@ public class BasicRenderingActivity extends AspectActivity implements RenderingA
 		public int compare(Entity entity1, Entity entity2) {
 			LayerData layer1 = (LayerData) entity1.getComponent(m_layerType);
 			LayerData layer2 = (LayerData) entity2.getComponent(m_layerType);
-			return layer1.layer - layer2.layer;
+			if (layer1.layer < layer2.layer)
+				return -1;
+			if (layer1.layer > layer2.layer)
+				return 1;
+			return 0;
 		}
 	}
 }

@@ -16,8 +16,7 @@ import engine.core.implementation.rendering.data.LayerData;
 import engine.core.implementation.rendering.logic.RenderingLogic;
 import engine.graphics.Renderer;
 
-public class ParallaxRenderingActivity extends AspectActivity implements
-		RenderingActivity {
+public class ParallaxRenderingActivity extends AspectActivity implements RenderingActivity {
 	private ComponentType m_renderingType;
 	private ComponentType m_layerType;
 
@@ -35,8 +34,7 @@ public class ParallaxRenderingActivity extends AspectActivity implements
 	}
 
 	public ParallaxRenderingActivity(EntitySystem system, Camera camera) {
-		super(system, new Aspect(TypeManager.getType(RenderingLogic.class),
-				TypeManager.getType(LayerData.class)));
+		super(system, new Aspect(TypeManager.getType(RenderingLogic.class), TypeManager.getType(LayerData.class)));
 
 		m_camera = camera;
 	}
@@ -61,11 +59,10 @@ public class ParallaxRenderingActivity extends AspectActivity implements
 	@Override
 	public void render(Renderer renderer) {
 		for (Entity entity : m_entities) {
-			RenderingLogic rendering = (RenderingLogic) entity
-					.getComponent(m_renderingType);
+			RenderingLogic rendering = (RenderingLogic) entity.getComponent(m_renderingType);
 			LayerData layer = (LayerData) entity.getComponent(m_layerType);
 
-			float scale = (layer.layer + 1);
+			float scale = ((float) layer.layer + 1);
 			int transX = (int) (-scale * m_camera.getX() * 0.1);
 			int transY = (int) (-scale * m_camera.getY() * 0.1);
 			renderer.scale(scale, scale);
@@ -87,7 +84,11 @@ public class ParallaxRenderingActivity extends AspectActivity implements
 		public int compare(Entity entity1, Entity entity2) {
 			LayerData layer1 = (LayerData) entity1.getComponent(m_layerType);
 			LayerData layer2 = (LayerData) entity2.getComponent(m_layerType);
-			return layer1.layer - layer2.layer;
+			if (layer1.layer < layer2.layer)
+				return -1;
+			if (layer1.layer > layer2.layer)
+				return 1;
+			return 0;
 		}
 	}
 }
