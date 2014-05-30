@@ -11,6 +11,7 @@ import engine.core.execute.Game;
 import engine.core.factory.ComponentFactory;
 import engine.core.framework.Entity;
 import engine.core.implementation.behavior.activity.BehaviorActivity;
+import engine.core.implementation.behavior.base.composite.ParallelComposite;
 import engine.core.implementation.behavior.base.leaf.action.executor.ActionExecutorLeaf;
 import engine.core.implementation.behavior.logic.TreeLogic;
 import engine.core.implementation.camera.activities.CameraActivity;
@@ -55,7 +56,7 @@ public class Platformer extends Game {
 		this.getEntitySystem().addEntity(makePlatform(new Vector(500, -100), 200, 150));
 		// this.getEntitySystem().addEntity(makePlatform(new Vector(00, -200), 500, 50));
 
-		m_player = makePlayer(new Vector(0, 0));
+		m_player = makePlayer(new Vector(-500, 0));
 		this.getEntitySystem().addEntity(m_player);
 
 		this.getViewPort().getCamera().setZoom(0.2);
@@ -133,9 +134,13 @@ public class Platformer extends Game {
 
 		player.addComponent(new TextureRenderingLogic(player));
 		player.addComponent(new JumpControllerLogic(player));
+		player.addComponent(new RollControllerLogic(player, -10000000));
 
 		TreeLogic tree = new TreeLogic(player);
-		tree.setRoot(new ActionExecutorLeaf<JumpControllerLogic>(JumpControllerLogic.class));
+		ParallelComposite parallel = new ParallelComposite();
+		tree.setRoot(parallel);
+		parallel.add(new ActionExecutorLeaf<RollControllerLogic>(RollControllerLogic.class));
+		parallel.add(new ActionExecutorLeaf<JumpControllerLogic>(JumpControllerLogic.class));
 		player.addComponent(tree);
 		return player;
 	}

@@ -9,6 +9,10 @@ import engine.core.implementation.behavior.base.ExecutionState;
 import engine.core.implementation.behavior.base.leaf.action.executor.ActionExecutable;
 import engine.core.implementation.physics.data.PhysicsData;
 
+/**
+ * Applies a torque to an object - would best be used in conjunction with a TimeDecorator since it always returns
+ * Running.
+ */
 public class RollControllerLogic extends LogicComponent implements ActionExecutable {
 	private PhysicsData m_physics;
 	private double m_torque;
@@ -26,7 +30,7 @@ public class RollControllerLogic extends LogicComponent implements ActionExecuta
 	@Override
 	public ExecutionState update(int ticks) {
 		m_physics.applyTorque(m_torque);
-		return ExecutionState.SUCCESS;
+		return ExecutionState.RUNNING;
 	}
 
 	@Override
