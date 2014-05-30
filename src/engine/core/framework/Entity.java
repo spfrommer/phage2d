@@ -118,7 +118,7 @@ public class Entity {
 	}
 
 	/**
-	 * Calls on all LogicComponents to reload their dependencies.
+	 * Calls on all DependentComponents to reload their dependencies.
 	 */
 	private void forceLoadDependencies() {
 		for (Component c : getComponents()) {

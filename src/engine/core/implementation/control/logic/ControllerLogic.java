@@ -3,8 +3,13 @@ package engine.core.implementation.control.logic;
 import engine.core.framework.Aspect;
 import engine.core.framework.Entity;
 import engine.core.framework.component.LogicComponent;
+import engine.core.implementation.behavior.base.ExecutionState;
+import engine.core.implementation.behavior.base.leaf.action.executor.ActionExecutable;
 
-public abstract class ControllerLogic extends LogicComponent {
+/**
+ * Controls an Entity - can be inserted into a tree as an ActionExecutorLeaf.
+ */
+public abstract class ControllerLogic extends LogicComponent implements ActionExecutable {
 
 	public ControllerLogic() {
 		super();
@@ -28,5 +33,6 @@ public abstract class ControllerLogic extends LogicComponent {
 	 * @param ticks
 	 *            the number of ticks elapsed
 	 */
-	public abstract void update(int ticks);
+	@Override
+	public abstract ExecutionState update(int ticks);
 }

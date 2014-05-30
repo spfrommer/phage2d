@@ -5,6 +5,7 @@ import engine.core.framework.Aspect;
 import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.type.TypeManager;
+import engine.core.implementation.behavior.base.ExecutionState;
 import engine.core.implementation.control.logic.ControllerLogic;
 import engine.core.implementation.physics.data.PhysicsData;
 import engine.inputs.InputManager;
@@ -27,7 +28,7 @@ public class PlatformerControllerLogic extends ControllerLogic {
 	}
 
 	@Override
-	public void update(int ticks) {
+	public ExecutionState update(int ticks) {
 		float jump = m_inputManager.getValue("Jump");
 
 		float left = m_inputManager.getValue("Left");
@@ -39,6 +40,7 @@ public class PlatformerControllerLogic extends ControllerLogic {
 			m_physics.applyForce(new Vector(0, jump * 100000000));
 
 		m_physics.applyTorque(strafe * 20000000);
+		return ExecutionState.RUNNING;
 	}
 
 	@Override

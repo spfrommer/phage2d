@@ -26,6 +26,9 @@ import engine.inputs.BindingListener;
 import engine.inputs.InputManager;
 import engine.inputs.keyboard.KeyTrigger;
 
+/**
+ * A game that uses behavior trees to control a ball.
+ */
 public class Platformer extends Game {
 	public Platformer() {
 		super(1000, 500, "images-all.txt");
@@ -42,34 +45,24 @@ public class Platformer extends Game {
 	public void onStart() {
 		this.getEntitySystem().addEntity(makeBackground(15000, 6000));
 
-		this.getEntitySystem().addEntity(
-				makeScenery("palmtree3.png", new Vector(-3000, 0), 500, 3000));
-		this.getEntitySystem().addEntity(
-				makeScenery("palmtree1.png", new Vector(-1000, 0), 2000, 3000));
-		this.getEntitySystem().addEntity(
-				makeScenery("palmtree2.png", new Vector(-1000, 0), 500, 3000));
-		this.getEntitySystem().addEntity(
-				makeScenery("palmtree3.png", new Vector(0, 0), 500, 3000));
-		this.getEntitySystem().addEntity(
-				makeScenery("palmtree1.png", new Vector(500, 0), 1500, 3000));
-		this.getEntitySystem().addEntity(
-				makeScenery("palmtree3.png", new Vector(2000, 0), 500, 3000));
-		this.getEntitySystem().addEntity(
-				makeScenery("palmtree2.png", new Vector(3000, 0), 500, 3000));
+		this.getEntitySystem().addEntity(makeScenery("palmtree3.png", new Vector(-3000, 0), 500, 3000));
+		this.getEntitySystem().addEntity(makeScenery("palmtree1.png", new Vector(-1000, 0), 2000, 3000));
+		this.getEntitySystem().addEntity(makeScenery("palmtree2.png", new Vector(-1000, 0), 500, 3000));
+		this.getEntitySystem().addEntity(makeScenery("palmtree3.png", new Vector(0, 0), 500, 3000));
+		this.getEntitySystem().addEntity(makeScenery("palmtree1.png", new Vector(500, 0), 1500, 3000));
+		this.getEntitySystem().addEntity(makeScenery("palmtree3.png", new Vector(2000, 0), 500, 3000));
+		this.getEntitySystem().addEntity(makeScenery("palmtree2.png", new Vector(3000, 0), 500, 3000));
 
-		this.getEntitySystem().addEntity(
-				makePlatform(new Vector(0, -200), 1000, 50));
-		this.getEntitySystem().addEntity(
-				makePlatform(new Vector(1200, -200), 500, 50));
-		this.getEntitySystem().addEntity(
-				makePlatform(new Vector(-1000, -200), 500, 50));
+		this.getEntitySystem().addEntity(makePlatform(new Vector(0, -200), 1000, 50));
+		this.getEntitySystem().addEntity(makePlatform(new Vector(1200, -200), 500, 50));
+		this.getEntitySystem().addEntity(makePlatform(new Vector(-1000, -200), 500, 50));
 
 		m_player = makePlayer(new Vector(0, 0));
 		this.getEntitySystem().addEntity(m_player);
 
 		this.getViewPort().getCamera().setZoom(0.2);
-		ParallaxRenderingActivity rendering = new ParallaxRenderingActivity(
-				this.getEntitySystem(), this.getViewPort().getCamera());
+		ParallaxRenderingActivity rendering = new ParallaxRenderingActivity(this.getEntitySystem(), this.getViewPort()
+				.getCamera());
 		rendering.loadEntities();
 		this.setRenderingActivity(rendering);
 	}
@@ -88,8 +81,8 @@ public class Platformer extends Game {
 	public void initProcesses() {
 		m_physics = new PhysicsActivity(this.getEntitySystem());
 		m_animation = new AnimationActivity(this.getEntitySystem());
-		m_camera = new KeyboardCameraActivity(this.getEntitySystem(),
-				LWJGLKeyboard.instance(), new MovementProfile(10, 0.01));
+		m_camera = new KeyboardCameraActivity(this.getEntitySystem(), LWJGLKeyboard.instance(), new MovementProfile(10,
+				0.01));
 		m_controller = new ControllerActivity(this.getEntitySystem());
 	}
 
@@ -106,8 +99,7 @@ public class Platformer extends Game {
 
 		ComponentFactory.addShellData(background, new Vector(0, 0), 0);
 
-		ComponentFactory.addTextureData(background,
-				new Texture(ImageUtils.getID("terrain2.png"), width, height));
+		ComponentFactory.addTextureData(background, new Texture(ImageUtils.getID("terrain2.png"), width, height));
 		ComponentFactory.addShellWrappers(background);
 		ComponentFactory.addNameData(background, "background");
 		ComponentFactory.addLayerData(background, 0);
@@ -115,14 +107,12 @@ public class Platformer extends Game {
 		return background;
 	}
 
-	private Entity makeScenery(String imageName, Vector position, double width,
-			double height) {
+	private Entity makeScenery(String imageName, Vector position, double width, double height) {
 		Entity background = new Entity();
 
 		ComponentFactory.addShellData(background, position, 0);
 
-		ComponentFactory.addTextureData(background,
-				new Texture(ImageUtils.getID(imageName), width, height));
+		ComponentFactory.addTextureData(background, new Texture(ImageUtils.getID(imageName), width, height));
 		ComponentFactory.addShellWrappers(background);
 		ComponentFactory.addNameData(background, "background");
 		ComponentFactory.addLayerData(background, 1);
@@ -133,32 +123,27 @@ public class Platformer extends Game {
 	private Entity makePlayer(Vector position) {
 		Entity player = new Entity();
 
-		PhysicsData physics = ComponentFactory.addPhysicsData(player, position,
-				0, new Circle(25));
+		PhysicsData physics = ComponentFactory.addPhysicsData(player, position, 0, new Circle(25));
 		physics.setGravity(100);
 		physics.setCollisionFriction(10);
 		physics.setRestitution(0.5);
 
-		ComponentFactory.addTextureData(player,
-				new Texture(ImageUtils.getID("blueblob.png"), 50, 50));
+		ComponentFactory.addTextureData(player, new Texture(ImageUtils.getID("blueblob.png"), 50, 50));
 		ComponentFactory.addNameData(player, "player");
 		ComponentFactory.addPhysicsWrappers(player);
 		ComponentFactory.addLayerData(player, 2);
 		player.addComponent(new TextureRenderingLogic(player));
-		player.addComponent(new PlatformerControllerLogic(player,
-				makeInputManager()));
+		player.addComponent(new PlatformerControllerLogic(player, makeInputManager()));
 		return player;
 	}
 
 	private Entity makePlatform(Vector position, double width, double height) {
 		Entity platform = new Entity();
 
-		PhysicsData physics = ComponentFactory.addPhysicsData(platform,
-				position, 0, new Rectangle(width, height));
+		PhysicsData physics = ComponentFactory.addPhysicsData(platform, position, 0, new Rectangle(width, height));
 		physics.setMassType(Mass.Type.INFINITE);
 
-		ComponentFactory.addTextureData(platform,
-				new Texture(ImageUtils.getID("darkpanel.jpg"), width, height));
+		ComponentFactory.addTextureData(platform, new Texture(ImageUtils.getID("darkpanel.jpg"), width, height));
 		ComponentFactory.addNameData(platform, "platform");
 		ComponentFactory.addPhysicsWrappers(platform);
 		ComponentFactory.addLayerData(platform, 2);
@@ -168,21 +153,16 @@ public class Platformer extends Game {
 
 	private InputManager makeInputManager() {
 		InputManager manager = new InputManager();
-		manager.addBinding("Jump", new KeyTrigger(LWJGLKeyboard.instance()
-				.getKey('i')));
-		manager.addBinding("Reset", new KeyTrigger(LWJGLKeyboard.instance()
-				.getKey('r')));
-		manager.addBinding("Left", new KeyTrigger(LWJGLKeyboard.instance()
-				.getKey('j')));
-		manager.addBinding("Right", new KeyTrigger(LWJGLKeyboard.instance()
-				.getKey('l')));
+		manager.addBinding("Jump", new KeyTrigger(LWJGLKeyboard.instance().getKey('i')));
+		manager.addBinding("Reset", new KeyTrigger(LWJGLKeyboard.instance().getKey('r')));
+		manager.addBinding("Left", new KeyTrigger(LWJGLKeyboard.instance().getKey('j')));
+		manager.addBinding("Right", new KeyTrigger(LWJGLKeyboard.instance().getKey('l')));
 		manager.addBindingListener("Reset", new BindingListener() {
 			@Override
 			public void onAction(String binding, float value) {
 				if (value == 0)
 					return;
-				PhysicsData physics = (PhysicsData) m_player
-						.getComponent(TypeManager.getType(PhysicsData.class));
+				PhysicsData physics = (PhysicsData) m_player.getComponent(TypeManager.getType(PhysicsData.class));
 				physics.setPosition(new Vector(0, 0));
 			}
 		});
@@ -196,7 +176,6 @@ public class Platformer extends Game {
 
 	@Override
 	public void renderGui(Renderer renderer) {
-		// TODO Auto-generated method stub
 
 	}
 }

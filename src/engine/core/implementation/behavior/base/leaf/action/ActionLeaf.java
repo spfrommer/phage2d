@@ -1,4 +1,6 @@
-package engine.core.implementation.behavior.base.leaf;
+package engine.core.implementation.behavior.base.leaf.action;
+
+import engine.core.implementation.behavior.base.leaf.LeafNode;
 
 
 /**

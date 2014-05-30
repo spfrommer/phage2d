@@ -5,6 +5,7 @@ import engine.core.framework.Aspect;
 import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.type.TypeManager;
+import engine.core.implementation.behavior.base.ExecutionState;
 import engine.core.implementation.physics.data.PhysicsData;
 import engine.inputs.InputManager;
 
@@ -28,7 +29,7 @@ public class WASDControllerLogic extends ControllerLogic {
 	}
 
 	@Override
-	public void update(int ticks) {
+	public ExecutionState update(int ticks) {
 		float forewards = m_inputManager.getValue("Forwards");
 		float backwards = m_inputManager.getValue("Backwards");
 
@@ -47,6 +48,7 @@ public class WASDControllerLogic extends ControllerLogic {
 		m_physics.applyForce(v.scalarMultiply(acceleration * ticks * 1000));
 
 		m_physics.applyTorque(turn * ticks * 5000);
+		return ExecutionState.RUNNING;
 	}
 
 	@Override

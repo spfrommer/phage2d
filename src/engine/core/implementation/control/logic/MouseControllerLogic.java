@@ -5,6 +5,7 @@ import engine.core.framework.Aspect;
 import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.type.TypeManager;
+import engine.core.implementation.behavior.base.ExecutionState;
 import engine.core.implementation.physics.data.PhysicsData;
 import engine.inputs.InputManager;
 
@@ -54,7 +55,7 @@ public class MouseControllerLogic extends ControllerLogic {
 	private float lastAcceleration = 0;
 
 	@Override
-	public void update(int ticks) {
+	public ExecutionState update(int ticks) {
 		float mousex = m_inputManager.getValue("MouseWorldX");
 		float mousey = m_inputManager.getValue("MouseWorldY");
 		float acceleration = m_inputManager.getValue("LeftMouse");
@@ -81,6 +82,7 @@ public class MouseControllerLogic extends ControllerLogic {
 			onDeccelerate();
 		}
 		lastAcceleration = acceleration;
+		return ExecutionState.RUNNING;
 	}
 
 	@Override
