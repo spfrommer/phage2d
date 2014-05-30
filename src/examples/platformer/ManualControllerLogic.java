@@ -14,16 +14,16 @@ import engine.inputs.InputManager;
 /**
  * A controller for a bouncing ball.
  */
-public class PlatformerControllerLogic extends LogicComponent implements ActionExecutable {
+public class ManualControllerLogic extends LogicComponent implements ActionExecutable {
 	private PhysicsData m_physics;
 	private InputManager m_inputManager;
 
-	public PlatformerControllerLogic(InputManager manager) {
+	public ManualControllerLogic(InputManager manager) {
 		super(new Aspect(TypeManager.getType(PhysicsData.class)));
 		m_inputManager = manager;
 	}
 
-	public PlatformerControllerLogic(Entity parent, InputManager manager) {
+	public ManualControllerLogic(Entity parent, InputManager manager) {
 		super(parent, new Aspect(TypeManager.getType(PhysicsData.class)));
 		m_inputManager = manager;
 	}
@@ -51,6 +51,6 @@ public class PlatformerControllerLogic extends LogicComponent implements ActionE
 
 	@Override
 	public Component copy() {
-		return new PlatformerControllerLogic(m_inputManager);
+		return new ManualControllerLogic(m_inputManager);
 	}
 }

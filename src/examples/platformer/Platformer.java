@@ -51,9 +51,9 @@ public class Platformer extends Game {
 		this.getEntitySystem().addEntity(makeScenery("palmtree3.png", new Vector(2000, 0), 500, 3000));
 		this.getEntitySystem().addEntity(makeScenery("palmtree2.png", new Vector(3000, 0), 500, 3000));
 
-		this.getEntitySystem().addEntity(makePlatform(new Vector(0, -200), 1000, 50));
-		this.getEntitySystem().addEntity(makePlatform(new Vector(1200, -200), 500, 50));
-		this.getEntitySystem().addEntity(makePlatform(new Vector(-1000, -200), 500, 50));
+		this.getEntitySystem().addEntity(makePlatform(new Vector(0, -200), 2000, 50));
+		this.getEntitySystem().addEntity(makePlatform(new Vector(500, -100), 200, 150));
+		// this.getEntitySystem().addEntity(makePlatform(new Vector(00, -200), 500, 50));
 
 		m_player = makePlayer(new Vector(0, 0));
 		this.getEntitySystem().addEntity(m_player);
