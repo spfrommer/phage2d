@@ -10,11 +10,13 @@ import utils.physics.Vector;
 import engine.core.execute.Game;
 import engine.core.factory.ComponentFactory;
 import engine.core.framework.Entity;
-import engine.core.framework.component.type.TypeManager;
+import engine.core.implementation.behavior.activity.BehaviorActivity;
+import engine.core.implementation.behavior.base.composite.SequencerComposite;
+import engine.core.implementation.behavior.base.leaf.action.executor.ActionExecutorLeaf;
+import engine.core.implementation.behavior.logic.TreeLogic;
 import engine.core.implementation.camera.activities.CameraActivity;
 import engine.core.implementation.camera.activities.KeyboardCameraActivity;
 import engine.core.implementation.camera.activities.MovementProfile;
-import engine.core.implementation.control.activities.ControllerActivity;
 import engine.core.implementation.physics.activities.PhysicsActivity;
 import engine.core.implementation.physics.data.PhysicsData;
 import engine.core.implementation.rendering.activities.AnimationActivity;
@@ -22,9 +24,6 @@ import engine.core.implementation.rendering.activities.ParallaxRenderingActivity
 import engine.core.implementation.rendering.logic.TextureRenderingLogic;
 import engine.graphics.Renderer;
 import engine.graphics.lwjgl.LWJGLKeyboard;
-import engine.inputs.BindingListener;
-import engine.inputs.InputManager;
-import engine.inputs.keyboard.KeyTrigger;
 
 /**
  * A game that uses behavior trees to control a ball.
@@ -37,7 +36,7 @@ public class Platformer extends Game {
 	private PhysicsActivity m_physics;
 	private AnimationActivity m_animation;
 	private CameraActivity m_camera;
-	private ControllerActivity m_controller;
+	private BehaviorActivity m_behavior;
 
 	private Entity m_player;
 
@@ -83,7 +82,7 @@ public class Platformer extends Game {
 		m_animation = new AnimationActivity(this.getEntitySystem());
 		m_camera = new KeyboardCameraActivity(this.getEntitySystem(), LWJGLKeyboard.instance(), new MovementProfile(10,
 				0.01));
-		m_controller = new ControllerActivity(this.getEntitySystem());
+		m_behavior = new BehaviorActivity(this.getEntitySystem());
 	}
 
 	@Override
@@ -91,7 +90,7 @@ public class Platformer extends Game {
 		m_physics.update(ticks);
 		m_animation.update(ticks);
 		m_camera.control(this.getViewPort().getCamera(), ticks);
-		m_controller.update(ticks);
+		m_behavior.update(ticks);
 	}
 
 	private Entity makeBackground(double width, double height) {
@@ -132,8 +131,16 @@ public class Platformer extends Game {
 		ComponentFactory.addNameData(player, "player");
 		ComponentFactory.addPhysicsWrappers(player);
 		ComponentFactory.addLayerData(player, 2);
+
 		player.addComponent(new TextureRenderingLogic(player));
-		player.addComponent(new PlatformerControllerLogic(player, makeInputManager()));
+		player.addComponent(new JumpControllerLogic(player));
+
+		TreeLogic tree = new TreeLogic(player);
+		SequencerComposite root = new SequencerComposite();
+		tree.setRoot(root);
+		root.add(new ActionExecutorLeaf<JumpControllerLogic>(JumpControllerLogic.class));
+		player.addComponent(tree);
+		// player.addComponent(new PlatformerControllerLogic(player, makeInputManager()));
 		return player;
 	}
 
@@ -149,24 +156,6 @@ public class Platformer extends Game {
 		ComponentFactory.addLayerData(platform, 2);
 		platform.addComponent(new TextureRenderingLogic(platform));
 		return platform;
-	}
-
-	private InputManager makeInputManager() {
-		InputManager manager = new InputManager();
-		manager.addBinding("Jump", new KeyTrigger(LWJGLKeyboard.instance().getKey('i')));
-		manager.addBinding("Reset", new KeyTrigger(LWJGLKeyboard.instance().getKey('r')));
-		manager.addBinding("Left", new KeyTrigger(LWJGLKeyboard.instance().getKey('j')));
-		manager.addBinding("Right", new KeyTrigger(LWJGLKeyboard.instance().getKey('l')));
-		manager.addBindingListener("Reset", new BindingListener() {
-			@Override
-			public void onAction(String binding, float value) {
-				if (value == 0)
-					return;
-				PhysicsData physics = (PhysicsData) m_player.getComponent(TypeManager.getType(PhysicsData.class));
-				physics.setPosition(new Vector(0, 0));
-			}
-		});
-		return manager;
 	}
 
 	public static void main(String[] args) {

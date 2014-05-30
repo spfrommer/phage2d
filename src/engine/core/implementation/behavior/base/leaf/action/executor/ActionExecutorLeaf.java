@@ -17,12 +17,18 @@ public class ActionExecutorLeaf<T extends LogicComponent & ActionExecutable> ext
 	private Class<T> m_type;
 	private T m_logic;
 
+	public ActionExecutorLeaf(Class<T> type) {
+		super();
+		m_type = type;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean load(Entity entity) {
 		try {
 			m_logic = (T) entity.getComponent(TypeManager.getType(m_type));
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			return false;
 		}
 		return true;
@@ -30,12 +36,11 @@ public class ActionExecutorLeaf<T extends LogicComponent & ActionExecutable> ext
 
 	@Override
 	public Node copy() {
-		return new ActionExecutorLeaf<T>();
+		return new ActionExecutorLeaf<T>(m_type);
 	}
 
 	@Override
 	public ExecutionState update(int ticks) {
 		return m_logic.update(ticks);
 	}
-
 }

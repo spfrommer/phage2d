@@ -1,7 +1,8 @@
-package engine.core.implementation.behavior.base;
+package engine.core.implementation.behavior.logic;
 
 import engine.core.framework.Entity;
 import engine.core.framework.component.LogicComponent;
+import engine.core.implementation.behavior.base.Node;
 
 /**
  * An executable tree of Nodes.
@@ -13,7 +14,11 @@ public class TreeLogic extends LogicComponent {
 	private Node m_root;
 
 	public TreeLogic() {
+		super();
+	}
 
+	public TreeLogic(Entity entity) {
+		super(entity);
 	}
 
 	/**
@@ -25,11 +30,11 @@ public class TreeLogic extends LogicComponent {
 		m_root.update(ticks);
 	}
 
-	public void setRootNode(Node root) {
+	public void setRoot(Node root) {
 		m_root = root;
 	}
 
-	public Node getRootNode() {
+	public Node getRoot() {
 		return m_root;
 	}
 
@@ -40,7 +45,7 @@ public class TreeLogic extends LogicComponent {
 	@Override
 	public TreeLogic copy() {
 		TreeLogic newTree = new TreeLogic();
-		newTree.setRootNode(m_root.copy());
+		newTree.setRoot(m_root.copy());
 		return newTree;
 	}
 

@@ -43,29 +43,30 @@ public class SequencerComposite extends CompositeNode {
 		List<Node> children = this.getChildren();
 		Node running = this.getRunningNode();
 
-		int startNode = 0;
+		int nodeIndex = 0;
 		if (running != null)
-			startNode = children.indexOf(running);
+			nodeIndex = children.indexOf(running);
 
-		for (; startNode < children.size(); startNode++) {
-			Node node = children.get(startNode);
-			ExecutionState state = node.update(ticks);
-			switch (state) {
-			case FAILURE:
-				this.setRunningNode(null);
-				return ExecutionState.FAILURE;
-			case RUNNING: {
-				this.setRunningNode(node);
-				return ExecutionState.RUNNING;
-			}
-			case SUCCESS: {
-				this.setRunningNode(children.get(startNode + 1));
-				return ExecutionState.RUNNING;
-			}
-			default:
-				break;
-			}
+		Node node = children.get(nodeIndex);
+		ExecutionState state = node.update(ticks);
+		switch (state) {
+		case FAILURE:
+			this.setRunningNode(null);
+			return ExecutionState.FAILURE;
+		case RUNNING: {
+			this.setRunningNode(node);
+			return ExecutionState.RUNNING;
 		}
+		case SUCCESS: {
+			if (nodeIndex < children.size())
+				return ExecutionState.SUCCESS;
+			this.setRunningNode(children.get(nodeIndex + 1));
+			return ExecutionState.RUNNING;
+		}
+		default:
+			break;
+		}
+		System.err.println("SequencerComposite should not reach here!");
 		return ExecutionState.SUCCESS;
 	}
 
