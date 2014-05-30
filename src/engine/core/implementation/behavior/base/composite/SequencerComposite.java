@@ -58,7 +58,7 @@ public class SequencerComposite extends CompositeNode {
 			return ExecutionState.RUNNING;
 		}
 		case SUCCESS: {
-			if (nodeIndex < children.size())
+			if (nodeIndex >= children.size())
 				return ExecutionState.SUCCESS;
 			this.setRunningNode(children.get(nodeIndex + 1));
 			return ExecutionState.RUNNING;
@@ -71,14 +71,14 @@ public class SequencerComposite extends CompositeNode {
 	}
 
 	public static void main(String[] args) {
-		SequencerComposite selector = new SequencerComposite();
+		SequencerComposite sequencer = new SequencerComposite();
 
-		selector.add(new SuccessNode());
-		selector.add(new SuccessNode());
-		selector.add(new RunningNode());
-		selector.add(new FailureNode());
+		sequencer.add(new SuccessNode());
+		sequencer.add(new SuccessNode());
+		sequencer.add(new RunningNode());
+		sequencer.add(new FailureNode());
 		for (int i = 0; i < 4; i++) {
-			System.out.println(selector.update(1));
+			System.out.println(sequencer.update(1));
 		}
 	}
 }

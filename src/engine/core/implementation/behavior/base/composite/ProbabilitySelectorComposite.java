@@ -100,9 +100,10 @@ public class ProbabilitySelectorComposite extends CompositeNode {
 	private ExecutionState updateNode(Node node, int ticks) {
 		ExecutionState state = node.update(ticks);
 		switch (state) {
-		case FAILURE:
+		case FAILURE: {
 			this.setRunningNode(null);
 			return ExecutionState.FAILURE;
+		}
 		case RUNNING: {
 			this.setRunningNode(node);
 			return ExecutionState.RUNNING;

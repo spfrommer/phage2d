@@ -4,6 +4,7 @@ import org.dyn4j.geometry.Circle;
 import org.dyn4j.geometry.Mass;
 import org.dyn4j.geometry.Rectangle;
 
+import test.tree.RunningNode;
 import utils.image.ImageUtils;
 import utils.image.Texture;
 import utils.physics.Vector;
@@ -12,6 +13,8 @@ import engine.core.factory.ComponentFactory;
 import engine.core.framework.Entity;
 import engine.core.implementation.behavior.activity.BehaviorActivity;
 import engine.core.implementation.behavior.base.composite.ParallelComposite;
+import engine.core.implementation.behavior.base.composite.SequencerComposite;
+import engine.core.implementation.behavior.base.decorator.TimeDecorator;
 import engine.core.implementation.behavior.base.leaf.action.executor.ActionExecutorLeaf;
 import engine.core.implementation.behavior.logic.TreeLogic;
 import engine.core.implementation.camera.activities.CameraActivity;
@@ -137,10 +140,19 @@ public class Platformer extends Game {
 		player.addComponent(new RollControllerLogic(player, -10000000));
 
 		TreeLogic tree = new TreeLogic(player);
+
+		SequencerComposite sequencer = new SequencerComposite();
+
+		TimeDecorator timer = new TimeDecorator(150);
 		ParallelComposite parallel = new ParallelComposite();
-		tree.setRoot(parallel);
 		parallel.add(new ActionExecutorLeaf<RollControllerLogic>(RollControllerLogic.class));
 		parallel.add(new ActionExecutorLeaf<JumpControllerLogic>(JumpControllerLogic.class));
+		timer.setChild(parallel);
+		sequencer.add(timer);
+		sequencer.add(new RunningNode());
+
+		tree.setRoot(sequencer);
+
 		player.addComponent(tree);
 		return player;
 	}

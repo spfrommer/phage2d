@@ -5,7 +5,7 @@ import engine.core.implementation.behavior.base.Node;
 
 /**
  * Runs a child Node until it returns SUCCESS or the ticks passed counter exceeds the ticks allowed, at which point it
- * will return SUCCESS and reset the ticks passed counter.
+ * will return SUCCESS and reset the ticks passed counter. Until this happens, the TimeDecorator will return RUNNING.
  */
 public class TimeDecorator extends DecoratorNode {
 	private int m_ticksAllowed;
@@ -79,6 +79,8 @@ public class TimeDecorator extends DecoratorNode {
 				m_ticksPassed = 0;
 				return ExecutionState.SUCCESS;
 			}
+
+			return ExecutionState.RUNNING;
 		}
 		default: {
 			System.err.println("TimeDecorator should not reach here!");
