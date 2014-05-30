@@ -15,6 +15,13 @@ public interface Node {
 	public boolean load(Entity entity);
 
 	/**
+	 * Returns a copy of this Node.
+	 * 
+	 * @return
+	 */
+	public abstract Node copy();
+
+	/**
 	 * Updates the Node - a composite node will simply call this method on its children.
 	 * 
 	 * @param ticks

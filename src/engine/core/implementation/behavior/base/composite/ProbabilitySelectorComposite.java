@@ -1,6 +1,7 @@
 package engine.core.implementation.behavior.base.composite;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import test.tree.FailureNode;
@@ -62,6 +63,15 @@ public class ProbabilitySelectorComposite extends CompositeNode {
 				return false;
 		}
 		return true;
+	}
+
+	@Override
+	public Node copy() {
+		ProbabilitySelectorComposite selector = new ProbabilitySelectorComposite(Arrays.copyOf(m_probabilities,
+				m_probabilities.length));
+		for (Node n : this.getChildren())
+			selector.add(n.copy());
+		return selector;
 	}
 
 	@Override

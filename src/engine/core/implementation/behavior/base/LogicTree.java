@@ -1,6 +1,5 @@
 package engine.core.implementation.behavior.base;
 
-
 /**
  * An executable tree of Nodes.
  */
@@ -12,6 +11,12 @@ public class LogicTree {
 
 	public LogicTree() {
 
+	}
+
+	public LogicTree copy() {
+		LogicTree newTree = new LogicTree();
+		newTree.setRootNode(m_root.copy());
+		return newTree;
 	}
 
 	/**

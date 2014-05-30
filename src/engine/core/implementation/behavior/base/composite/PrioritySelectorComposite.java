@@ -1,5 +1,7 @@
 package engine.core.implementation.behavior.base.composite;
 
+import java.util.Arrays;
+
 import test.tree.FailureNode;
 import test.tree.RunningNode;
 import test.tree.SuccessNode;
@@ -12,7 +14,7 @@ import engine.core.implementation.behavior.base.Node;
  * index of the child with the highest priority, with the second integer mapping to the second highest priority, etc.
  */
 public class PrioritySelectorComposite extends CompositeNode {
-	private int[] m_priorityIndex;
+	private int[] m_priorities;
 	private int m_nextPick;
 
 	{
@@ -23,7 +25,7 @@ public class PrioritySelectorComposite extends CompositeNode {
 	 * Constructs a PrioritySelectorComposite with the priority index set to {1, 2, 3, 4, 5}.
 	 */
 	public PrioritySelectorComposite() {
-		m_priorityIndex = new int[] { 1, 2, 3, 4, 5 };
+		m_priorities = new int[] { 1, 2, 3, 4, 5 };
 	}
 
 	/**
@@ -32,7 +34,7 @@ public class PrioritySelectorComposite extends CompositeNode {
 	 * @param priorityIndex
 	 */
 	public PrioritySelectorComposite(int[] priorityIndex) {
-		m_priorityIndex = priorityIndex;
+		m_priorities = priorityIndex;
 	}
 
 	/**
@@ -41,7 +43,7 @@ public class PrioritySelectorComposite extends CompositeNode {
 	 * @param priorities
 	 */
 	public void setPriorities(int[] priorities) {
-		m_priorityIndex = priorities;
+		m_priorities = priorities;
 	}
 
 	@Override
@@ -51,6 +53,15 @@ public class PrioritySelectorComposite extends CompositeNode {
 				return false;
 		}
 		return true;
+	}
+
+	@Override
+	public Node copy() {
+		PrioritySelectorComposite selector = new PrioritySelectorComposite(Arrays.copyOf(m_priorities,
+				m_priorities.length));
+		for (Node n : this.getChildren())
+			selector.add(n.copy());
+		return selector;
 	}
 
 	@Override
@@ -83,7 +94,7 @@ public class PrioritySelectorComposite extends CompositeNode {
 	}
 
 	private Node getNextPriority() {
-		return this.getChildren().get(m_priorityIndex[m_nextPick]);
+		return this.getChildren().get(m_priorities[m_nextPick]);
 	}
 
 	public static void main(String[] args) {

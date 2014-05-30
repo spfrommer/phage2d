@@ -30,6 +30,15 @@ public class SequencerComposite extends CompositeNode {
 	}
 
 	@Override
+	public Node copy() {
+		SequencerComposite sequencer = new SequencerComposite();
+		for (Node n : this.getChildren())
+			sequencer.add(n);
+
+		return sequencer;
+	}
+
+	@Override
 	public ExecutionState update(int ticks) {
 		List<Node> children = this.getChildren();
 		Node running = this.getRunningNode();
