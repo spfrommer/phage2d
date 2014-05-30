@@ -57,12 +57,6 @@ public abstract class Client {
 
 		PhageSplash splash = new PhageSplash();
 
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
 		m_interpreter = interpreter;
 		Display display = setupDisplay();
 

@@ -37,12 +37,6 @@ public abstract class Game {
 
 		PhageSplash splash = new PhageSplash();
 
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
 		m_display = setupDisplay(width, height);
 
 		onInit();
