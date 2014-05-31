@@ -20,6 +20,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
+import utils.Point2f;
 import utils.shape.ShapeUtils;
 import engine.graphics.Color;
 import engine.graphics.PostProcessor;
@@ -149,47 +150,47 @@ public class LWJGLRenderer implements Renderer {
 	 */
 
 	@Override
-	public void fillRect(int x, int y, int width, int height) {
+	public void fillRect(float x, float y, float width, float height) {
 		GL11.glBegin(GL11.GL_QUADS);
 
 		GL11.glTexCoord2f(0, 0);
-		GL11.glVertex2i(x, y);
+		GL11.glVertex2f(x, y);
 
 		GL11.glTexCoord2f(0, 1);
-		GL11.glVertex2i(x, y + height);
+		GL11.glVertex2f(x, y + height);
 
 		GL11.glTexCoord2f(1, 1);
-		GL11.glVertex2i(x + width, y + height);
+		GL11.glVertex2f(x + width, y + height);
 
 		GL11.glTexCoord2f(1, 0);
-		GL11.glVertex2i(x + width, y);
+		GL11.glVertex2f(x + width, y);
 		GL11.glEnd();
 	}
 
 	@Override
-	public void drawRect(int x, int y, int width, int height) {
+	public void drawRect(float x, float y, float width, float height) {
 		GL11.glBegin(GL11.GL_LINE_LOOP);
 
 		GL11.glTexCoord2f(0, 0);
-		GL11.glVertex2i(x, y);
+		GL11.glVertex2f(x, y);
 
 		GL11.glTexCoord2f(0, 1);
-		GL11.glVertex2i(x, y + height);
+		GL11.glVertex2f(x, y + height);
 
 		GL11.glTexCoord2f(1, 1);
-		GL11.glVertex2i(x + width, y + height);
+		GL11.glVertex2f(x + width, y + height);
 
 		GL11.glTexCoord2f(1, 0);
-		GL11.glVertex2i(x + width, y);
+		GL11.glVertex2f(x + width, y);
 
 		GL11.glEnd();
 	}
 
 	@Override
-	public void drawLine(int x1, int y1, int x2, int y2) {
+	public void drawLine(float x1, float y1, float x2, float y2) {
 		GL11.glBegin(GL11.GL_LINES);
-		GL11.glVertex2i(x1, y1);
-		GL11.glVertex2i(x2, y2);
+		GL11.glVertex2f(x1, y1);
+		GL11.glVertex2f(x2, y2);
 		GL11.glEnd();
 	}
 
@@ -232,9 +233,9 @@ public class LWJGLRenderer implements Renderer {
 	 * Light functions
 	 */
 	@Override
-	public void drawPointLight(int x, int y, Color c, Vector3f attenuation) {
-		Point2D transformed = new Point();
-		getTransform().transform(new Point(x, y), transformed);
+	public void drawPointLight(float x, float y, Color c, Vector3f attenuation) {
+		Point2f transformed = new Point2f();
+		getTransform().transform(new Point2f(x, y), transformed);
 		Vector2f trans = new Vector2f((float) transformed.getX(),
 				(float) transformed.getY());
 		m_pointLights.add(new LWJGLPointLight(trans, c, attenuation));
@@ -255,7 +256,7 @@ public class LWJGLRenderer implements Renderer {
 	}
 
 	@Override
-	public void drawImage(BufferedImage img, int x, int y, int width, int height) {
+	public void drawImage(BufferedImage img, float x, float y, float width, float height) {
 		LWJGLTexture texture = getTexture(img);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		texture.bind();
@@ -264,7 +265,7 @@ public class LWJGLRenderer implements Renderer {
 	}
 
 	@Override
-	public void drawImage(BufferedImage img, int x, int y) {
+	public void drawImage(BufferedImage img, float x, float y) {
 		drawImage(img, x, y, img.getWidth(), img.getHeight());
 	}
 
@@ -291,7 +292,7 @@ public class LWJGLRenderer implements Renderer {
 	}
 
 	@Override
-	public void drawString(String str, int x, int y) {
+	public void drawString(String str, float x, float y) {
 		Font font = getFont();
 
 		pushTransform();
@@ -313,7 +314,7 @@ public class LWJGLRenderer implements Renderer {
 	 */
 
 	@Override
-	public void translate(int x, int y) {
+	public void translate(float x, float y) {
 		GL11.glTranslatef(x, y, 0);
 	}
 
@@ -324,7 +325,7 @@ public class LWJGLRenderer implements Renderer {
 	}
 
 	@Override
-	public void rotate(float theta, int x, int y) {
+	public void rotate(float theta, float x, float y) {
 		pushTransform();
 		translate(x, y);
 		rotate(theta);
@@ -394,7 +395,7 @@ public class LWJGLRenderer implements Renderer {
 		for (PostProcessor p : m_postProcessors) {
 			GL11.glLoadIdentity();
 			// TODO: Fix post processors
-			// p.run(this);
+			p.run(this);
 		}
 		Display.sync(targetFPS);
 		Display.update();
@@ -409,13 +410,7 @@ public class LWJGLRenderer implements Renderer {
 		doFrameSetup();
 	}
 
-	// Runs all setup commands needed to render the next frame
-	public void doFrameSetup() {
-		s_defaultProgram.use();
-		LWJGLTexture.s_default.bind();
-		// Reset the color uniform
-		setColor(m_color);
-	}
+
 
 	public static LWJGLRenderer instance() {
 		if (s_instance == null) {
@@ -423,7 +418,14 @@ public class LWJGLRenderer implements Renderer {
 		}
 		return s_instance;
 	}
-
+	
+	// Runs all setup commands needed to render the next frame
+	public static void doFrameSetup() {
+		s_defaultProgram.use();
+		LWJGLTexture.s_default.bind();
+		// Reset the color uniform
+		instance().setColor(instance().getColor());
+	}
 	/*
 	 * Static opengl setup functions TODO: Move to display system
 	 */
@@ -467,7 +469,7 @@ public class LWJGLRenderer implements Renderer {
 			e.printStackTrace();
 		}
 		// Setup for the first frame
-		instance().doFrameSetup();
+		doFrameSetup();
 	}
 
 	public static void setupBlending() {
