@@ -35,14 +35,15 @@ public class TextureRenderingLogic extends RenderingLogic {
 	public void render(Renderer renderer) {
 		renderer.pushTransform();
 
-		renderer.translate((int) m_position.getPosition().getX(), (int) m_position.getPosition().getY());
+		renderer.translate((float) m_position.getPosition().getX(), (float) m_position.getPosition().getY());
 		renderer.rotate((float) Math.toRadians(m_rotation.getRotation()));
-		renderer.translate((int) m_center.getCenter().getX(), (int) m_center.getCenter().getY());
+		renderer.translate((float) m_center.getCenter().getX(), (float) m_center.getCenter().getY());
 
 		renderer.scale(1, -1);
-		renderer.translate((int) -m_textureData.texture.getWidth() / 2, (int) -m_textureData.texture.getHeight() / 2);
-		renderer.drawImage(m_textureData.texture.getImage(), 0, 0, (int) m_textureData.texture.getWidth(),
-				(int) m_textureData.texture.getHeight());
+		renderer.translate((float) -m_textureData.texture.getWidth() / 2,
+				(float) -m_textureData.texture.getHeight() / 2);
+		renderer.drawImage(m_textureData.texture.getImage(), 0, 0, (float) m_textureData.texture.getWidth(),
+				(float) m_textureData.texture.getHeight());
 
 		renderer.popTransform();
 	}
