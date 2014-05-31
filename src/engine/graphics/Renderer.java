@@ -23,19 +23,19 @@ public interface Renderer {
 	public void setClip(Shape clip);
 	public Shape getClip();
 	
-	public void fillRect(int x, int y, int width, int height);
-	public void drawRect(int x, int y, int width, int height);
+	public void fillRect(float x, float y, float width, float height);
+	public void drawRect(float x, float y, float width, float height);
 	
-	public void drawLine(int x1, int y1, int x2, int y2);
+	public void drawLine(float x1, float y1, float x2, float y2);
 	public void drawLineLoop(ArrayList<Point> points);
 	
 	public void fill(Shape shape);
 	public void draw(Shape shape);
 	
-	public void drawPointLight(int x, int y, Color color, Vector3f attenuation);
+	public void drawPointLight(float x, float y, Color color, Vector3f attenuation);
 	
-	public void drawImage(BufferedImage img, int x, int y, int width, int height);
-	public void drawImage(BufferedImage img, int x, int y);
+	public void drawImage(BufferedImage img, float x, float y, float width, float height);
+	public void drawImage(BufferedImage img, float x, float y);
 	public void drawImage(BufferedImage img, AffineTransform trans);
 	
 	public void setFont(Font font);
@@ -46,11 +46,11 @@ public interface Renderer {
 	 * Ignores new line characters
 	 * xy coordinates are coordinates of the starting baseline
 	 */
-	public void drawString(String str, int x, int y);
+	public void drawString(String str, float x, float y);
 	
-	public void translate(int x, int y);
+	public void translate(float x, float y);
 	public void rotate(float theta);
-	public void rotate(float theta, int x, int y);
+	public void rotate(float theta, float x, float y);
 	public void scale(float sx, float sy);
 	
 	public void transform(AffineTransform trans);
