@@ -85,7 +85,7 @@ public class ShaceshipServer extends Server {
 	}
 
 	@Override
-	public void updateProcesses(int ticks) {
+	public void update(int ticks) {
 		m_behavior.update(ticks);
 		m_physics.update(ticks);
 		m_animation.update(ticks);

@@ -19,6 +19,9 @@ import engine.core.network.message.Message;
 import engine.core.network.message.command.CommandInterpreter;
 import engine.core.network.message.parameter.MessageParameter;
 
+/**
+ * An abstract Server that manages networking details. Extend this class if you want to make a multiplayer game.
+ */
 public abstract class Server {
 	private static NetworkInputHub m_inputHub = new NetworkInputHub();
 	private EntitySystem m_system;
@@ -86,7 +89,7 @@ public abstract class Server {
 	private void startGameLoop() {
 		long nextGameTick = System.currentTimeMillis();
 		while (true) {
-			updateProcesses(1);
+			update(1);
 			m_network.processWriters();
 			m_network.processMessages();
 			m_network.processUpdates();
@@ -119,7 +122,7 @@ public abstract class Server {
 
 	public abstract void initProcesses();
 
-	public abstract void updateProcesses(int ticks);
+	public abstract void update(int ticks);
 
 	private static int s_clientCount = 0;
 

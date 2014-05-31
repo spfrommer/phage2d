@@ -27,6 +27,9 @@ import engine.graphics.Color;
 import engine.graphics.Renderer;
 import engine.graphics.lwjgl.LWJGLDisplay;
 
+/**
+ * An abstract Client that manages networking details. Extend this class if you want to make a multiplayer game.
+ */
 public abstract class Client {
 	private Socket m_socket;
 	private MessageBuffer m_messageBuffer;

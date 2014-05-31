@@ -1,4 +1,4 @@
-package examples.spaceship;
+package examples.tankarena;
 
 import java.util.ArrayList;
 
@@ -30,8 +30,12 @@ import engine.inputs.mouse.MouseButton;
 import engine.inputs.mouse.MouseButtonTrigger;
 import engine.inputs.mouse.MouseWorldXTrigger;
 import engine.inputs.mouse.MouseWorldYTrigger;
+import examples.spaceship.SpaceshipClient;
 
-public class SpaceshipClient extends Client {
+/**
+ * A Client for the tank arena game. Very similar to that of the Spaceship game.
+ */
+public class ArenaClient extends Client {
 	private CameraActivity m_cam;
 
 	private static DecoderMapper s_decoder;
@@ -44,7 +48,7 @@ public class SpaceshipClient extends Client {
 		s_decoder.addMapping(TextureData.class, new TextureDecoder());
 	}
 
-	public SpaceshipClient(CommandInterpreter interpreter, String server, int port) {
+	public ArenaClient(CommandInterpreter interpreter, String server, int port) {
 		super(interpreter, server, port, s_decoder, "images-all.txt");
 		this.getViewPort().getCamera().setZoom(0.2);
 	}
@@ -98,7 +102,7 @@ public class SpaceshipClient extends Client {
 				Message message = new Message(command, new MessageParameter[] { new MessageParameter(id),
 						new MessageParameter(value) });
 
-				SpaceshipClient.this.writeMessage(message);
+				ArenaClient.this.writeMessage(message);
 			}
 		});
 	}
