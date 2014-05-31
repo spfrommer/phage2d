@@ -1,5 +1,6 @@
 package engine.core.execute;
 
+import java.awt.geom.AffineTransform;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -144,7 +145,7 @@ public abstract class Client {
 			m_network.processWriters();
 			m_network.processMessages();
 
-			updateProcesses(1);
+			update(1);
 
 			render(display);
 
@@ -172,6 +173,9 @@ public abstract class Client {
 		m_viewport.lookThrough(r);
 		m_rendering.render(r);
 
+		r.setTransform(new AffineTransform());
+		renderGui(r);
+
 		display.getRenderer().setColor(Color.WHITE);
 		display.render();
 		display.update(FPS);
@@ -197,7 +201,9 @@ public abstract class Client {
 
 	public abstract void initProcesses();
 
-	public abstract void updateProcesses(int ticks);
+	public abstract void update(int ticks);
+
+	public abstract void renderGui(Renderer renderer);
 
 	private class ServerReader implements Runnable {
 		public ServerReader() {

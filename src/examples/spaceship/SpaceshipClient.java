@@ -19,6 +19,7 @@ import engine.core.network.message.Message;
 import engine.core.network.message.MessageDeclaration;
 import engine.core.network.message.command.CommandInterpreter;
 import engine.core.network.message.parameter.MessageParameter;
+import engine.graphics.Renderer;
 import engine.graphics.lwjgl.LWJGLKeyboard;
 import engine.graphics.lwjgl.LWJGLMouse;
 import engine.inputs.BindingListener;
@@ -63,7 +64,12 @@ public class SpaceshipClient extends Client {
 	}
 
 	@Override
-	public void updateProcesses(int ticks) {
+	public void renderGui(Renderer renderer) {
+
+	}
+
+	@Override
+	public void update(int ticks) {
 		m_cam.control(this.getViewPort().getCamera(), ticks);
 	}
 

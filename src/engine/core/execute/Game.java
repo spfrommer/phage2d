@@ -86,7 +86,7 @@ public abstract class Game {
 		AbsoluteTimer timer = new AbsoluteTimer();
 		while (!display.destroyRequested()) {
 			timer.start();
-			updateProcesses(1);
+			update(1);
 
 			render(display);
 
@@ -115,7 +115,6 @@ public abstract class Game {
 		Renderer r = display.getRenderer();
 
 		m_viewport.lookThrough(r);
-
 		m_rendering.render(r);
 
 		r.setTransform(new AffineTransform());
@@ -135,8 +134,6 @@ public abstract class Game {
 		return m_system;
 	}
 
-	public abstract void renderGui(Renderer renderer);
-
 	public abstract void onStart();
 
 	public abstract void onStop();
@@ -145,5 +142,7 @@ public abstract class Game {
 
 	public abstract void initProcesses();
 
-	public abstract void updateProcesses(int ticks);
+	public abstract void update(int ticks);
+
+	public abstract void renderGui(Renderer renderer);
 }

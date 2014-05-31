@@ -127,7 +127,7 @@ public class FlipFlop extends Game {
 	}
 
 	@Override
-	public void updateProcesses(int ticks) {
+	public void update(int ticks) {
 		m_physics.update(ticks);
 		m_animation.update(ticks);
 		m_camera.control(this.getViewPort().getCamera(), ticks);
