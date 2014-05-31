@@ -12,12 +12,9 @@ import engine.core.implementation.behavior.base.Node;
 /**
  * A composite node that executes each of its children sequentially, returning FAILURE if any node returns FAILURE,
  * SUCCESS if all nodes succeed, and RUNNING if a Node returns RUNNING.
- * 
- * The SequencerComposite is guaranteed to only call update on ONE of its children nodes for every update call on it.
  */
 public class SequencerComposite extends CompositeNode {
 	public SequencerComposite() {
-
 	}
 
 	@Override
@@ -33,7 +30,7 @@ public class SequencerComposite extends CompositeNode {
 	public Node copy() {
 		SequencerComposite sequencer = new SequencerComposite();
 		for (Node n : this.getChildren())
-			sequencer.add(n);
+			sequencer.addChild(n);
 
 		return sequencer;
 	}
@@ -49,6 +46,7 @@ public class SequencerComposite extends CompositeNode {
 
 		Node node = children.get(nodeIndex);
 		ExecutionState state = node.update(ticks);
+
 		switch (state) {
 		case FAILURE:
 			this.setRunningNode(null);
@@ -58,8 +56,10 @@ public class SequencerComposite extends CompositeNode {
 			return ExecutionState.RUNNING;
 		}
 		case SUCCESS: {
-			if (nodeIndex >= children.size())
+			if (nodeIndex >= children.size() - 1) {
+				this.setRunningNode(null);
 				return ExecutionState.SUCCESS;
+			}
 			this.setRunningNode(children.get(nodeIndex + 1));
 			return ExecutionState.RUNNING;
 		}
@@ -73,10 +73,10 @@ public class SequencerComposite extends CompositeNode {
 	public static void main(String[] args) {
 		SequencerComposite sequencer = new SequencerComposite();
 
-		sequencer.add(new SuccessNode());
-		sequencer.add(new SuccessNode());
-		sequencer.add(new RunningNode());
-		sequencer.add(new FailureNode());
+		sequencer.addChild(new SuccessNode());
+		sequencer.addChild(new SuccessNode());
+		sequencer.addChild(new RunningNode());
+		sequencer.addChild(new FailureNode());
 		for (int i = 0; i < 4; i++) {
 			System.out.println(sequencer.update(1));
 		}

@@ -13,13 +13,10 @@ import engine.core.implementation.behavior.base.Node;
 
 /**
  * A ProbabilitySelectorComposite will visit one of its children semi-randomly based on probabilities. If a selected
- * node fails, another node is selected. To do this, a number between zero and the sum of the probabilities is
- * generated, then the section of the probability array it lands on will determine the selected node. An array with all
- * equal probabilities would make a truly random selection. The number of elements in the probability array should equal
- * the number of child nodes. See update method for more details on the selection algorithm.
- * 
- * The ProbabilitySelectorComposite is guaranteed to only call update on ONE of its children nodes for every update call
- * on it.
+ * node fails, another node is updated immediately. To do this, a number between zero and the sum of the probabilities
+ * is generated, then the section of the probability array it lands on will determine the selected node. An array with
+ * all equal probabilities would make a truly random selection. The number of elements in the probability array should
+ * equal the number of child nodes. See update method for more details on the selection algorithm.
  */
 public class ProbabilitySelectorComposite extends CompositeNode {
 	private double[] m_probabilities;
@@ -70,7 +67,7 @@ public class ProbabilitySelectorComposite extends CompositeNode {
 		ProbabilitySelectorComposite selector = new ProbabilitySelectorComposite(Arrays.copyOf(m_probabilities,
 				m_probabilities.length));
 		for (Node n : this.getChildren())
-			selector.add(n.copy());
+			selector.addChild(n.copy());
 		return selector;
 	}
 
@@ -86,13 +83,15 @@ public class ProbabilitySelectorComposite extends CompositeNode {
 		}
 
 		ExecutionState update = updateNode(selected, ticks);
-		if (update == ExecutionState.FAILURE) {
+		while (update == ExecutionState.FAILURE) {
 			m_triedNodes.add(this.getChildren().indexOf(selected));
-
-			return ExecutionState.RUNNING;
-		} else {
-			m_triedNodes.clear();
+			int selection = randomSelection();
+			if (selection == -1)
+				return ExecutionState.FAILURE;
+			selected = this.getChildren().get(selection);
+			update = selected.update(ticks);
 		}
+		m_triedNodes.clear();
 
 		return update;
 	}
@@ -142,11 +141,11 @@ public class ProbabilitySelectorComposite extends CompositeNode {
 	}
 
 	public static void main(String[] args) {
-		ProbabilitySelectorComposite selector = new ProbabilitySelectorComposite(new double[] { 0.33, 0.33, 0.00001 });
+		ProbabilitySelectorComposite selector = new ProbabilitySelectorComposite(new double[] { 0.99, 0.001, 0.1 });
 
-		selector.add(new FailureNode());
-		selector.add(new RunningNode());
-		selector.add(new SuccessNode());
+		selector.addChild(new FailureNode());
+		selector.addChild(new RunningNode());
+		selector.addChild(new SuccessNode());
 		for (int i = 0; i < 10; i++) {
 			System.out.println(selector.update(1));
 		}

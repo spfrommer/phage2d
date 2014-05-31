@@ -30,11 +30,11 @@ public abstract class CompositeNode implements Node {
 		return m_runningNode;
 	}
 
-	public void add(Node node) {
+	public void addChild(Node node) {
 		m_children.add(node);
 	}
 
-	public void remove(Node node) {
+	public void removeChild(Node node) {
 		m_children.remove(node);
 	}
 

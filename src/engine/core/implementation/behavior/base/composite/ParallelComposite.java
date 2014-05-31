@@ -26,7 +26,7 @@ public class ParallelComposite extends CompositeNode {
 	public Node copy() {
 		ParallelComposite parallel = new ParallelComposite();
 		for (Node n : this.getChildren())
-			parallel.add(n.copy());
+			parallel.addChild(n.copy());
 		return parallel;
 	}
 

@@ -12,6 +12,8 @@ import engine.core.implementation.behavior.base.Node;
 /**
  * Executes nodes in descending priority until one succeeds. The first integer in the priority index/array maps to the
  * index of the child with the highest priority, with the second integer mapping to the second highest priority, etc.
+ * 
+ * If a child fails on update(), the next child is immediately updated. If all fail, FAILURE is returned.
  */
 public class PrioritySelectorComposite extends CompositeNode {
 	private int[] m_priorities;
@@ -60,7 +62,7 @@ public class PrioritySelectorComposite extends CompositeNode {
 		PrioritySelectorComposite selector = new PrioritySelectorComposite(Arrays.copyOf(m_priorities,
 				m_priorities.length));
 		for (Node n : this.getChildren())
-			selector.add(n.copy());
+			selector.addChild(n.copy());
 		return selector;
 	}
 
@@ -75,7 +77,9 @@ public class PrioritySelectorComposite extends CompositeNode {
 		case FAILURE: {
 			m_nextPick++;
 			this.setRunningNode(null);
-			return ExecutionState.RUNNING;
+			if (m_nextPick >= m_priorities.length)
+				return ExecutionState.FAILURE;
+			return update(ticks);
 		}
 		case RUNNING: {
 			this.setRunningNode(selected);
@@ -100,9 +104,9 @@ public class PrioritySelectorComposite extends CompositeNode {
 	public static void main(String[] args) {
 		PrioritySelectorComposite priority = new PrioritySelectorComposite(new int[] { 2, 1, 0 });
 
-		priority.add(new SuccessNode());
-		priority.add(new RunningNode());
-		priority.add(new FailureNode());
+		priority.addChild(new SuccessNode());
+		priority.addChild(new RunningNode());
+		priority.addChild(new FailureNode());
 
 		for (int i = 0; i < 10; i++)
 			System.out.println(priority.update(1));

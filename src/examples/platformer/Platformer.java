@@ -4,7 +4,6 @@ import org.dyn4j.geometry.Circle;
 import org.dyn4j.geometry.Mass;
 import org.dyn4j.geometry.Rectangle;
 
-import test.tree.RunningNode;
 import utils.image.ImageUtils;
 import utils.image.Texture;
 import utils.physics.Vector;
@@ -12,8 +11,9 @@ import engine.core.execute.Game;
 import engine.core.factory.ComponentFactory;
 import engine.core.framework.Entity;
 import engine.core.implementation.behavior.activity.BehaviorActivity;
-import engine.core.implementation.behavior.base.composite.ParallelComposite;
+import engine.core.implementation.behavior.base.composite.PrioritySelectorComposite;
 import engine.core.implementation.behavior.base.composite.SequencerComposite;
+import engine.core.implementation.behavior.base.decorator.SuccessDecorator;
 import engine.core.implementation.behavior.base.decorator.TimeDecorator;
 import engine.core.implementation.behavior.base.leaf.action.executor.ActionExecutorLeaf;
 import engine.core.implementation.behavior.logic.TreeLogic;
@@ -141,17 +141,21 @@ public class Platformer extends Game {
 
 		TreeLogic tree = new TreeLogic(player);
 
+		PrioritySelectorComposite priority = new PrioritySelectorComposite(new int[] { 0, 1 });
+
 		SequencerComposite sequencer = new SequencerComposite();
+		sequencer.addChild(new LateralCollisionCondition());
+		TimeDecorator timer = new TimeDecorator(100);
+		timer.setChild(new ActionExecutorLeaf<RollControllerLogic>(RollControllerLogic.class));
+		sequencer.addChild(timer);
+		sequencer.addChild(new ActionExecutorLeaf<JumpControllerLogic>(JumpControllerLogic.class));
+		priority.addChild(sequencer);
 
-		TimeDecorator timer = new TimeDecorator(150);
-		ParallelComposite parallel = new ParallelComposite();
-		parallel.add(new ActionExecutorLeaf<RollControllerLogic>(RollControllerLogic.class));
-		parallel.add(new ActionExecutorLeaf<JumpControllerLogic>(JumpControllerLogic.class));
-		timer.setChild(parallel);
-		sequencer.add(timer);
-		sequencer.add(new RunningNode());
+		SuccessDecorator success = new SuccessDecorator();
+		success.setChild(new ActionExecutorLeaf<RollControllerLogic>(RollControllerLogic.class));
+		priority.addChild(success);
 
-		tree.setRoot(sequencer);
+		tree.setRoot(priority);
 
 		player.addComponent(tree);
 		return player;
