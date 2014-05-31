@@ -29,12 +29,14 @@ public class BasicRenderingActivity extends AspectActivity implements RenderingA
 	 */
 	private List<Entity> m_entities;
 
-	public BasicRenderingActivity(EntitySystem system) {
-		super(system, new Aspect(TypeManager.getType(RenderingLogic.class), TypeManager.getType(LayerData.class)));
-
+	{
 		m_entities = new ArrayList<Entity>();
 		m_renderingType = TypeManager.getType(RenderingLogic.class);
 		m_layerType = TypeManager.getType(LayerData.class);
+	}
+
+	public BasicRenderingActivity(EntitySystem system) {
+		super(system, new Aspect(TypeManager.getType(RenderingLogic.class), TypeManager.getType(LayerData.class)));
 	}
 
 	@Override
@@ -70,7 +72,11 @@ public class BasicRenderingActivity extends AspectActivity implements RenderingA
 		public int compare(Entity entity1, Entity entity2) {
 			LayerData layer1 = (LayerData) entity1.getComponent(m_layerType);
 			LayerData layer2 = (LayerData) entity2.getComponent(m_layerType);
-			return layer1.layer - layer2.layer;
+			if (layer1.layer < layer2.layer)
+				return -1;
+			if (layer1.layer > layer2.layer)
+				return 1;
+			return 0;
 		}
 	}
 }

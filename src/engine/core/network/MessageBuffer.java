@@ -13,9 +13,15 @@ import engine.core.network.message.Message;
  * Buffers Messages, then flushes them to all its MessageWriters and clears the buffer. Uses a Lock to be thread safe.
  */
 public class MessageBuffer {
-	private List<Message> m_buffer = new ArrayList<Message>();
-	private List<MessageWriter> m_writers = new ArrayList<MessageWriter>();
-	private Lock m_lock = new ReentrantLock();
+	private List<Message> m_buffer;
+	private List<MessageWriter> m_writers;
+	private Lock m_lock;
+
+	{
+		m_buffer = new ArrayList<Message>();
+		m_writers = new ArrayList<MessageWriter>();
+		m_lock = new ReentrantLock();
+	}
 
 	public MessageBuffer() {
 	}

@@ -25,6 +25,15 @@ public class ChaseCameraActivity extends CameraActivity {
 	private int m_focusID;
 	private Entity m_focusEntity;
 
+	private double m_lastX;
+	private double m_lastY;
+	private static final double UPDATE_THRESHOLD = 1;
+
+	{
+		m_focusType = TypeManager.getType(CameraFocusData.class);
+		m_positionType = TypeManager.getType(PositionWrapper.class);
+	}
+
 	/**
 	 * Constructs a new ChaseCameraActivity, with the focusID equaling the CameraFocusComponent value in the Entity it
 	 * should follow.
@@ -36,13 +45,7 @@ public class ChaseCameraActivity extends CameraActivity {
 		super(system,
 				new Aspect(TypeManager.getType(CameraFocusData.class), TypeManager.getType(PositionWrapper.class)));
 		m_focusID = focusID;
-		m_focusType = TypeManager.getType(CameraFocusData.class);
-		m_positionType = TypeManager.getType(PositionWrapper.class);
 	}
-
-	private double m_lastX = 0;
-	private double m_lastY = 0;
-	private static final double UPDATE_THRESHOLD = 1;
 
 	@Override
 	public void control(Camera camera, int ticks) {

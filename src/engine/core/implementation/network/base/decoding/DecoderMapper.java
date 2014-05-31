@@ -11,8 +11,12 @@ import engine.core.framework.component.DataComponent;
 public class DecoderMapper {
 	private Map<Class<? extends DataComponent>, DataDecoder> m_decoders;
 
-	public DecoderMapper() {
+	{
 		m_decoders = new HashMap<Class<? extends DataComponent>, DataDecoder>();
+	}
+
+	public DecoderMapper() {
+
 	}
 
 	public void addMapping(Class<? extends DataComponent> comp, DataDecoder decoder) {

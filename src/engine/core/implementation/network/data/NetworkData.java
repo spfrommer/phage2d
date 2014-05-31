@@ -11,11 +11,16 @@ public class NetworkData extends DataComponent {
 	/**
 	 * The network id of the Entity
 	 */
-	public int id = -1;
+	public int id;
 	/**
 	 * Whether this Entity should be synced over the network
 	 */
-	public boolean sync = true;
+	public boolean sync;
+
+	{
+		id = -1;
+		sync = true;
+	}
 
 	public NetworkData() {
 		super();

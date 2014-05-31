@@ -1,6 +1,13 @@
 Additional notes:
 
-Never use WrapperComponents to modify DataComponents directly - just provide a way for LogicComponents to access the DataComponents without worrying what type it is.
+DataComponents should only be containers for data, and have no methods - preferably public fields, but getters and setters may be used if necessary.
+
+LogicComponents can either be called by their corresponding activity, or, for more complex behaviors, can be added to a behavior tree and called from the BehaviorActivity.
+
+Never use WrapperComponents to modify DataComponents directly - just provide a way for LogicComponents to access the DataComponents without worrying what type it is.  A sample implementation would be with the Physics/Shell wrappers; just abstract getters and setters are provided.
+
 If you have a branch in your LogicComponents - say, a renderer that uses PhysicsData and one that uses ShellData - use WrapperComponents to abstract these differences.
+
 When overriding a Component that isn't abstract, MAKE SURE YOU OVERRIDE THE COPY FUNCTION.  Otherwise, the parent component will use its copy function to return a more basic Component.
-If you want to sync a Component over the network, make sure you provide either a DataEncoder or DependentEncoder for that Component and add it to the EncoderWrapper.
+
+If you want to sync a Component over the network, make sure you provide either a DataEncoder or DependentEncoder for that Component and add it to the EncoderWrapper for that Entity on the Server side.  On the client side, provide the NetworkSyncActivity with the necessary decoders.  To make this process easier, extend the Client and Server classes in engine/core/execute.  See spaceship example project for more details.

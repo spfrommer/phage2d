@@ -12,7 +12,6 @@ public class NetworkInputTrigger extends InputTrigger implements NetworkReceiver
 	public NetworkInputTrigger(int id, String inputListen) {
 		m_id = id;
 		m_inputListen = inputListen;
-
 	}
 
 	@Override

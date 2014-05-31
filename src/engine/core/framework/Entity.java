@@ -25,12 +25,15 @@ public class Entity {
 	 */
 	private Map<ComponentType, Component> m_components;
 
+	{
+		m_aspect = new Aspect();
+		m_components = new HashMap<ComponentType, Component>();
+	}
+
 	/**
 	 * Constructs an empty Entity.
 	 */
 	public Entity() {
-		m_aspect = new Aspect();
-		m_components = new HashMap<ComponentType, Component>();
 	}
 
 	/**
@@ -115,7 +118,7 @@ public class Entity {
 	}
 
 	/**
-	 * Calls on all LogicComponents to reload their dependencies.
+	 * Calls on all DependentComponents to reload their dependencies.
 	 */
 	private void forceLoadDependencies() {
 		for (Component c : getComponents()) {

@@ -15,9 +15,14 @@ import engine.core.implementation.rendering.data.TextureData;
 public class PortalManager implements CollisionListener {
 	private EntitySystem m_system;
 
-	private Map<Entity, Boolean> m_portals = new HashMap<Entity, Boolean>();
+	private Map<Entity, Boolean> m_portals;
 
-	private List<PortalsSatisfiedListener> m_portalListeners = new ArrayList<PortalsSatisfiedListener>();
+	private List<PortalsSatisfiedListener> m_portalListeners;
+
+	{
+		m_portals = new HashMap<Entity, Boolean>();
+		m_portalListeners = new ArrayList<PortalsSatisfiedListener>();
+	}
 
 	public PortalManager(EntitySystem system) {
 		m_system = system;
@@ -49,10 +54,8 @@ public class PortalManager implements CollisionListener {
 
 	@Override
 	public void collided(Entity portal, Entity entity) {
-		AnimationData animation = (AnimationData) portal
-				.getComponent(TypeManager.getType(AnimationData.class));
-		TextureData texture = (TextureData) portal.getComponent(TypeManager
-				.getType(TextureData.class));
+		AnimationData animation = (AnimationData) portal.getComponent(TypeManager.getType(AnimationData.class));
+		TextureData texture = (TextureData) portal.getComponent(TypeManager.getType(TextureData.class));
 		animation.getAnimator("activation").animate(texture.texture);
 
 		if (m_portals.containsKey(portal)) {

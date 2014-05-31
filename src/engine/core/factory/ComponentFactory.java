@@ -37,6 +37,10 @@ import engine.core.implementation.rendering.logic.TextureRenderingLogic;
  * A factory for adding Data and Wrapper components easily to an Entity
  */
 public class ComponentFactory {
+	private ComponentFactory() {
+
+	}
+
 	/**
 	 * Adds a PhysicsData to the Entity, then returns the PhysicsData
 	 * 

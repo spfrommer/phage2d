@@ -21,11 +21,13 @@ public class HealthActivity extends AspectActivity {
 	private ComponentType m_healthType;
 	private ComponentType m_physicsType;
 
-	public HealthActivity(EntitySystem system) {
-		super(system, new Aspect(TypeManager.getType(HealthData.class), TypeManager.getType(PhysicsData.class)));
-
+	{
 		m_healthType = TypeManager.getType(HealthData.class);
 		m_physicsType = TypeManager.getType(PhysicsData.class);
+	}
+
+	public HealthActivity(EntitySystem system) {
+		super(system, new Aspect(TypeManager.getType(HealthData.class), TypeManager.getType(PhysicsData.class)));
 	}
 
 	@Override

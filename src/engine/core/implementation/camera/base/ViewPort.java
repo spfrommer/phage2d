@@ -9,13 +9,17 @@ import engine.graphics.Renderer;
 
 // a viewport for split screen, etc...
 public class ViewPort {
-	private List<ResizeListener> m_listeners = new ArrayList<ResizeListener>();
+	private List<ResizeListener> m_listeners;
 
 	private int m_x;
 	private int m_y;
 	private int m_width;
 	private int m_height;
 	private Camera m_camera;
+
+	{
+		m_listeners = new ArrayList<ResizeListener>();
+	}
 
 	public ViewPort(Camera camera) {
 		m_camera = camera;

@@ -26,6 +26,9 @@ public class GunLogic extends SpawningLogic {
 	private long m_spawnInterval;
 	private double m_velocity;
 
+	// ticks since last spawn
+	private long ticksElapsed = 0;
+
 	public GunLogic(Entity spawn, InputManager input, long spawnInterval, double velocity) {
 		super(new Aspect(TypeManager.getType(PositionWrapper.class), TypeManager.getType(RotationWrapper.class)));
 		m_spawningEntity = spawn;
@@ -42,9 +45,6 @@ public class GunLogic extends SpawningLogic {
 		m_spawnInterval = spawnInterval;
 		m_velocity = velocity;
 	}
-
-	// ticks since last spawn
-	private long ticksElapsed = 0;
 
 	@Override
 	public ArrayList<Entity> spawn(int ticks) {

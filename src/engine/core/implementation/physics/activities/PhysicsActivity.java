@@ -27,15 +27,17 @@ import engine.core.implementation.physics.logic.handler.CollisionHandlerLogic;
 public class PhysicsActivity extends AspectActivity {
 	private World m_world;
 	private TwoWayHashMap<Entity, Integer> m_idMapper;
-	private int currentID = 0;
+	private int currentID;
 
-	public PhysicsActivity(EntitySystem system) {
-		super(system, new Aspect(TypeManager.getType(PhysicsData.class)));
-
+	{
 		m_world = new World();
 		m_world.getSettings().setMaximumRotation(1000000000);
 		m_world.getSettings().setMaximumTranslation(1000000000);
 		m_idMapper = new TwoWayHashMap<Entity, Integer>();
+	}
+
+	public PhysicsActivity(EntitySystem system) {
+		super(system, new Aspect(TypeManager.getType(PhysicsData.class)));
 
 		listenForCollisions();
 	}
@@ -44,27 +46,20 @@ public class PhysicsActivity extends AspectActivity {
 		m_world.addListener(new CollisionListener() {
 			@Override
 			public boolean collision(ContactConstraint arg0) {
-				Entity entity1 = m_idMapper.getBackward((Integer) arg0
-						.getBody1().getUserData());
-				Entity entity2 = m_idMapper.getBackward((Integer) arg0
-						.getBody2().getUserData());
+				Entity entity1 = m_idMapper.getBackward((Integer) arg0.getBody1().getUserData());
+				Entity entity2 = m_idMapper.getBackward((Integer) arg0.getBody2().getUserData());
 				boolean continue1 = true;
 				boolean continue2 = true;
 
-				ComponentType collisionHandlerType = TypeManager
-						.getType(CollisionHandlerLogic.class);
+				ComponentType collisionHandlerType = TypeManager.getType(CollisionHandlerLogic.class);
 
-				if (entity1.getAspect().encapsulates(
-						new Aspect(collisionHandlerType))) {
-					continue1 = ((CollisionHandlerLogic) entity1
-							.getComponent(collisionHandlerType))
+				if (entity1.getAspect().encapsulates(new Aspect(collisionHandlerType))) {
+					continue1 = ((CollisionHandlerLogic) entity1.getComponent(collisionHandlerType))
 							.handleCollision(entity2);
 				}
 
-				if (entity2.getAspect().encapsulates(
-						new Aspect(collisionHandlerType))) {
-					continue2 = ((CollisionHandlerLogic) entity2
-							.getComponent(collisionHandlerType))
+				if (entity2.getAspect().encapsulates(new Aspect(collisionHandlerType))) {
+					continue2 = ((CollisionHandlerLogic) entity2.getComponent(collisionHandlerType))
 							.handleCollision(entity1);
 				}
 
@@ -77,22 +72,19 @@ public class PhysicsActivity extends AspectActivity {
 			}
 
 			@Override
-			public boolean collision(Body arg0, BodyFixture arg1, Body arg2,
-					BodyFixture arg3, Penetration arg4) {
+			public boolean collision(Body arg0, BodyFixture arg1, Body arg2, BodyFixture arg3, Penetration arg4) {
 				return true;
 			}
 
 			@Override
-			public boolean collision(Body arg0, BodyFixture arg1, Body arg2,
-					BodyFixture arg3, Manifold arg4) {
+			public boolean collision(Body arg0, BodyFixture arg1, Body arg2, BodyFixture arg3, Manifold arg4) {
 				return true;
 			}
 		});
 	}
 
 	/**
-	 * Sets the gravity of the world. Default is 9.8 m/s in the negative y
-	 * direction.
+	 * Sets the gravity of the world. Default is 9.8 m/s in the negative y direction.
 	 * 
 	 * @param vector
 	 */
@@ -101,8 +93,7 @@ public class PhysicsActivity extends AspectActivity {
 	}
 
 	/**
-	 * Gets the gravity of the world. Default is 9.8 m/s in the negative y
-	 * direction.
+	 * Gets the gravity of the world. Default is 9.8 m/s in the negative y direction.
 	 * 
 	 * @return
 	 */
@@ -119,8 +110,7 @@ public class PhysicsActivity extends AspectActivity {
 
 	@Override
 	public void entityAdded(Entity entity) {
-		PhysicsData physics = (PhysicsData) entity.getComponent(TypeManager
-				.getType(PhysicsData.class));
+		PhysicsData physics = (PhysicsData) entity.getComponent(TypeManager.getType(PhysicsData.class));
 		physics.addToWorld(m_world);
 
 		int id = physics.getID();
@@ -137,8 +127,7 @@ public class PhysicsActivity extends AspectActivity {
 
 	@Override
 	public void entityRemoved(Entity entity) {
-		PhysicsData physics = (PhysicsData) entity.getComponent(TypeManager
-				.getType(PhysicsData.class));
+		PhysicsData physics = (PhysicsData) entity.getComponent(TypeManager.getType(PhysicsData.class));
 		physics.removeFromWorld(m_world);
 	}
 }

@@ -10,8 +10,11 @@ import engine.core.network.message.Message;
 public class NetworkInputHub {
 	private ArrayList<NetworkReceiver> m_receivers;
 
-	public NetworkInputHub() {
+	{
 		m_receivers = new ArrayList<NetworkReceiver>();
+	}
+
+	public NetworkInputHub() {
 	}
 
 	public void addNetworkReceiver(NetworkReceiver receiver) {
