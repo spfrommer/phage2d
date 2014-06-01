@@ -39,7 +39,6 @@ public class Animator {
 	public void updateAnimation(int ticks) {
 		if (m_toAnimate != null && m_currentFrame < m_animationSequence.size()) {
 			m_ticksElapsed += ticks;
-			System.out.println("animating");
 			while (m_ticksElapsed >= m_ticksPerFrame && m_currentFrame < m_animationSequence.size()) {
 				Texture frame = m_animationSequence.get(m_currentFrame);
 				m_toAnimate.setImageID(frame.getImageID());
