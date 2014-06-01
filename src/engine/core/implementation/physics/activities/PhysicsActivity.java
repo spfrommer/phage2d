@@ -7,6 +7,7 @@ import org.dyn4j.dynamics.BodyFixture;
 import org.dyn4j.dynamics.CollisionListener;
 import org.dyn4j.dynamics.World;
 import org.dyn4j.dynamics.contact.ContactConstraint;
+import org.dyn4j.dynamics.joint.Joint;
 
 import utils.TwoWayHashMap;
 import utils.physics.Vector;
@@ -102,7 +103,27 @@ public class PhysicsActivity extends AspectActivity {
 	}
 
 	/**
+	 * Adds a Joint to the world.
+	 * 
+	 * @param joint
+	 */
+	public void addJoint(Joint joint) {
+		m_world.addJoint(joint);
+	}
+
+	/**
+	 * Removes a Joint from the world.
+	 * 
+	 * @param joint
+	 */
+	public void removeJoint(Joint joint) {
+		m_world.removeJoint(joint);
+	}
+
+	/**
 	 * Updates the world.
+	 * 
+	 * @param ticks
 	 */
 	public void update(int ticks) {
 		m_world.update(ticks);

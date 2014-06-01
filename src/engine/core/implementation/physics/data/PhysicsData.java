@@ -7,10 +7,14 @@ import java.awt.geom.Rectangle2D;
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.BodyFixture;
 import org.dyn4j.dynamics.World;
+import org.dyn4j.dynamics.joint.Joint;
+import org.dyn4j.dynamics.joint.RevoluteJoint;
+import org.dyn4j.dynamics.joint.WeldJoint;
 import org.dyn4j.geometry.AABB;
 import org.dyn4j.geometry.Convex;
 import org.dyn4j.geometry.Mass;
 
+import utils.physics.JointType;
 import utils.physics.Vector;
 import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
@@ -411,6 +415,15 @@ public class PhysicsData extends DataComponent {
 	}
 
 	/**
+	 * Gets the body - only to be used in JointFactory.
+	 * 
+	 * @return
+	 */
+	private Body getBody() {
+		return m_body;
+	}
+
+	/**
 	 * Will return true if the linear velocity is greater than 1 or the angular velocity is greater than 0.1.
 	 * 
 	 * @return
@@ -476,4 +489,29 @@ public class PhysicsData extends DataComponent {
 		super.setEntity(parent);
 		m_fixture.setFilter(new PhysicsFilter(this.getEntity()));
 	}
+
+	public static class JointFactory {
+		private JointFactory() {
+
+		}
+
+		public static Joint createJoint(PhysicsData physics1, PhysicsData physics2, Vector anchor, JointType type) {
+			Joint joint = null;
+			switch (type) {
+			case WELD: {
+				joint = new WeldJoint(physics1.getBody(), physics2.getBody(), anchor.toPhysicsVector());
+				break;
+			}
+			case REVOLUTE: {
+				joint = new RevoluteJoint(physics1.getBody(), physics2.getBody(), anchor.toPhysicsVector());
+				break;
+			}
+			default: {
+				throw new RuntimeException("Unhandled Joint Type");
+			}
+			}
+			return joint;
+		}
+	}
+
 }

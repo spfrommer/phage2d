@@ -49,7 +49,7 @@ public abstract class Client {
 	private int m_port;
 	private Display m_display;
 
-	private static final boolean DUMP_MESSAGES = false;
+	private boolean m_dumpMessages = false;
 
 	{
 		m_system = new EntitySystem();
@@ -83,6 +83,10 @@ public abstract class Client {
 
 	public void setRenderingActivity(RenderingActivity rendering) {
 		m_rendering = rendering;
+	}
+
+	public void setDumpMessages(boolean dumpMessages) {
+		m_dumpMessages = dumpMessages;
 	}
 
 	/**
@@ -222,7 +226,7 @@ public abstract class Client {
 					System.err.println("Socket connection closed.");
 					System.exit(0);
 				}
-				if (DUMP_MESSAGES)
+				if (m_dumpMessages)
 					System.out.println(message);
 				m_network.bufferMessage(message);
 			}

@@ -23,8 +23,8 @@ public class Camera {
 
 	{
 		m_zoom = 0.3;
-		m_minZoom = 0.08;
-		m_maxZoom = 5;
+		m_minZoom = 0.01;
+		m_maxZoom = 500;
 		m_listeners = new HashSet<CameraListener>();
 	}
 

@@ -1,4 +1,4 @@
-package engine.core.implementation.behavior.logic.controller;
+package examples.spaceship;
 
 import engine.core.framework.Aspect;
 import engine.core.framework.Entity;

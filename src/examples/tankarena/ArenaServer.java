@@ -2,6 +2,7 @@ package examples.tankarena;
 
 import java.util.ArrayList;
 
+import utils.physics.Vector;
 import engine.core.execute.Server;
 import engine.core.implementation.behavior.activity.BehaviorActivity;
 import engine.core.implementation.network.base.decoding.DecoderMapper;
@@ -13,7 +14,8 @@ import engine.core.network.NetworkInputTrigger;
 import engine.core.network.message.MessageDeclaration;
 import engine.core.network.message.command.CommandInterpreter;
 import engine.inputs.InputManager;
-import examples.spaceship.ShaceshipServer;
+import examples.tankarena.entities.TankBody;
+import examples.tankarena.entities.TankTreads;
 
 public class ArenaServer extends Server {
 	private PhysicsActivity m_physics;
@@ -51,8 +53,13 @@ public class ArenaServer extends Server {
 
 	@Override
 	public void onClientConnect(int clientID) {
-		// Entity entity = makeSpaceship(new Vector(0, 0), clientID);
-		// this.getEntitySystem().addEntity(entity);
+		InputManager input = makeInputManager(this.getInputHub(), clientID);
+		TankBody body = new TankBody(new Vector(0, 0), new Vector(0, 0), 50, 100, "chassis1.png", 1, clientID, input);
+		TankTreads treads1 = new TankTreads(new Vector(35, 0), 20, 100, "treads.png", 1, input, body, m_physics, 1);
+		TankTreads treads2 = new TankTreads(new Vector(-35, 0), 20, 100, "treads.png", 1, input, body, m_physics, -1);
+		this.getEntitySystem().addEntity(body);
+		this.getEntitySystem().addEntity(treads1);
+		this.getEntitySystem().addEntity(treads2);
 	}
 
 	private InputManager makeInputManager(NetworkInputHub inputHub, int clientID) {
@@ -62,7 +69,6 @@ public class ArenaServer extends Server {
 		addInputTrigger(networkInputManager, inputHub, "inputbackwards", "Backwards", clientID);
 		addInputTrigger(networkInputManager, inputHub, "inputright", "Right", clientID);
 		addInputTrigger(networkInputManager, inputHub, "inputleft", "Left", clientID);
-		addInputTrigger(networkInputManager, inputHub, "inputT", "t", clientID);
 
 		addInputTrigger(networkInputManager, inputHub, "inputmousex", "MouseWorldX", clientID);
 		addInputTrigger(networkInputManager, inputHub, "inputmousey", "MouseWorldY", clientID);
@@ -85,13 +91,12 @@ public class ArenaServer extends Server {
 		declarations.add(new MessageDeclaration("inputbackwards"));
 		declarations.add(new MessageDeclaration("inputright"));
 		declarations.add(new MessageDeclaration("inputleft"));
-		declarations.add(new MessageDeclaration("inputT"));
 
 		declarations.add(new MessageDeclaration("inputmousex"));
 		declarations.add(new MessageDeclaration("inputmousey"));
 		declarations.add(new MessageDeclaration("inputleftmousedown"));
 		declarations.add(new MessageDeclaration("inputrightmousedown"));
-		ShaceshipServer server = new ShaceshipServer(new CommandInterpreter(declarations), Server.PORT);
+		ArenaServer server = new ArenaServer(new CommandInterpreter(declarations), Server.PORT);
 		server.start();
 	}
 }

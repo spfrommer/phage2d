@@ -31,7 +31,7 @@ public abstract class Server {
 	private int m_port;
 	public static final int PORT = 5000;
 
-	private static final boolean DUMP_MESSAGES = false;
+	private boolean m_dumpMessages = false;
 
 	{
 		m_system = new EntitySystem();
@@ -60,6 +60,10 @@ public abstract class Server {
 		startGameLoop();
 
 		onStop();
+	}
+
+	public void setDumpMessages(boolean dumpMessages) {
+		m_dumpMessages = dumpMessages;
 	}
 
 	private void listen(int port) {
@@ -170,7 +174,7 @@ public abstract class Server {
 					System.exit(0);
 				}
 
-				if (DUMP_MESSAGES)
+				if (m_dumpMessages)
 					System.out.println(message);
 
 				if (message.getCommand().contains("input")) {
