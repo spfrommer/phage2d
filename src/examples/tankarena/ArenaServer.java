@@ -15,6 +15,7 @@ import engine.core.network.message.MessageDeclaration;
 import engine.core.network.message.command.CommandInterpreter;
 import engine.inputs.InputManager;
 import examples.tankarena.entities.TankBody;
+import examples.tankarena.entities.TankGun;
 import examples.tankarena.entities.TankTread;
 
 public class ArenaServer extends Server {
@@ -59,9 +60,11 @@ public class ArenaServer extends Server {
 				"treads3.png", "treads4.png", "treads1.png" }, 1, input, body, m_physics, 1);
 		TankTread treads2 = new TankTread(new Vector(-35, 0), 20, 100, new String[] { "treads1.png", "treads2.png",
 				"treads3.png", "treads4.png", "treads1.png" }, 1, input, body, m_physics, -1);
+		TankGun gun = new TankGun(15, 50, new String[] { "gun1.png" }, 2, input, body, m_physics);
 		this.getEntitySystem().addEntity(body);
 		this.getEntitySystem().addEntity(treads1);
 		this.getEntitySystem().addEntity(treads2);
+		this.getEntitySystem().addEntity(gun);
 	}
 
 	private InputManager makeInputManager(NetworkInputHub inputHub, int clientID) {
