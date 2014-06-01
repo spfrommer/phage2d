@@ -15,7 +15,7 @@ import engine.core.network.message.MessageDeclaration;
 import engine.core.network.message.command.CommandInterpreter;
 import engine.inputs.InputManager;
 import examples.tankarena.entities.TankBody;
-import examples.tankarena.entities.TankTreads;
+import examples.tankarena.entities.TankTread;
 
 public class ArenaServer extends Server {
 	private PhysicsActivity m_physics;
@@ -55,8 +55,10 @@ public class ArenaServer extends Server {
 	public void onClientConnect(int clientID) {
 		InputManager input = makeInputManager(this.getInputHub(), clientID);
 		TankBody body = new TankBody(new Vector(0, 0), new Vector(0, 0), 50, 100, "chassis1.png", 1, clientID, input);
-		TankTreads treads1 = new TankTreads(new Vector(35, 0), 20, 100, "treads.png", 1, input, body, m_physics, 1);
-		TankTreads treads2 = new TankTreads(new Vector(-35, 0), 20, 100, "treads.png", 1, input, body, m_physics, -1);
+		TankTread treads1 = new TankTread(new Vector(35, 0), 20, 100, new String[] { "treads1.png", "treads2.png",
+				"treads3.png", "treads4.png", "treads1.png" }, 1, input, body, m_physics, 1);
+		TankTread treads2 = new TankTread(new Vector(-35, 0), 20, 100, new String[] { "treads1.png", "treads2.png",
+				"treads3.png", "treads4.png", "treads1.png" }, 1, input, body, m_physics, -1);
 		this.getEntitySystem().addEntity(body);
 		this.getEntitySystem().addEntity(treads1);
 		this.getEntitySystem().addEntity(treads2);
