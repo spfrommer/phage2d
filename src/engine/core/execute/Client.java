@@ -1,5 +1,6 @@
 package engine.core.execute;
 
+import java.awt.geom.AffineTransform;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -26,6 +27,9 @@ import engine.graphics.Color;
 import engine.graphics.Renderer;
 import engine.graphics.lwjgl.LWJGLDisplay;
 
+/**
+ * An abstract Client that manages networking details. Extend this class if you want to make a multiplayer game.
+ */
 public abstract class Client {
 	private Socket m_socket;
 	private MessageBuffer m_messageBuffer;
@@ -45,7 +49,7 @@ public abstract class Client {
 	private int m_port;
 	private Display m_display;
 
-	private static final boolean DUMP_MESSAGES = false;
+	private boolean m_dumpMessages = false;
 
 	{
 		m_system = new EntitySystem();
@@ -79,6 +83,10 @@ public abstract class Client {
 
 	public void setRenderingActivity(RenderingActivity rendering) {
 		m_rendering = rendering;
+	}
+
+	public void setDumpMessages(boolean dumpMessages) {
+		m_dumpMessages = dumpMessages;
 	}
 
 	/**
@@ -144,7 +152,7 @@ public abstract class Client {
 			m_network.processWriters();
 			m_network.processMessages();
 
-			updateProcesses(1);
+			update(1);
 
 			render(display);
 
@@ -172,6 +180,9 @@ public abstract class Client {
 		m_viewport.lookThrough(r);
 		m_rendering.render(r);
 
+		r.setTransform(new AffineTransform());
+		renderGui(r);
+
 		display.getRenderer().setColor(Color.WHITE);
 		display.render();
 		display.update(FPS);
@@ -197,7 +208,9 @@ public abstract class Client {
 
 	public abstract void initProcesses();
 
-	public abstract void updateProcesses(int ticks);
+	public abstract void update(int ticks);
+
+	public abstract void renderGui(Renderer renderer);
 
 	private class ServerReader implements Runnable {
 		public ServerReader() {
@@ -213,7 +226,7 @@ public abstract class Client {
 					System.err.println("Socket connection closed.");
 					System.exit(0);
 				}
-				if (DUMP_MESSAGES)
+				if (m_dumpMessages)
 					System.out.println(message);
 				m_network.bufferMessage(message);
 			}

@@ -1,4 +1,4 @@
-package engine.core.implementation.behavior.logic.controller;
+package examples.spaceship;
 
 import utils.physics.Vector;
 import engine.core.framework.Aspect;

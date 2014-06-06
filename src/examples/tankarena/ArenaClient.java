@@ -1,11 +1,12 @@
-package examples.spaceship;
+package examples.tankarena;
 
 import java.util.ArrayList;
 
 import engine.core.execute.Client;
 import engine.core.execute.Server;
 import engine.core.implementation.camera.activities.CameraActivity;
-import engine.core.implementation.camera.activities.ChaseCameraActivity;
+import engine.core.implementation.camera.activities.KeyboardCameraActivity;
+import engine.core.implementation.camera.activities.MovementProfile;
 import engine.core.implementation.camera.base.ViewPort;
 import engine.core.implementation.network.base.decoding.DecoderMapper;
 import engine.core.implementation.network.base.decoding.ErrorDecoder;
@@ -31,7 +32,10 @@ import engine.inputs.mouse.MouseButtonTrigger;
 import engine.inputs.mouse.MouseWorldXTrigger;
 import engine.inputs.mouse.MouseWorldYTrigger;
 
-public class SpaceshipClient extends Client {
+/**
+ * A Client for the tank arena game. Very similar to that of the Spaceship game.
+ */
+public class ArenaClient extends Client {
 	private CameraActivity m_cam;
 
 	private static DecoderMapper s_decoder;
@@ -44,9 +48,9 @@ public class SpaceshipClient extends Client {
 		s_decoder.addMapping(TextureData.class, new TextureDecoder());
 	}
 
-	public SpaceshipClient(CommandInterpreter interpreter, String server, int port) {
+	public ArenaClient(CommandInterpreter interpreter, String server, int port) {
 		super(interpreter, server, port, s_decoder, "images-all.txt");
-		this.getViewPort().getCamera().setZoom(0.2);
+		this.getViewPort().getCamera().setZoom(1);
 	}
 
 	@Override
@@ -56,7 +60,9 @@ public class SpaceshipClient extends Client {
 
 	@Override
 	public void initProcesses() {
-		m_cam = new ChaseCameraActivity(this.getEntitySystem(), this.getID());
+		// m_cam = new ChaseCameraActivity(this.getEntitySystem(), this.getID());
+		m_cam = new KeyboardCameraActivity(this.getEntitySystem(), LWJGLKeyboard.instance(), new MovementProfile(20,
+				0.05));
 	}
 
 	@Override
@@ -79,7 +85,6 @@ public class SpaceshipClient extends Client {
 				"inputforwards", id);
 		addNetworkBinding(inputManager, new KeyTrigger(LWJGLKeyboard.instance().getKey('j')), "Left", "inputleft", id);
 		addNetworkBinding(inputManager, new KeyTrigger(LWJGLKeyboard.instance().getKey('l')), "Right", "inputright", id);
-		addNetworkBinding(inputManager, new KeyTrigger(LWJGLKeyboard.instance().getKey('t')), "t", "inputT", id);
 		addNetworkBinding(inputManager, new MouseWorldXTrigger(mouse, port), "MouseWorldX", "inputmousex", id);
 		addNetworkBinding(inputManager, new MouseWorldYTrigger(mouse, port), "MouseWorldY", "inputmousey", id);
 		addNetworkBinding(inputManager, new MouseButtonTrigger(mouse.getMouseButton(MouseButton.LEFT_NAME)),
@@ -98,7 +103,7 @@ public class SpaceshipClient extends Client {
 				Message message = new Message(command, new MessageParameter[] { new MessageParameter(id),
 						new MessageParameter(value) });
 
-				SpaceshipClient.this.writeMessage(message);
+				ArenaClient.this.writeMessage(message);
 			}
 		});
 	}
@@ -109,13 +114,12 @@ public class SpaceshipClient extends Client {
 		declarations.add(new MessageDeclaration("inputbackwards"));
 		declarations.add(new MessageDeclaration("inputright"));
 		declarations.add(new MessageDeclaration("inputleft"));
-		declarations.add(new MessageDeclaration("inputT"));
 
 		declarations.add(new MessageDeclaration("inputmousex"));
 		declarations.add(new MessageDeclaration("inputmousey"));
 		declarations.add(new MessageDeclaration("inputleftmousedown"));
 		declarations.add(new MessageDeclaration("inputrightmousedown"));
-		SpaceshipClient client = new SpaceshipClient(new CommandInterpreter(declarations), "localhost", Server.PORT);
+		ArenaClient client = new ArenaClient(new CommandInterpreter(declarations), "localhost", Server.PORT);
 		client.start();
 	}
 }

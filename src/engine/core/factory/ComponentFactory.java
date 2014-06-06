@@ -100,7 +100,7 @@ public class ComponentFactory {
 	 * @param layer
 	 * @return
 	 */
-	public static LayerData addLayerData(Entity entity, int layer) {
+	public static LayerData addLayerData(Entity entity, double layer) {
 		LayerData layerData = new LayerData(entity);
 		layerData.layer = layer;
 		entity.addComponent(layerData);

@@ -10,6 +10,9 @@ import engine.core.framework.component.type.ComponentType;
 import engine.core.framework.component.type.TypeManager;
 import engine.core.implementation.behavior.logic.TreeLogic;
 
+/**
+ * Executes TreeLogic Components.
+ */
 public class BehaviorActivity extends AspectActivity {
 	private ComponentType m_treeType;
 

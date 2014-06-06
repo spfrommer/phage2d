@@ -19,6 +19,9 @@ import engine.core.network.message.Message;
 import engine.core.network.message.command.CommandInterpreter;
 import engine.core.network.message.parameter.MessageParameter;
 
+/**
+ * An abstract Server that manages networking details. Extend this class if you want to make a multiplayer game.
+ */
 public abstract class Server {
 	private static NetworkInputHub m_inputHub = new NetworkInputHub();
 	private EntitySystem m_system;
@@ -28,7 +31,7 @@ public abstract class Server {
 	private int m_port;
 	public static final int PORT = 5000;
 
-	private static final boolean DUMP_MESSAGES = false;
+	private boolean m_dumpMessages = false;
 
 	{
 		m_system = new EntitySystem();
@@ -59,6 +62,10 @@ public abstract class Server {
 		onStop();
 	}
 
+	public void setDumpMessages(boolean dumpMessages) {
+		m_dumpMessages = dumpMessages;
+	}
+
 	private void listen(int port) {
 		try {
 			ServerSocket s = new ServerSocket(port);
@@ -86,7 +93,7 @@ public abstract class Server {
 	private void startGameLoop() {
 		long nextGameTick = System.currentTimeMillis();
 		while (true) {
-			updateProcesses(1);
+			update(1);
 			m_network.processWriters();
 			m_network.processMessages();
 			m_network.processUpdates();
@@ -119,7 +126,7 @@ public abstract class Server {
 
 	public abstract void initProcesses();
 
-	public abstract void updateProcesses(int ticks);
+	public abstract void update(int ticks);
 
 	private static int s_clientCount = 0;
 
@@ -167,7 +174,7 @@ public abstract class Server {
 					System.exit(0);
 				}
 
-				if (DUMP_MESSAGES)
+				if (m_dumpMessages)
 					System.out.println(message);
 
 				if (message.getCommand().contains("input")) {

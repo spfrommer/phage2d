@@ -20,12 +20,22 @@ public class Animator {
 		m_ticksPerFrame = ticksPerFrame;
 	}
 
+	/**
+	 * Rewinds the animation
+	 * 
+	 * @param texture
+	 */
 	public void animate(Texture texture) {
 		m_toAnimate = texture;
 		m_ticksElapsed = m_ticksPerFrame;
 		m_currentFrame = 0;
 	}
 
+	/**
+	 * Updates the animation - should be called by AnimationActivity
+	 * 
+	 * @param ticks
+	 */
 	public void updateAnimation(int ticks) {
 		if (m_toAnimate != null && m_currentFrame < m_animationSequence.size()) {
 			m_ticksElapsed += ticks;
@@ -48,5 +58,23 @@ public class Animator {
 			 * m_timeSinceLastUpdate -= m_frameIntervalNanos; }
 			 */
 		}
+	}
+
+	/**
+	 * Returns if this animation has finished playing
+	 * 
+	 * @return
+	 */
+	public boolean isFinished() {
+		return (m_currentFrame >= m_animationSequence.size());
+	}
+
+	/**
+	 * Returns if the animation is rewinded to the first frame and is ready to play.
+	 * 
+	 * @return
+	 */
+	public boolean isReset() {
+		return (m_currentFrame == 0);
 	}
 }
