@@ -17,7 +17,10 @@ public class Point2d extends Point2D {
 	public double getY() {
 		return m_y;
 	}
-
+	@Override
+	public String toString() {
+		return "Point[" + getX() + ", " + getY() + "]";
+	}
 	@Override
 	public void setLocation(double x, double y) {
 		m_x = x;

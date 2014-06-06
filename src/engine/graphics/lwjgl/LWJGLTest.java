@@ -9,6 +9,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
 import utils.image.ImageUtils;
+import engine.core.implementation.camera.base.Camera;
 import engine.core.implementation.camera.base.ViewPort;
 import engine.graphics.Color;
 import engine.graphics.Renderable;
@@ -39,7 +40,7 @@ public class LWJGLTest {
 
 		LWJGLRenderer renderer = LWJGLRenderer.instance();
 
-		ViewPort fakePort = new ViewPort(null);
+		ViewPort fakePort = new ViewPort(new Camera());
 		fakePort.resized(1024, 1024);
 		m_mouse = new LWJGLMouse(fakePort.getViewShape());
 
@@ -75,7 +76,7 @@ public class LWJGLTest {
 		renderer.drawPointLight(400, 100, new Color(1f, 0f, 1f, 1f), new Vector3f(0.001f, 0.005f, 0.00001f));
 		renderer.drawPointLight(300, 150, new Color(0f, 1f, 1f, 1f), new Vector3f(0.001f, 0.005f, 0.00001f));
 
-		renderer.drawPointLight(500, 500, new Color(1f, 1f, 1f, 1f), new Vector3f(0.005f, 0.005f, 0f));
+		renderer.drawPointLight(500, 500, new Color(1f, 1f, 1f, 1f), new Vector3f(0.001f, 0.005f, 0f));
 
 		renderer.render(new Renderable() {
 			@Override
@@ -83,6 +84,11 @@ public class LWJGLTest {
 				r.drawImage(TANK_BODY, 0, 0, 1024, 1024);
 			}
 		});
+		GL11.glBegin(GL11.GL_POLYGON);
+		GL11.glVertex2f(200, 300);
+		GL11.glVertex2f(300, 300);
+		GL11.glVertex2f(300, 200);
+		GL11.glEnd();
 		/*m_light.use();
 		//Setup light
 		Uniform lightLocation = new Uniform(m_light, "lightpos");
