@@ -51,18 +51,14 @@ public class ArenaClient extends Client {
 	public ArenaClient(CommandInterpreter interpreter, String server, int port) {
 		super(interpreter, server, port, s_decoder, "images-all.txt");
 		this.getViewPort().getCamera().setZoom(1);
+
+		m_cam = new KeyboardCameraActivity(this.getEntitySystem(), LWJGLKeyboard.instance(), new MovementProfile(10,
+				0.05));
 	}
 
 	@Override
 	protected void onServerConnect() {
 		createInputManager(this.getID());
-	}
-
-	@Override
-	public void initProcesses() {
-		// m_cam = new ChaseCameraActivity(this.getEntitySystem(), this.getID());
-		m_cam = new KeyboardCameraActivity(this.getEntitySystem(), LWJGLKeyboard.instance(), new MovementProfile(10,
-				0.05));
 	}
 
 	@Override

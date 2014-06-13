@@ -47,16 +47,13 @@ public class SpaceshipClient extends Client {
 	public SpaceshipClient(CommandInterpreter interpreter, String server, int port) {
 		super(interpreter, server, port, s_decoder, "images-all.txt");
 		this.getViewPort().getCamera().setZoom(0.2);
+
+		m_cam = new ChaseCameraActivity(this.getEntitySystem(), this.getID());
 	}
 
 	@Override
 	protected void onServerConnect() {
 		createInputManager(this.getID());
-	}
-
-	@Override
-	public void initProcesses() {
-		m_cam = new ChaseCameraActivity(this.getEntitySystem(), this.getID());
 	}
 
 	@Override

@@ -27,6 +27,11 @@ public class ArenaServer extends Server {
 
 	public ArenaServer(CommandInterpreter interpreter, int port) {
 		super(interpreter, port, new DecoderMapper(), "images-all.txt");
+
+		m_physics = new PhysicsActivity(this.getEntitySystem());
+		m_behavior = new BehaviorActivity(this.getEntitySystem());
+		m_spawning = new SpawningActivity(this.getEntitySystem());
+		m_animation = new AnimationActivity(this.getEntitySystem());
 	}
 
 	@Override
@@ -35,14 +40,6 @@ public class ArenaServer extends Server {
 
 	@Override
 	public void onStop() {
-	}
-
-	@Override
-	public void initProcesses() {
-		m_physics = new PhysicsActivity(this.getEntitySystem());
-		m_behavior = new BehaviorActivity(this.getEntitySystem());
-		m_spawning = new SpawningActivity(this.getEntitySystem());
-		m_animation = new AnimationActivity(this.getEntitySystem());
 	}
 
 	@Override

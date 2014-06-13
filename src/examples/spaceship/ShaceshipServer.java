@@ -44,6 +44,14 @@ public class ShaceshipServer extends Server {
 
 	public ShaceshipServer(CommandInterpreter interpreter, int port) {
 		super(interpreter, port, new DecoderMapper(), "images-all.txt");
+
+		m_physics = new PhysicsActivity(this.getEntitySystem());
+		m_behavior = new BehaviorActivity(this.getEntitySystem());
+		m_spawning = new SpawningActivity(this.getEntitySystem());
+		m_animation = new AnimationActivity(this.getEntitySystem());
+		m_health = new HealthActivity(this.getEntitySystem());
+
+		this.setUPS(59);
 	}
 
 	@Override
@@ -72,15 +80,6 @@ public class ShaceshipServer extends Server {
 
 	@Override
 	public void onStop() {
-	}
-
-	@Override
-	public void initProcesses() {
-		m_physics = new PhysicsActivity(this.getEntitySystem());
-		m_behavior = new BehaviorActivity(this.getEntitySystem());
-		m_spawning = new SpawningActivity(this.getEntitySystem());
-		m_animation = new AnimationActivity(this.getEntitySystem());
-		m_health = new HealthActivity(this.getEntitySystem());
 	}
 
 	@Override
