@@ -50,6 +50,7 @@ public abstract class Client {
 	private Display m_display;
 
 	private boolean m_dumpMessages = false;
+	private double m_lastTimeStamp = System.currentTimeMillis();
 
 	{
 		m_system = new EntitySystem();
@@ -153,7 +154,7 @@ public abstract class Client {
 			m_network.processMessages();
 
 			update(1);
-
+			// this call is actually blocking 16 milliseconds
 			render(display);
 
 			nextGameTick += milliSkip;
@@ -185,7 +186,7 @@ public abstract class Client {
 
 		display.getRenderer().setColor(Color.WHITE);
 		display.render();
-		display.update(FPS);
+		display.update();
 	}
 
 	protected void writeMessage(Message message) {
@@ -226,8 +227,14 @@ public abstract class Client {
 					System.err.println("Socket connection closed.");
 					System.exit(0);
 				}
-				if (m_dumpMessages)
-					System.out.println(message);
+
+				if (m_dumpMessages) {
+					double timeStamp = System.currentTimeMillis();
+					if (timeStamp - m_lastTimeStamp > 1)
+						System.out.println((timeStamp - m_lastTimeStamp) + "---" + message);
+					m_lastTimeStamp = timeStamp;
+				}
+
 				m_network.bufferMessage(message);
 			}
 		}

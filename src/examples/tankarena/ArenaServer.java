@@ -23,6 +23,7 @@ public class ArenaServer extends Server {
 	private BehaviorActivity m_behavior;
 	private SpawningActivity m_spawning;
 	private AnimationActivity m_animation;
+	private TankBody m_testBody;
 
 	public ArenaServer(CommandInterpreter interpreter, int port) {
 		super(interpreter, port, new DecoderMapper(), "images-all.txt");
@@ -55,13 +56,13 @@ public class ArenaServer extends Server {
 	@Override
 	public void onClientConnect(int clientID) {
 		InputManager input = makeInputManager(this.getInputHub(), clientID);
-		TankBody body = new TankBody(new Vector(0, 0), new Vector(0, 0), 50, 100, "chassis1.png", 1, clientID, input);
+		m_testBody = new TankBody(new Vector(0, 0), new Vector(0, 0), 50, 100, "phage2dlogo.png", 1, clientID, input);
 		TankTread treads1 = new TankTread(new Vector(35, 0), 20, 100, new String[] { "treads1.png", "treads2.png",
-				"treads3.png", "treads4.png", "treads1.png" }, 1, input, body, m_physics, 1);
+				"treads3.png", "treads4.png", "treads1.png" }, 1, input, m_testBody, m_physics, 1);
 		TankTread treads2 = new TankTread(new Vector(-35, 0), 20, 100, new String[] { "treads1.png", "treads2.png",
-				"treads3.png", "treads4.png", "treads1.png" }, 1, input, body, m_physics, -1);
-		TankGun gun = new TankGun(15, 50, new String[] { "gun1.png" }, 2, input, body, m_physics);
-		this.getEntitySystem().addEntity(body);
+				"treads3.png", "treads4.png", "treads1.png" }, 1, input, m_testBody, m_physics, -1);
+		TankGun gun = new TankGun(15, 50, new String[] { "gun3.png" }, 2, input, m_testBody, m_physics);
+		this.getEntitySystem().addEntity(m_testBody);
 		this.getEntitySystem().addEntity(treads1);
 		this.getEntitySystem().addEntity(treads2);
 		this.getEntitySystem().addEntity(gun);

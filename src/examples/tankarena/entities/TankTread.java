@@ -20,6 +20,7 @@ import engine.core.implementation.physics.activities.PhysicsActivity;
 import engine.core.implementation.physics.data.PhysicsData;
 import engine.core.implementation.rendering.base.Animator;
 import engine.core.implementation.rendering.data.AnimationData;
+import engine.core.implementation.rendering.logic.TextureRenderingLogic;
 import engine.inputs.InputManager;
 
 public class TankTread extends Entity {
@@ -60,8 +61,9 @@ public class TankTread extends Entity {
 		ComponentFactory.addPhysicsWrappers(this);
 
 		this.addComponent(ComponentFactory.createBasicEncoder(this));
-
 		this.addComponent(new ServerLogic(this));
+
+		this.addComponent(new TextureRenderingLogic(this));
 
 		this.addComponent(new PlayerTreadLogic(this, input, direction));
 

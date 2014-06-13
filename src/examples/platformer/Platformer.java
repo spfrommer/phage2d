@@ -75,12 +75,7 @@ public class Platformer extends Game {
 	}
 
 	@Override
-	public void onInit() {
-
-	}
-
-	@Override
-	public void initProcesses() {
+	public void init() {
 		m_physics = new PhysicsActivity(this.getEntitySystem());
 		m_animation = new AnimationActivity(this.getEntitySystem());
 		m_camera = new KeyboardCameraActivity(this.getEntitySystem(), LWJGLKeyboard.instance(), new MovementProfile(10,

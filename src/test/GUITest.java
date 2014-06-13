@@ -138,7 +138,7 @@ public class GUITest {
 
 		while (!org.lwjgl.opengl.Display.isCloseRequested()) {
 			manager.run(LWJGLRenderer.instance());
-			LWJGLRenderer.instance().update(60);
+			LWJGLRenderer.instance().update();
 		}
 	}
 

@@ -27,6 +27,8 @@ public abstract class Game {
 	private Camera m_camera;
 	private Display m_display;
 
+	private int m_desiredFPS = 40;
+
 	{
 		m_system = new EntitySystem();
 		m_rendering = new BasicRenderingActivity(m_system);
@@ -39,8 +41,7 @@ public abstract class Game {
 
 		m_display = setupDisplay(width, height);
 
-		onInit();
-		initProcesses();
+		init();
 
 		splash.setVisible(false);
 	}
@@ -53,6 +54,20 @@ public abstract class Game {
 		onStop();
 	}
 
+	/**
+	 * Sets the desired FPS of this game. Set by default to 60.
+	 * 
+	 * @param fps
+	 */
+	public void setFPS(int fps) {
+		m_desiredFPS = fps;
+	}
+
+	/**
+	 * Sets the RenderingActivity that this game should use when rendering.
+	 * 
+	 * @param rendering
+	 */
 	public void setRenderingActivity(RenderingActivity rendering) {
 		m_rendering = rendering;
 	}
@@ -75,40 +90,63 @@ public abstract class Game {
 		return display;
 	}
 
-	private final int DESIRED_FPS = 60;
 	private double fpsSum = 0;
 	private int fpsSumCounter = 0;
 
 	private void startGameLoop(Display display) {
-		int milliSkip = 1000 / DESIRED_FPS;
+		AbsoluteTimer timer = new AbsoluteTimer();
+		int milliSkip = 1000 / m_desiredFPS;
 
 		long nextGameTick = System.currentTimeMillis();
-		AbsoluteTimer timer = new AbsoluteTimer();
 		while (!display.destroyRequested()) {
-			timer.start();
+			// timer.start();
 			update(1);
 
 			render(display);
 
-			nextGameTick += milliSkip;
+			/*nextGameTick += milliSkip;
 			long sleepTime = nextGameTick - System.currentTimeMillis();
+			System.out.println("Next time: " + nextGameTick + "; current time: " + System.currentTimeMillis());
 			if (sleepTime > 0) {
+				System.out.println("Sleeping: " + sleepTime);
 				try {
 					Thread.sleep(sleepTime);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-			}
-			timer.stop();
-			fpsSum += 1000000000 / (timer.getTimeNanos());
+			}*/
+			// capFrameRate();
+			// timer.stop();
+
+			/*fpsSum += 1000000000 / (timer.getTimeNanos());
 			fpsSumCounter++;
 			if (fpsSumCounter == 1) {
 				double fps = fpsSum / fpsSumCounter;
 				// System.out.println("FPS: " + fps);
 				fpsSum = 0;
 				fpsSumCounter = 0;
+			}*/
+		}
+	}
+
+	private double m_start = 0;
+	private double m_diff;
+	private double m_wait;
+
+	private void capFrameRate() {
+		m_wait = 1 / m_desiredFPS;
+		m_diff = System.currentTimeMillis() - m_start;
+		System.out.println(m_diff < m_wait);
+		if (m_diff < m_wait) {
+			System.out.println("Sleeping");
+			try {
+				System.out.println("Waiting");
+				Thread.sleep((long) (m_wait - m_diff));
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
+		m_start = System.currentTimeMillis();
 	}
 
 	private void render(Display display) {
@@ -123,7 +161,7 @@ public abstract class Game {
 
 		display.getRenderer().setColor(Color.WHITE);
 		display.render();
-		display.update(DESIRED_FPS);
+		display.update();
 	}
 
 	protected ViewPort getViewPort() {
@@ -138,9 +176,7 @@ public abstract class Game {
 
 	public abstract void onStop();
 
-	public abstract void onInit();
-
-	public abstract void initProcesses();
+	public abstract void init();
 
 	public abstract void update(int ticks);
 

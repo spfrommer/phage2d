@@ -32,6 +32,7 @@ public abstract class Server {
 	public static final int PORT = 5000;
 
 	private boolean m_dumpMessages = false;
+	private double m_lastTimeStamp = System.currentTimeMillis();
 
 	{
 		m_system = new EntitySystem();
@@ -87,8 +88,8 @@ public abstract class Server {
 		}
 	}
 
-	// 60 is the updates per second
-	private final int MILLI_SKIP = 1000 / 60;
+	// 30 is the updates per second
+	private final int MILLI_SKIP = 1000 / 30;
 
 	private void startGameLoop() {
 		long nextGameTick = System.currentTimeMillis();
@@ -96,7 +97,16 @@ public abstract class Server {
 			update(1);
 			m_network.processWriters();
 			m_network.processMessages();
-			m_network.processUpdates();
+			boolean transmitted = m_network.trasmitUpdates();
+
+			if (m_dumpMessages) {
+				if (!transmitted)
+					System.out.println("Did not transmit");
+				double timeStamp = System.currentTimeMillis();
+				if (timeStamp - m_lastTimeStamp > 17)
+					System.out.println(timeStamp - m_lastTimeStamp);
+				m_lastTimeStamp = timeStamp;
+			}
 
 			nextGameTick += MILLI_SKIP;
 			long sleepTime = nextGameTick - System.currentTimeMillis();
@@ -174,8 +184,8 @@ public abstract class Server {
 					System.exit(0);
 				}
 
-				if (m_dumpMessages)
-					System.out.println(message);
+				// if (m_dumpMessages)
+				// System.out.println(message);
 
 				if (message.getCommand().contains("input")) {
 					m_inputHub.broadcast(message);

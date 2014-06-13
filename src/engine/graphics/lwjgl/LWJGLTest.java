@@ -65,7 +65,7 @@ public class LWJGLTest {
 			GL11.glDepthMask(false);
 			render(renderer, true);
 			GL11.glDepthMask(true);
-			LWJGLRenderer.instance().update(60);
+			LWJGLRenderer.instance().update();
 		}
 	}
 

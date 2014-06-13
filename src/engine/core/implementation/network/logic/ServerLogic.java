@@ -27,6 +27,8 @@ public class ServerLogic extends NetworkSyncLogic {
 	private RotationWrapper m_rotation;
 	private VelocityWrapper m_velocity;
 
+	private boolean m_sendInterpolationData = false;
+
 	public ServerLogic() {
 		super(new Aspect(TypeManager.getType(EncoderWrapper.class), TypeManager.getType(TextureData.class),
 				TypeManager.getType(PositionWrapper.class), TypeManager.getType(RotationWrapper.class),
@@ -37,6 +39,13 @@ public class ServerLogic extends NetworkSyncLogic {
 		super(parent, new Aspect(TypeManager.getType(EncoderWrapper.class), TypeManager.getType(TextureData.class),
 				TypeManager.getType(PositionWrapper.class), TypeManager.getType(RotationWrapper.class),
 				TypeManager.getType(VelocityWrapper.class)));
+	}
+
+	/**
+	 * Sets whether the server should send velocity information for the client to do interpolation with.
+	 */
+	public void setSendInterpolationData(boolean send) {
+		m_sendInterpolationData = send;
 	}
 
 	@Override
@@ -58,31 +67,33 @@ public class ServerLogic extends NetworkSyncLogic {
 	private double m_lastRotation = 0;
 	private double m_lastTextureID = -1;
 
+	double m_lastTimeStamp = System.currentTimeMillis();
+
 	@Override
 	public ArrayList<Message> getUpdateMessages() {
 		ArrayList<Message> updates = new ArrayList<Message>();
-		if (m_lastPosition.subtract(m_position.getPosition()).length() > 0.5) {
+		if (m_lastPosition.subtract(m_position.getPosition()).length() > 0.01) {
 			MessageParameter[] positionParameters = new MessageParameter[4];
 			positionParameters[0] = new MessageParameter(getID());
 			positionParameters[1] = new MessageParameter(0);
-			positionParameters[2] = new MessageParameter(m_position.getPosition().getX());
-			positionParameters[3] = new MessageParameter(m_position.getPosition().getY());
+			positionParameters[2] = new MessageParameter(Math.floor(m_position.getPosition().getX() * 10) / 10);
+			positionParameters[3] = new MessageParameter(Math.floor(m_position.getPosition().getY() * 10) / 10);
 			updates.add(new Message("update", positionParameters));
 
 			m_lastPosition = m_position.getPosition().clone();
 		}
 
-		if (Math.abs(m_lastRotation - m_rotation.getRotation()) > 0.5) {
+		if (Math.abs(m_lastRotation - m_rotation.getRotation()) > 0.01) {
 			MessageParameter[] rotationParameters = new MessageParameter[3];
 			rotationParameters[0] = new MessageParameter(getID());
 			rotationParameters[1] = new MessageParameter(1);
-			rotationParameters[2] = new MessageParameter(m_rotation.getRotation());
+			rotationParameters[2] = new MessageParameter(Math.floor(m_rotation.getRotation() * 10) / 10);
 			updates.add(new Message("update", rotationParameters));
 
 			m_lastRotation = m_rotation.getRotation();
 		}
 
-		if (m_lastVelocity.subtract(m_velocity.getVelocity()).length() > 0.5) {
+		if (m_sendInterpolationData && m_lastVelocity.subtract(m_velocity.getVelocity()).length() > 0.01) {
 			MessageParameter[] velocityParameters = new MessageParameter[4];
 			velocityParameters[0] = new MessageParameter(getID());
 			velocityParameters[1] = new MessageParameter(2);
@@ -90,6 +101,8 @@ public class ServerLogic extends NetworkSyncLogic {
 			velocityParameters[3] = new MessageParameter(m_velocity.getVelocity().getY());
 
 			updates.add(new Message("update", velocityParameters));
+
+			m_lastVelocity = m_velocity.getVelocity().clone();
 		}
 
 		if (m_lastTextureID == -1)

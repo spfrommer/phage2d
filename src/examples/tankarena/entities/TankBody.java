@@ -13,6 +13,7 @@ import engine.core.implementation.network.base.encoding.BasicDataEncoder;
 import engine.core.implementation.network.logic.ServerLogic;
 import engine.core.implementation.network.wrappers.EncoderWrapper;
 import engine.core.implementation.physics.data.PhysicsData;
+import engine.core.implementation.rendering.logic.TextureRenderingLogic;
 import engine.inputs.InputManager;
 
 /**
@@ -28,11 +29,11 @@ public class TankBody extends Entity {
 	 * @param height
 	 * @param texture
 	 * @param layer
-	 * @param clientID
+	 * @param focusID
 	 * @param input
 	 */
 	public TankBody(Vector position, Vector center, double width, double height, String texture, double layer,
-			int clientID, InputManager input) {
+			int focusID, InputManager input) {
 		super();
 
 		PhysicsData physics = ComponentFactory.addPhysicsData(this, position, 0, new Rectangle(width, height));
@@ -41,6 +42,9 @@ public class TankBody extends Entity {
 		physics.setMovementFriction(10);
 		physics.setCenter(center);
 		physics.setMass(100);
+		physics.setVelocity(new Vector(0, 100));
+		physics.setRotationalVelocity(1);
+		// ComponentFactory.addShellData(this, position, 0);
 
 		ComponentFactory.addTextureData(this, new Texture(ImageUtils.getID(texture), width, height));
 
@@ -48,12 +52,14 @@ public class TankBody extends Entity {
 		ComponentFactory.addHealthData(this, 100);
 		ComponentFactory.addNameData(this, "tankbody");
 		ComponentFactory.addLayerData(this, layer);
-		ComponentFactory.addCameraFocusData(this, clientID);
+		ComponentFactory.addCameraFocusData(this, focusID);
 		ComponentFactory.addPhysicsWrappers(this);
 
 		EncoderWrapper encoder = ComponentFactory.createBasicEncoder(this);
 		encoder.addDataEncoder(TypeManager.getType(CameraFocusData.class), new BasicDataEncoder());
 		this.addComponent(encoder);
+
+		this.addComponent(new TextureRenderingLogic(this));
 
 		this.addComponent(new ServerLogic(this));
 	}

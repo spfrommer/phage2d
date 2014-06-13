@@ -188,11 +188,13 @@ public class NetworkSyncActivity extends AspectActivity {
 
 				if (message.getCommand().equals("update")) {
 					Entity receiver = m_idMapper.getBackward((message.getParameters()[0]).getIntValue());
+
 					if (receiver == null)
 						System.err.println("Null receiver in NetworkSyncProcess.handleMessages(): " + message);
-					NetworkSyncLogic component = (NetworkSyncLogic) receiver.getComponent(TypeManager
+
+					NetworkSyncLogic syncLogic = (NetworkSyncLogic) receiver.getComponent(TypeManager
 							.getType(NetworkSyncLogic.class));
-					component.processMessage(message);
+					syncLogic.processMessage(message);
 				} else if (message.getCommand().equals("addentity")) {
 					Entity entity = EntityDecoder.decode(message.getParameters()[0].getStringValue(), m_decoder);
 					this.getSystem().addEntity(entity);
@@ -209,13 +211,14 @@ public class NetworkSyncActivity extends AspectActivity {
 
 	/**
 	 * Transmits all updates that Components want the other side to know.
+	 * 
+	 * @return if any data was transmitted
 	 */
-	public void processUpdates() {
+	public boolean trasmitUpdates() {
 		List<Entity> entities = this.getEntities();
-		// concurrent mod
-		// for (Entity entity : entities) {
-		for (int i = 0; i < entities.size(); i++) {
-			Entity entity = entities.get(i);
+
+		boolean transmitted = false;
+		for (Entity entity : entities) {
 			NetworkSyncLogic component = (NetworkSyncLogic) entity.getComponent(m_syncType);
 			ArrayList<Message> updateMessages = component.getUpdateMessages();
 			for (Message updateMessage : updateMessages) {
@@ -226,8 +229,10 @@ public class NetworkSyncActivity extends AspectActivity {
 						e.printStackTrace();
 					}
 				}
+				transmitted = true;
 			}
 		}
+		return transmitted;
 	}
 
 	/**

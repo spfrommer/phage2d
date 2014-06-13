@@ -12,6 +12,8 @@ import utils.physics.JointType;
 import engine.core.factory.ComponentFactory;
 import engine.core.framework.Entity;
 import engine.core.framework.component.type.TypeManager;
+import engine.core.implementation.behavior.base.composite.ParallelComposite;
+import engine.core.implementation.behavior.base.composite.SequencerComposite;
 import engine.core.implementation.behavior.base.leaf.action.executor.ActionExecutorLeaf;
 import engine.core.implementation.behavior.logic.TreeLogic;
 import engine.core.implementation.network.logic.ServerLogic;
@@ -62,9 +64,19 @@ public class TankGun extends Entity {
 		this.addComponent(new ServerLogic(this));
 
 		this.addComponent(new PlayerGunAimerLogic(this, input));
+		this.addComponent(new ShootingLogic());
 
 		TreeLogic tree = new TreeLogic(this);
-		tree.setRoot(new ActionExecutorLeaf<PlayerGunAimerLogic>(PlayerGunAimerLogic.class));
+
+		ParallelComposite concurrent = new ParallelComposite();
+
+		SequencerComposite firing = new SequencerComposite();
+		firing.addChild(new LeftMouseHeldCondition(input));
+		firing.addChild(new ActionExecutorLeaf<ShootingLogic>(ShootingLogic.class));
+		concurrent.addChild(firing);
+		concurrent.addChild(new ActionExecutorLeaf<PlayerGunAimerLogic>(PlayerGunAimerLogic.class));
+		tree.setRoot(concurrent);
+
 		this.addComponent(tree);
 	}
 }

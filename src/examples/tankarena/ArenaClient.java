@@ -61,7 +61,7 @@ public class ArenaClient extends Client {
 	@Override
 	public void initProcesses() {
 		// m_cam = new ChaseCameraActivity(this.getEntitySystem(), this.getID());
-		m_cam = new KeyboardCameraActivity(this.getEntitySystem(), LWJGLKeyboard.instance(), new MovementProfile(20,
+		m_cam = new KeyboardCameraActivity(this.getEntitySystem(), LWJGLKeyboard.instance(), new MovementProfile(10,
 				0.05));
 	}
 

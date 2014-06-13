@@ -7,6 +7,7 @@ darkmetal.jpg
 darkpanel.jpg
 gun1.png
 gun2.png
+gun3.png
 terrain1.jpg
 terrain2.png
 terrain3.jpg

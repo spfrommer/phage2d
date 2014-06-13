@@ -40,7 +40,7 @@ public class ResizingTest {
 
 		while (!Display.isCloseRequested()) {
 			r.render(renderer, new AnimationState(), 10, 10);
-			LWJGLRenderer.instance().update(60);
+			LWJGLRenderer.instance().update();
 		}
 	}
 }
