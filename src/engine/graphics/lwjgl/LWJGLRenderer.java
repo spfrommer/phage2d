@@ -1,6 +1,5 @@
 package engine.graphics.lwjgl;
 
-import java.awt.Point;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
@@ -22,10 +21,12 @@ import org.lwjgl.opengl.GL11;
 
 import utils.Point2f;
 import utils.shape.ShapeUtils;
+import utils.shape.Triangle;
 import engine.graphics.Color;
 import engine.graphics.PostProcessor;
 import engine.graphics.Renderable;
 import engine.graphics.Renderer;
+import engine.graphics.Triangulator;
 import engine.graphics.font.Font;
 import engine.graphics.font.Font.Glyph;
 import engine.graphics.lwjgl.shader.FragmentShader;
@@ -110,7 +111,27 @@ public class LWJGLRenderer implements Renderer {
 	public Color getColor() {
 		return m_color;
 	}
-
+	public void clearClip() {
+		GL11.glStencilMask(0xFF);
+		GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
+		m_clip = null;
+		GL11.glDisable(GL11.GL_STENCIL_TEST);
+	}
+	public void occlude(Shape s) {
+		GL11.glEnable(GL11.GL_STENCIL_TEST);
+		GL11.glColorMask(false, false, false, false);
+		GL11.glDepthMask(false);
+		GL11.glStencilMask(0xFF);
+		GL11.glStencilFunc(GL11.GL_NEVER, 1, 0xFF);
+		GL11.glStencilOp(GL11.GL_REPLACE, GL11.GL_KEEP, GL11.GL_KEEP);
+		fill(s);
+		// Back to normal rendering mode
+		GL11.glColorMask(true, true, true, true);
+		GL11.glDepthMask(true);
+		GL11.glStencilMask(0x00);
+		// draw where stencil's value is 0
+		GL11.glStencilFunc(GL11.GL_EQUAL, 0, 0xFF);
+	}
 	/*
 	 * Clip functions
 	 */
@@ -138,10 +159,11 @@ public class LWJGLRenderer implements Renderer {
 		GL11.glDepthMask(true);
 		GL11.glStencilMask(0x00);
 		// draw where stencil's value is 0
-		// GL11.glStencilFunc(GL11.GL_EQUAL, 0, 0xFF);
-		/* (nothing to draw) */
+		 GL11.glStencilFunc(GL11.GL_EQUAL, 0, 0xFF);
+		 
+		///* (nothing to draw) */
 		// draw only where stencil's value is 1
-		GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
+		//GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
 	}
 
 	@Override
@@ -197,23 +219,37 @@ public class LWJGLRenderer implements Renderer {
 		GL11.glVertex2f(x2, y2);
 		GL11.glEnd();
 	}
-
 	@Override
-	public void drawLineLoop(ArrayList<Point> points) {
+	public void drawLines(ArrayList<Point2D> points) {
+		GL11.glBegin(GL11.GL_LINES);
+		for (int i = 0; i < points.size(); i++) {
+			Point2D point = points.get(i);
+			//If this is not the first, finish up the previous one
+			if (i != 0 && i != (points.size() - 1)) GL11.glVertex2f((float) point.getX(), (float) point.getY());
+			GL11.glVertex2f((float) point.getX(), (float) point.getY());
+		}
+		GL11.glEnd();
+	}
+	@Override
+	public void drawLineLoop(ArrayList<Point2D> points) {
 		GL11.glBegin(GL11.GL_LINE_LOOP);
 		for (int i = 0; i < points.size(); i++) {
-			Point point = points.get(i);
-			GL11.glVertex2d(point.getX(), point.getY());
+			Point2D point = points.get(i);
+			GL11.glVertex2f((float) point.getX(), (float) point.getY());
 		}
 		GL11.glEnd();
 	}
 
 	@Override
 	public void fill(Shape shape) {
-		ArrayList<Point2D> points = ShapeUtils.getPoints(shape);
-		GL11.glBegin(GL11.GL_TRIANGLE_FAN);
-		for (Point2D point : points) {
-			GL11.glVertex2f((float) point.getX(), (float) point.getY());
+		ArrayList<Vector2f> points = ShapeUtils.getVectors(shape, true);
+		ArrayList<Triangle> tris = Triangulator.s_triangulate(points);
+		System.out.println("Filling: " + points.size());
+		GL11.glBegin(GL11.GL_TRIANGLES);
+		for (Triangle tri : tris) {
+			GL11.glVertex2f(tri.get(0).getX(), tri.get(0).getY());
+			GL11.glVertex2f(tri.get(1).getX(), tri.get(1).getY());
+			GL11.glVertex2f(tri.get(2).getX(), tri.get(2).getY());
 		}
 		GL11.glEnd();
 	}
@@ -221,15 +257,17 @@ public class LWJGLRenderer implements Renderer {
 	@Override
 	public void draw(Shape shape) {
 		PathIterator iterator = shape.getPathIterator(new AffineTransform());
-		ArrayList<Point> points = new ArrayList<Point>();
+		ArrayList<Point2D> points = new ArrayList<Point2D>();
 		float[] coords = new float[6];
 		while (!iterator.isDone()) {
 			iterator.currentSegment(coords);
-			int x = (int) coords[0];
-			int y = (int) coords[1];
-			points.add(new Point(x, y));
+			float x = (float) coords[0];
+			float y = (float) coords[1];
+			points.add(new Point2f(x, y));
 			iterator.next();
 		}
+		points.remove(points.size() - 1);
+		System.out.println("Drawing loop: " + points.size());
 		drawLineLoop(points);
 	}
 

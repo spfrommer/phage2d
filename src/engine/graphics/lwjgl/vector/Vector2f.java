@@ -1,6 +1,8 @@
 package engine.graphics.lwjgl.vector;
 
 import java.nio.FloatBuffer;
+import java.util.HashMap;
+
 
 public class Vector2f extends Vector {
 	public float x, y;
@@ -37,6 +39,12 @@ public class Vector2f extends Vector {
 		set(getX() * factor, getY() * factor);
 		return this;
 	}
+	public Vector2f perpendicular(boolean clockwise) {
+		return perpendicular(clockwise, this);
+	}
+	public Vector2f perpendicular(boolean clockwise, Vector2f dest) {
+		return perpendicular(this, clockwise, dest);
+	}
 
 	public Vector2f negate() {//puts the negation of itself in itself
 		return negate(this);
@@ -67,9 +75,26 @@ public class Vector2f extends Vector {
 		setX(buf.get());
 		setY(buf.get());
 	}
-	
 	public String toString() {
 		return "[" + getX() + ", " + getY() + "]";
+	}
+	public int hashCode() {
+		int hashCode = 1;
+		int xh = Float.floatToIntBits(getX());
+		hashCode = 31 * hashCode + xh;
+		int xy = Float.floatToIntBits(getY());
+		hashCode = 31 * hashCode + xy;
+		return hashCode;
+	}
+	public boolean equals(Object o) {
+		if (o instanceof Vector2f) {
+			Vector2f vector = (Vector2f) o;
+			return vector.getX() == getX() && vector.getY() == getY();
+		}
+		return false;
+	}	
+	public Vector2f clone() {
+		return new Vector2f(this);
 	}
 
 	public static Vector2f add(Vector2f left, Vector2f right, Vector2f dest) {
@@ -90,5 +115,23 @@ public class Vector2f extends Vector {
 		if (dls < -1f) dls = -1f;
 		else if (dls > 1f) dls = 1f;
 		return (float) Math.acos(dls);
+	}
+	/**
+	 * Finds a perpendicular vector either by turnign the current one clockwise or cc
+	 * @param vec  the vector to find a vector parallel to
+	 * @para clockwise whether to turn clockwise(true), or counterclockwise(false)
+	 * @para dest the destination vector
+	 */
+	public static Vector2f perpendicular(Vector2f vec, boolean clockwise, Vector2f dest) {
+		if (dest == null) dest = new Vector2f();
+		float nx = clockwise ?  vec.getY() : -vec.getY();
+		float ny = clockwise ? -vec.getX() :  vec.getX();
+		dest.setX(nx);
+		dest.setY(ny);
+		return dest;
+	}
+	public static void main(String[] args) {
+		HashMap<Vector2f, Boolean> map = new HashMap<Vector2f, Boolean>();
+		map.put(new Vector2f(0f, 0f), true);
 	}
 }

@@ -1,8 +1,8 @@
 package engine.graphics;
 
-import java.awt.Point;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -19,7 +19,8 @@ public interface Renderer {
 	
 	public void setColor(Color color);
 	public Color getColor();
-	
+	public void occlude(Shape clip);
+	public void clearClip();
 	public void setClip(Shape clip);
 	public Shape getClip();
 	
@@ -27,7 +28,8 @@ public interface Renderer {
 	public void drawRect(float x, float y, float width, float height);
 	
 	public void drawLine(float x1, float y1, float x2, float y2);
-	public void drawLineLoop(ArrayList<Point> points);
+	public void drawLines(ArrayList<Point2D> points);
+	public void drawLineLoop(ArrayList<Point2D> points);
 	
 	public void fill(Shape shape);
 	public void draw(Shape shape);

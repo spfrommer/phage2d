@@ -15,7 +15,7 @@ public class ShapeSaver {
 	public static void write(Shape s, OutputStream out) throws IOException {
 		PrintWriter writer = new PrintWriter(out);
 		writer.println("shape");
-		ArrayList<Point2D> points = ShapeUtils.getPoints(s);
+		ArrayList<Point2D> points = ShapeUtils.getPoints(s, true);
 		for (Point2D point : points) {
 			writer.println(point.getX() + ", " + point.getY());
 		}

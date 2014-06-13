@@ -8,6 +8,8 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import utils.Point2f;
+
 public class ShapeIterator implements Iterator<Point2D>, Iterable<Point2D> {
 	Shape m_shape = null;
 	PathIterator m_iterator = null;
@@ -33,7 +35,7 @@ public class ShapeIterator implements Iterator<Point2D>, Iterable<Point2D> {
 			int type = m_iterator.currentSegment(point);
 			m_count++;
 			m_iterator.next();
-			return new Point((int) point[0], (int) point[1]);
+			return new Point2f((int) point[0], (int) point[1]);
 		} else {
 			return null;
 		}
@@ -51,9 +53,9 @@ public class ShapeIterator implements Iterator<Point2D>, Iterable<Point2D> {
 
 	public static void main(String[] args) {
 		ArrayList<Point2D> points = new ArrayList<Point2D>();
-		points.add(new Point(0, 0));
-		points.add(new Point(1, 0));
-		points.add(new Point(0, 1));
+		points.add(new Point2f(0, 0));
+		points.add(new Point2f(1, 0));
+		points.add(new Point2f(0, 1));
 		Shape s = ShapeUtils.createShape(points);
 		ShapeIterator iterator = new ShapeIterator(s, null);
 		for (Point2D point : iterator) {
