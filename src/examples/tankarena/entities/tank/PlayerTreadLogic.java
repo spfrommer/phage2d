@@ -1,4 +1,4 @@
-package examples.tankarena.entities;
+package examples.tankarena.entities.tank;
 
 import utils.physics.Vector;
 import engine.core.framework.Aspect;
@@ -75,10 +75,6 @@ public class PlayerTreadLogic extends LogicComponent implements ActionExecutable
 			if (treads.isFinished() || treads.isReset())
 				treads.animate(m_texture.texture);
 		}
-		// System.out.println(m_texture.texture.getImageID());
-		// if we are turning, but not accelerating
-
-		// m_physics.applyTorque(turn * ticks * 10000000);
 		return ExecutionState.RUNNING;
 	}
 

@@ -1,4 +1,4 @@
-package examples.tankarena.entities;
+package examples.tankarena.entities.tank;
 
 import org.dyn4j.geometry.Rectangle;
 
@@ -44,7 +44,6 @@ public class TankBody extends Entity {
 		physics.setMass(100);
 		physics.setVelocity(new Vector(0, 100));
 		physics.setRotationalVelocity(1);
-		// ComponentFactory.addShellData(this, position, 0);
 
 		ComponentFactory.addTextureData(this, new Texture(ImageUtils.getID(texture), width, height));
 
@@ -59,6 +58,7 @@ public class TankBody extends Entity {
 		encoder.addDataEncoder(TypeManager.getType(CameraFocusData.class), new BasicDataEncoder());
 		this.addComponent(encoder);
 
+		// for single player mode
 		this.addComponent(new TextureRenderingLogic(this));
 
 		this.addComponent(new ServerLogic(this));

@@ -1,4 +1,4 @@
-package examples.tankarena.entities;
+package examples.tankarena.entities.tank;
 
 import utils.physics.Vector;
 import engine.core.framework.Aspect;

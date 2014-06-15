@@ -1,4 +1,4 @@
-package engine.core.implementation.spawning.activities;
+package examples.spaceship.spawning.activities;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import engine.core.framework.Entity;
 import engine.core.framework.EntitySystem;
 import engine.core.framework.component.type.ComponentType;
 import engine.core.framework.component.type.TypeManager;
-import engine.core.implementation.spawning.logic.SpawningLogic;
+import examples.spaceship.spawning.logic.SpawningLogic;
 
 /**
  * Calls upon Entities to spawn other Entities if need be.

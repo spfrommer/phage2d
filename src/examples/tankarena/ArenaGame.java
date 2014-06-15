@@ -10,18 +10,16 @@ import engine.core.implementation.camera.activities.MovementProfile;
 import engine.core.implementation.physics.activities.PhysicsActivity;
 import engine.core.implementation.physics.data.PhysicsData;
 import engine.core.implementation.rendering.activities.AnimationActivity;
-import engine.core.implementation.spawning.activities.SpawningActivity;
 import engine.graphics.Renderer;
 import engine.graphics.lwjgl.LWJGLKeyboard;
 import engine.inputs.InputManager;
 import engine.inputs.keyboard.KeyTrigger;
-import examples.tankarena.entities.TankBody;
+import examples.tankarena.entities.tank.TankBody;
 
 public class ArenaGame extends Game {
 	private CameraActivity m_cam;
 	private PhysicsActivity m_physics;
 	private BehaviorActivity m_behavior;
-	private SpawningActivity m_spawning;
 	private AnimationActivity m_animation;
 
 	private TankBody m_tank;
@@ -55,7 +53,6 @@ public class ArenaGame extends Game {
 				0.05));
 		m_physics = new PhysicsActivity(this.getEntitySystem());
 		m_behavior = new BehaviorActivity(this.getEntitySystem());
-		m_spawning = new SpawningActivity(this.getEntitySystem());
 		m_animation = new AnimationActivity(this.getEntitySystem());
 
 		InputManager input = makeInputManager();
@@ -82,7 +79,6 @@ public class ArenaGame extends Game {
 		m_behavior.update(ticks);
 		m_physics.update(ticks);
 		m_animation.update(ticks);
-		m_spawning.spawn(this.getEntitySystem(), ticks);
 
 		PhysicsData data = (PhysicsData) m_tank.getComponent(TypeManager.getType(PhysicsData.class));
 		data.setPosition(data.getPosition().add(new Vector(0, 1)));

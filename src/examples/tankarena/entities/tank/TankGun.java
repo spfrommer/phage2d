@@ -1,4 +1,4 @@
-package examples.tankarena.entities;
+package examples.tankarena.entities.tank;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,7 @@ import utils.image.Texture;
 import utils.physics.JointType;
 import engine.core.factory.ComponentFactory;
 import engine.core.framework.Entity;
+import engine.core.framework.EntitySystem;
 import engine.core.framework.component.type.TypeManager;
 import engine.core.implementation.behavior.base.composite.ParallelComposite;
 import engine.core.implementation.behavior.base.composite.SequencerComposite;
@@ -22,11 +23,13 @@ import engine.core.implementation.physics.data.PhysicsData;
 import engine.core.implementation.physics.logic.filter.NoneCollisionFilterLogic;
 import engine.core.implementation.rendering.base.Animator;
 import engine.core.implementation.rendering.data.AnimationData;
+import engine.core.implementation.rendering.logic.TextureRenderingLogic;
 import engine.inputs.InputManager;
+import examples.tankarena.entities.missile.Missile;
 
 public class TankGun extends Entity {
 	public TankGun(double width, double height, String[] textures, int layer, InputManager input, TankBody body,
-			PhysicsActivity physicsActivity) {
+			PhysicsActivity physicsActivity, EntitySystem system) {
 		super();
 
 		PhysicsData tankPhysics = (PhysicsData) body.getComponent(TypeManager.getType(PhysicsData.class));
@@ -63,8 +66,12 @@ public class TankGun extends Entity {
 
 		this.addComponent(new ServerLogic(this));
 
+		// for single player mode
+		this.addComponent(new TextureRenderingLogic(this));
+
 		this.addComponent(new PlayerGunAimerLogic(this, input));
-		this.addComponent(new ShootingLogic());
+		this.addComponent(new ShootingLogic(this, system, new Missile(new Rectangle(20, 20), layer, new Texture(
+				ImageUtils.getID("portal1.png"), 20, 20))));
 
 		TreeLogic tree = new TreeLogic(this);
 

@@ -27,13 +27,13 @@ import engine.core.implementation.physics.logic.filter.AllCollisionFilterLogic;
 import engine.core.implementation.physics.logic.filter.ExclusiveCollisionFilterLogic;
 import engine.core.implementation.physics.logic.handler.BulletCollisionHandlerLogic;
 import engine.core.implementation.rendering.activities.AnimationActivity;
-import engine.core.implementation.spawning.activities.SpawningActivity;
-import engine.core.implementation.spawning.logic.GunLogic;
 import engine.core.network.NetworkInputHub;
 import engine.core.network.NetworkInputTrigger;
 import engine.core.network.message.MessageDeclaration;
 import engine.core.network.message.command.CommandInterpreter;
 import engine.inputs.InputManager;
+import examples.spaceship.spawning.activities.SpawningActivity;
+import examples.spaceship.spawning.logic.GunLogic;
 
 public class ShaceshipServer extends Server {
 	private PhysicsActivity m_physics;

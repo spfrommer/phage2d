@@ -1,4 +1,4 @@
-package examples.tankarena.entities;
+package examples.tankarena.entities.tank;
 
 import engine.core.framework.Entity;
 import engine.core.implementation.behavior.base.ExecutionState;
@@ -6,6 +6,9 @@ import engine.core.implementation.behavior.base.Node;
 import engine.core.implementation.behavior.base.leaf.ConditionLeaf;
 import engine.inputs.InputManager;
 
+/**
+ * Checks if the left mouse button is held down.
+ */
 public class LeftMouseHeldCondition extends ConditionLeaf {
 	private InputManager m_input;
 

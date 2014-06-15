@@ -1,4 +1,4 @@
-package examples.tankarena.entities;
+package examples.tankarena.entities.tank;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +63,7 @@ public class TankTread extends Entity {
 		this.addComponent(ComponentFactory.createBasicEncoder(this));
 		this.addComponent(new ServerLogic(this));
 
+		// for single player mode
 		this.addComponent(new TextureRenderingLogic(this));
 
 		this.addComponent(new PlayerTreadLogic(this, input, direction));

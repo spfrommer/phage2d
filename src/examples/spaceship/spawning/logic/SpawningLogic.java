@@ -1,4 +1,4 @@
-package engine.core.implementation.spawning.logic;
+package examples.spaceship.spawning.logic;
 
 import java.util.List;
 
