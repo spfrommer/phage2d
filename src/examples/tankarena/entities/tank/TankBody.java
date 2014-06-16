@@ -13,6 +13,7 @@ import engine.core.implementation.network.base.encoding.BasicDataEncoder;
 import engine.core.implementation.network.logic.ServerLogic;
 import engine.core.implementation.network.wrappers.EncoderWrapper;
 import engine.core.implementation.physics.data.PhysicsData;
+import engine.core.implementation.physics.wrappers.PhysicsTransformWrapper;
 import engine.core.implementation.rendering.logic.TextureRenderingLogic;
 import engine.inputs.InputManager;
 
@@ -52,7 +53,7 @@ public class TankBody extends Entity {
 		ComponentFactory.addNameData(this, "tankbody");
 		ComponentFactory.addLayerData(this, layer);
 		ComponentFactory.addCameraFocusData(this, focusID);
-		ComponentFactory.addPhysicsWrappers(this);
+		this.addComponent(new PhysicsTransformWrapper(this));
 
 		EncoderWrapper encoder = ComponentFactory.createBasicEncoder(this);
 		encoder.addDataEncoder(TypeManager.getType(CameraFocusData.class), new BasicDataEncoder());

@@ -36,14 +36,6 @@ public class PhysicsToShellEncoder implements DataEncoder {
 		centeryElement.appendChild(doc.createTextNode("" + physicsComponent.getCenter().getY()));
 		shellElement.appendChild(centeryElement);
 
-		Element velocityxElement = doc.createElement("velocityx");
-		velocityxElement.appendChild(doc.createTextNode("" + physicsComponent.getVelocity().getX()));
-		shellElement.appendChild(velocityxElement);
-
-		Element velocityyElement = doc.createElement("velocityy");
-		velocityyElement.appendChild(doc.createTextNode("" + physicsComponent.getVelocity().getY()));
-		shellElement.appendChild(velocityyElement);
-
 		return shellElement;
 	}
 }

@@ -27,6 +27,7 @@ public class BehaviorActivity extends AspectActivity {
 	public void update(int ticks) {
 		List<Entity> entities = super.getEntities();
 
+		// concurrent modification exception?
 		for (Entity entity : entities) {
 			TreeLogic tree = (TreeLogic) entity.getComponent(m_treeType);
 			tree.update(ticks);

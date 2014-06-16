@@ -25,7 +25,8 @@ import engine.core.implementation.physics.activities.PhysicsActivity;
 import engine.core.implementation.physics.data.PhysicsData;
 import engine.core.implementation.physics.logic.filter.AllCollisionFilterLogic;
 import engine.core.implementation.physics.logic.filter.ExclusiveCollisionFilterLogic;
-import engine.core.implementation.physics.logic.handler.BulletCollisionHandlerLogic;
+import engine.core.implementation.physics.wrappers.PhysicsTransformWrapper;
+import engine.core.implementation.physics.wrappers.ShellTransformWrapper;
 import engine.core.implementation.rendering.activities.AnimationActivity;
 import engine.core.network.NetworkInputHub;
 import engine.core.network.NetworkInputTrigger;
@@ -99,12 +100,14 @@ public class ShaceshipServer extends Server {
 
 	private Entity makeBackground() {
 		Entity background = new Entity();
+
 		ComponentFactory.addShellData(background, new Vector(0, 0), 0);
 		ComponentFactory.addTextureData(background, new Texture(ImageUtils.getID("terrain1.jpg"), 10000, 10000));
 		ComponentFactory.addNetworkData(background);
-		ComponentFactory.addShellWrappers(background);
 		ComponentFactory.addNameData(background, "background");
 		ComponentFactory.addLayerData(background, 0);
+
+		background.addComponent(new ShellTransformWrapper(background));
 		background.addComponent(ComponentFactory.createBasicEncoder(background));
 		background.addComponent(new ServerLogic(background));
 		return background;
@@ -119,10 +122,10 @@ public class ShaceshipServer extends Server {
 		ComponentFactory.addTextureData(wall, new Texture(ImageUtils.getID("darkmetal.jpg"), width, height));
 		ComponentFactory.addNetworkData(wall);
 		ComponentFactory.addNameData(wall, "wall");
-		ComponentFactory.addPhysicsWrappers(wall);
 		ComponentFactory.addLayerData(wall, 1);
-		wall.addComponent(ComponentFactory.createBasicEncoder(wall));
 
+		wall.addComponent(new PhysicsTransformWrapper(wall));
+		wall.addComponent(ComponentFactory.createBasicEncoder(wall));
 		wall.addComponent(new ServerLogic(wall));
 
 		return wall;
@@ -146,7 +149,8 @@ public class ShaceshipServer extends Server {
 		ComponentFactory.addNameData(spaceship, "bumper");
 		ComponentFactory.addLayerData(spaceship, 1);
 		ComponentFactory.addCameraFocusData(spaceship, clientID);
-		ComponentFactory.addPhysicsWrappers(spaceship);
+		spaceship.addComponent(new PhysicsTransformWrapper(spaceship));
+
 		EncoderWrapper encoder = ComponentFactory.createBasicEncoder(spaceship);
 		encoder.addDataEncoder(TypeManager.getType(CameraFocusData.class), new BasicDataEncoder());
 		spaceship.addComponent(encoder);
@@ -179,7 +183,8 @@ public class ShaceshipServer extends Server {
 		ComponentFactory.addDamageData(bullet, bulletDamage);
 		ComponentFactory.addNameData(bullet, "bullet");
 		ComponentFactory.addLayerData(bullet, 1);
-		ComponentFactory.addPhysicsWrappers(bullet);
+		bullet.addComponent(new PhysicsTransformWrapper(bullet));
+
 		bullet.addComponent(ComponentFactory.createBasicEncoder(bullet));
 
 		bullet.addComponent(new ServerLogic(bullet));

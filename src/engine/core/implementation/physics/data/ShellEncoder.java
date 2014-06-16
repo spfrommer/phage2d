@@ -36,14 +36,6 @@ public class ShellEncoder implements DataEncoder {
 		centeryElement.appendChild(doc.createTextNode("" + shellComponent.center.getY()));
 		shellElement.appendChild(centeryElement);
 
-		Element velocityxElement = doc.createElement("velocityx");
-		velocityxElement.appendChild(doc.createTextNode("" + shellComponent.velocity.getX()));
-		shellElement.appendChild(velocityxElement);
-
-		Element velocityyElement = doc.createElement("velocityy");
-		velocityyElement.appendChild(doc.createTextNode("" + shellComponent.velocity.getY()));
-		shellElement.appendChild(velocityyElement);
-
 		return shellElement;
 	}
 }

@@ -15,6 +15,8 @@ import engine.core.framework.Entity;
 import engine.core.implementation.physics.base.CollisionListener;
 import engine.core.implementation.physics.data.PhysicsData;
 import engine.core.implementation.physics.logic.handler.ListenerCollisionHandlerLogic;
+import engine.core.implementation.physics.wrappers.PhysicsTransformWrapper;
+import engine.core.implementation.physics.wrappers.ShellTransformWrapper;
 import engine.core.implementation.rendering.base.Animator;
 import engine.core.implementation.rendering.data.AnimationData;
 import engine.core.implementation.rendering.logic.TextureRenderingLogic;
@@ -23,29 +25,27 @@ public class EntityFactory {
 	public static Entity makePortal(Vector position) {
 		Entity portal = new Entity();
 
-		PhysicsData physics = ComponentFactory.addPhysicsData(portal, position,
-				0, new Circle(25));
+		PhysicsData physics = ComponentFactory.addPhysicsData(portal, position, 0, new Circle(25));
 		physics.setMassType(Mass.Type.INFINITE);
 		physics.setRotationalFriction(0);
 		physics.setRotationalVelocity(5);
 
-		ComponentFactory.addTextureData(portal,
-				new Texture(ImageUtils.getID("portal1.png"), 50, 50));
+		ComponentFactory.addTextureData(portal, new Texture(ImageUtils.getID("portal1.png"), 50, 50));
 
 		AnimationData animation = new AnimationData(portal);
 		List<Texture> frames = new ArrayList<Texture>();
 		for (int i = 1; i <= 9; i++)
-			frames.add(new Texture(ImageUtils.getID("portal" + i + ".png"), 50,
-					50));
+			frames.add(new Texture(ImageUtils.getID("portal" + i + ".png"), 50, 50));
 		Animator animator = new Animator(frames, 1);
 		animation.addAnimator("activation", animator);
 		portal.addComponent(animation);
 
 		ComponentFactory.addNameData(portal, "portal");
-		ComponentFactory.addPhysicsWrappers(portal);
 		ComponentFactory.addLayerData(portal, 2);
-		ListenerCollisionHandlerLogic handler = new ListenerCollisionHandlerLogic(
-				portal);
+
+		portal.addComponent(new PhysicsTransformWrapper(portal));
+
+		ListenerCollisionHandlerLogic handler = new ListenerCollisionHandlerLogic(portal);
 		portal.addComponent(handler);
 		portal.addComponent(new TextureRenderingLogic(portal));
 		return portal;
@@ -54,125 +54,119 @@ public class EntityFactory {
 	public static Entity makePortal(Vector position, CollisionListener listener) {
 		Entity portal = new Entity();
 
-		PhysicsData physics = ComponentFactory.addPhysicsData(portal, position,
-				0, new Rectangle(50, 50));
+		PhysicsData physics = ComponentFactory.addPhysicsData(portal, position, 0, new Rectangle(50, 50));
 		physics.setMassType(Mass.Type.INFINITE);
 
-		ComponentFactory.addTextureData(portal,
-				new Texture(ImageUtils.getID("portal1.png"), 50, 50));
+		ComponentFactory.addTextureData(portal, new Texture(ImageUtils.getID("portal1.png"), 50, 50));
+
 		AnimationData animation = new AnimationData(portal);
 		List<Texture> frames = new ArrayList<Texture>();
 		for (int i = 1; i <= 9; i++)
-			frames.add(new Texture(ImageUtils.getID("portal" + i + ".png"), 50,
-					50));
+			frames.add(new Texture(ImageUtils.getID("portal" + i + ".png"), 50, 50));
 		Animator animator = new Animator(frames, 1);
 		animation.addAnimator("activation", animator);
 		portal.addComponent(animation);
+
 		ComponentFactory.addNameData(portal, "portal");
-		ComponentFactory.addPhysicsWrappers(portal);
 		ComponentFactory.addLayerData(portal, 2);
-		ListenerCollisionHandlerLogic handler = new ListenerCollisionHandlerLogic(
-				portal);
+
+		portal.addComponent(new PhysicsTransformWrapper(portal));
+
+		ListenerCollisionHandlerLogic handler = new ListenerCollisionHandlerLogic(portal);
 		handler.addListener(listener);
 		portal.addComponent(handler);
+
 		portal.addComponent(new TextureRenderingLogic(portal));
 		return portal;
 	}
 
-	public static Entity makeScenery(String imageName, Vector position,
-			double width, double height) {
-		Entity background = new Entity();
+	public static Entity makeScenery(String imageName, Vector position, double width, double height) {
+		Entity scenery = new Entity();
 
-		ComponentFactory.addShellData(background, position, 0);
+		ComponentFactory.addShellData(scenery, position, 0);
 
-		ComponentFactory.addTextureData(background,
-				new Texture(ImageUtils.getID(imageName), width, height));
-		ComponentFactory.addShellWrappers(background);
-		ComponentFactory.addNameData(background, "scenery");
-		ComponentFactory.addLayerData(background, 1);
-		background.addComponent(new TextureRenderingLogic(background));
-		return background;
+		ComponentFactory.addTextureData(scenery, new Texture(ImageUtils.getID(imageName), width, height));
+		ComponentFactory.addNameData(scenery, "scenery");
+		ComponentFactory.addLayerData(scenery, 1);
+
+		scenery.addComponent(new ShellTransformWrapper(scenery));
+		scenery.addComponent(new TextureRenderingLogic(scenery));
+		return scenery;
 	}
 
-	public static Entity makeScenery(String imageName, Vector position,
-			double width, double height, int layer) {
-		Entity background = new Entity();
+	public static Entity makeScenery(String imageName, Vector position, double width, double height, int layer) {
+		Entity scenery = new Entity();
 
-		ComponentFactory.addShellData(background, position, 0);
+		ComponentFactory.addShellData(scenery, position, 0);
 
-		ComponentFactory.addTextureData(background,
-				new Texture(ImageUtils.getID(imageName), width, height));
-		ComponentFactory.addShellWrappers(background);
-		ComponentFactory.addNameData(background, "scenery");
-		ComponentFactory.addLayerData(background, layer);
-		background.addComponent(new TextureRenderingLogic(background));
-		return background;
+		ComponentFactory.addTextureData(scenery, new Texture(ImageUtils.getID(imageName), width, height));
+		ComponentFactory.addNameData(scenery, "scenery");
+		ComponentFactory.addLayerData(scenery, layer);
+
+		scenery.addComponent(new ShellTransformWrapper(scenery));
+		scenery.addComponent(new TextureRenderingLogic(scenery));
+		return scenery;
 	}
 
 	public static Entity makeBall(Vector position) {
 		Entity player = new Entity();
 
-		PhysicsData physics = ComponentFactory.addPhysicsData(player, position,
-				0, new Circle(23));
+		PhysicsData physics = ComponentFactory.addPhysicsData(player, position, 0, new Circle(23));
 		physics.setGravity(100);
 		physics.setCollisionFriction(0);
 		physics.setRestitution(0.01);
 		physics.setRotationalVelocity(50);
 		physics.setRotationalFriction(100);
 
-		ComponentFactory.addTextureData(player,
-				new Texture(ImageUtils.getID("blueblob.png"), 46, 46));
+		ComponentFactory.addTextureData(player, new Texture(ImageUtils.getID("blueblob.png"), 46, 46));
 		ComponentFactory.addNameData(player, "ball");
-		ComponentFactory.addPhysicsWrappers(player);
 		ComponentFactory.addLayerData(player, 2);
+
+		player.addComponent(new PhysicsTransformWrapper(player));
 		player.addComponent(new TextureRenderingLogic(player));
 		return player;
 	}
 
 	public static String PLATFORM_IMAGE = "";
 
-	public static Entity makePlatform(Vector position, double width,
-			double height) {
+	public static Entity makePlatform(Vector position, double width, double height) {
 		Entity platform = new Entity();
 
-		PhysicsData physics = ComponentFactory.addPhysicsData(platform,
-				position, 0, new Rectangle(width, height));
+		PhysicsData physics = ComponentFactory.addPhysicsData(platform, position, 0, new Rectangle(width, height));
 		physics.setMassType(Mass.Type.INFINITE);
-		ComponentFactory.addTextureData(platform,
-				new Texture(ImageUtils.getID(PLATFORM_IMAGE), width, height));
+		ComponentFactory.addTextureData(platform, new Texture(ImageUtils.getID(PLATFORM_IMAGE), width, height));
 		ComponentFactory.addNameData(platform, "platform");
-		ComponentFactory.addPhysicsWrappers(platform);
 		ComponentFactory.addLayerData(platform, 2);
+
+		platform.addComponent(new PhysicsTransformWrapper(platform));
 		platform.addComponent(new TextureRenderingLogic(platform));
 		return platform;
 	}
 
-	public static Entity makeBackground(String imageName, double width,
-			double height) {
+	public static Entity makeBackground(String imageName, double width, double height) {
 		Entity background = new Entity();
 
 		ComponentFactory.addShellData(background, new Vector(0, 0), 0);
 
-		ComponentFactory.addTextureData(background,
-				new Texture(ImageUtils.getID(imageName), width, height));
-		ComponentFactory.addShellWrappers(background);
+		ComponentFactory.addTextureData(background, new Texture(ImageUtils.getID(imageName), width, height));
 		ComponentFactory.addNameData(background, "background");
 		ComponentFactory.addLayerData(background, 0);
+
+		background.addComponent(new ShellTransformWrapper(background));
 		background.addComponent(new TextureRenderingLogic(background));
 		return background;
 	}
 
-	public static Entity makeBackground(String imageName, Vector position,
-			double width, double height) {
+	public static Entity makeBackground(String imageName, Vector position, double width, double height) {
 		Entity background = new Entity();
 
 		ComponentFactory.addShellData(background, position, 0);
 
-		ComponentFactory.addTextureData(background,
-				new Texture(ImageUtils.getID(imageName), width, height));
-		ComponentFactory.addShellWrappers(background);
+		ComponentFactory.addTextureData(background, new Texture(ImageUtils.getID(imageName), width, height));
 		ComponentFactory.addNameData(background, "background");
 		ComponentFactory.addLayerData(background, 0);
+
+		background.addComponent(new ShellTransformWrapper(background));
 		background.addComponent(new TextureRenderingLogic(background));
 		return background;
 	}

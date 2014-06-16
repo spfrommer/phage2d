@@ -8,20 +8,18 @@ import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.type.TypeManager;
 import engine.core.implementation.physics.data.PhysicsData;
-import engine.core.implementation.physics.wrappers.PositionWrapper;
-import engine.core.implementation.physics.wrappers.RotationWrapper;
+import engine.core.implementation.physics.wrappers.TransformWrapper;
 import engine.inputs.InputManager;
 
 /**
  * Spawns a bullet entity at a certain position and rotation.
  * 
- * @eng.dependencies PositionWrapper, RotationWrapper
+ * @eng.dependencies TransformWrapper
  */
 public class GunLogic extends SpawningLogic {
 	private Entity m_spawningEntity;
 	private InputManager m_input;
-	private PositionWrapper m_position;
-	private RotationWrapper m_rotation;
+	private TransformWrapper m_transform;
 
 	private long m_spawnInterval;
 	private double m_velocity;
@@ -30,7 +28,7 @@ public class GunLogic extends SpawningLogic {
 	private long ticksElapsed = 0;
 
 	public GunLogic(Entity spawn, InputManager input, long spawnInterval, double velocity) {
-		super(new Aspect(TypeManager.getType(PositionWrapper.class), TypeManager.getType(RotationWrapper.class)));
+		super(new Aspect(TypeManager.getType(TransformWrapper.class)));
 		m_spawningEntity = spawn;
 		m_input = input;
 		m_spawnInterval = spawnInterval;
@@ -38,8 +36,7 @@ public class GunLogic extends SpawningLogic {
 	}
 
 	public GunLogic(Entity parent, Entity spawn, InputManager input, long spawnInterval, double velocity) {
-		super(parent,
-				new Aspect(TypeManager.getType(PositionWrapper.class), TypeManager.getType(RotationWrapper.class)));
+		super(parent, new Aspect(TypeManager.getType(TransformWrapper.class)));
 		m_spawningEntity = spawn;
 		m_input = input;
 		m_spawnInterval = spawnInterval;
@@ -60,14 +57,21 @@ public class GunLogic extends SpawningLogic {
 		return new ArrayList<Entity>();
 	}
 
+	/**
+	 * Makes a bullet with a certain degree offset from the desired direction.
+	 * 
+	 * @param offset
+	 * @return
+	 */
 	public Entity makeBullet(double offset) {
 		Entity spawn = m_spawningEntity.copy();
+
 		PhysicsData physics = (PhysicsData) spawn.getComponent(TypeManager.getType(PhysicsData.class));
-		physics.setPosition(m_position.getPosition().add(
-				Vector.dyn4jNormalVector(m_rotation.getRotation()).scalarMultiply(100)));
-		physics.setRotation(m_rotation.getRotation());
-		physics.setVelocity(Vector.dyn4jNormalVector(m_rotation.getRotation() + offset).scalarMultiply(m_velocity));
-		physics.translateCenter(Vector.dyn4jNormalVector(m_rotation.getRotation() + offset).scalarMultiply(50));
+		physics.setPosition(m_transform.getPosition().add(
+				Vector.dyn4jNormalVector(m_transform.getRotation()).scalarMultiply(100)));
+		physics.setRotation(m_transform.getRotation());
+		physics.setVelocity(Vector.dyn4jNormalVector(m_transform.getRotation() + offset).scalarMultiply(m_velocity));
+		physics.translateCenter(Vector.dyn4jNormalVector(m_transform.getRotation() + offset).scalarMultiply(50));
 
 		physics.setMass(1000);
 		return spawn;
@@ -75,8 +79,7 @@ public class GunLogic extends SpawningLogic {
 
 	@Override
 	public void loadDependencies() {
-		m_position = (PositionWrapper) this.loadDependency(TypeManager.getType(PositionWrapper.class));
-		m_rotation = (RotationWrapper) this.loadDependency(TypeManager.getType(RotationWrapper.class));
+		m_transform = (TransformWrapper) this.loadDependency(TypeManager.getType(TransformWrapper.class));
 	}
 
 	@Override

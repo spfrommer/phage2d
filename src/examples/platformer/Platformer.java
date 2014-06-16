@@ -22,6 +22,8 @@ import engine.core.implementation.camera.activities.KeyboardCameraActivity;
 import engine.core.implementation.camera.activities.MovementProfile;
 import engine.core.implementation.physics.activities.PhysicsActivity;
 import engine.core.implementation.physics.data.PhysicsData;
+import engine.core.implementation.physics.wrappers.PhysicsTransformWrapper;
+import engine.core.implementation.physics.wrappers.ShellTransformWrapper;
 import engine.core.implementation.rendering.activities.AnimationActivity;
 import engine.core.implementation.rendering.activities.ParallaxRenderingActivity;
 import engine.core.implementation.rendering.logic.TextureRenderingLogic;
@@ -97,9 +99,10 @@ public class Platformer extends Game {
 		ComponentFactory.addShellData(background, new Vector(0, 0), 0);
 
 		ComponentFactory.addTextureData(background, new Texture(ImageUtils.getID("terrain2.png"), width, height));
-		ComponentFactory.addShellWrappers(background);
 		ComponentFactory.addNameData(background, "background");
 		ComponentFactory.addLayerData(background, 0);
+
+		background.addComponent(new ShellTransformWrapper(background));
 		background.addComponent(new TextureRenderingLogic(background));
 		return background;
 	}
@@ -110,9 +113,10 @@ public class Platformer extends Game {
 		ComponentFactory.addShellData(background, position, 0);
 
 		ComponentFactory.addTextureData(background, new Texture(ImageUtils.getID(imageName), width, height));
-		ComponentFactory.addShellWrappers(background);
 		ComponentFactory.addNameData(background, "background");
 		ComponentFactory.addLayerData(background, 1);
+
+		background.addComponent(new ShellTransformWrapper(background));
 		background.addComponent(new TextureRenderingLogic(background));
 		return background;
 	}
@@ -127,9 +131,9 @@ public class Platformer extends Game {
 
 		ComponentFactory.addTextureData(player, new Texture(ImageUtils.getID("blueblob.png"), 50, 50));
 		ComponentFactory.addNameData(player, "player");
-		ComponentFactory.addPhysicsWrappers(player);
 		ComponentFactory.addLayerData(player, 2);
 
+		player.addComponent(new PhysicsTransformWrapper(player));
 		player.addComponent(new TextureRenderingLogic(player));
 		player.addComponent(new JumpControllerLogic(player));
 		player.addComponent(new RollControllerLogic(player, -10000000));
@@ -164,8 +168,9 @@ public class Platformer extends Game {
 
 		ComponentFactory.addTextureData(platform, new Texture(ImageUtils.getID("darkpanel.jpg"), width, height));
 		ComponentFactory.addNameData(platform, "platform");
-		ComponentFactory.addPhysicsWrappers(platform);
 		ComponentFactory.addLayerData(platform, 2);
+
+		platform.addComponent(new PhysicsTransformWrapper(platform));
 		platform.addComponent(new TextureRenderingLogic(platform));
 		return platform;
 	}

@@ -1,4 +1,4 @@
-package engine.core.implementation.physics.logic.handler;
+package examples.spaceship;
 
 import utils.image.ImageUtils;
 import utils.image.Texture;
@@ -11,53 +11,42 @@ import engine.core.framework.component.type.TypeManager;
 import engine.core.implementation.extras.data.DamageData;
 import engine.core.implementation.extras.data.HealthData;
 import engine.core.implementation.network.logic.ServerLogic;
-import engine.core.implementation.physics.wrappers.PositionWrapper;
+import engine.core.implementation.physics.logic.handler.CollisionHandlerLogic;
+import engine.core.implementation.physics.wrappers.ShellTransformWrapper;
+import engine.core.implementation.physics.wrappers.TransformWrapper;
 
 /**
  * Handles a collision like a bullet - damages the entity it hits, destroys itself, and adds an explosion.
  * 
- * @eng.dependencies DamageData, PositionWrapper
+ * @eng.dependencies DamageData, TransformWrapper
  */
 public class BulletCollisionHandlerLogic extends CollisionHandlerLogic {
 	private EntitySystem m_system;
 	private DamageData m_damage;
-	private PositionWrapper m_position;
+	private TransformWrapper m_transform;
 
 	public BulletCollisionHandlerLogic(EntitySystem system) {
-		super(new Aspect(TypeManager.getType(DamageData.class), TypeManager.getType(PositionWrapper.class)));
+		super(new Aspect(TypeManager.getType(DamageData.class), TypeManager.getType(TransformWrapper.class)));
 		m_system = system;
 	}
 
 	public BulletCollisionHandlerLogic(Entity parent, EntitySystem system) {
-		super(parent, new Aspect(TypeManager.getType(DamageData.class), TypeManager.getType(PositionWrapper.class)));
+		super(parent, new Aspect(TypeManager.getType(DamageData.class), TypeManager.getType(TransformWrapper.class)));
 		m_system = system;
 	}
 
 	private Entity makeExplosion() {
 		final Entity explosion = new Entity();
 
-		ComponentFactory.addShellData(explosion, m_position.getPosition(), 0);
+		ComponentFactory.addShellData(explosion, m_transform.getPosition(), 0);
 		ComponentFactory.addTextureData(explosion, new Texture(ImageUtils.getID("explosion.png"), 60, 60));
 		ComponentFactory.addNetworkData(explosion);
 		ComponentFactory.addNameData(explosion, "explosion");
 		ComponentFactory.addLayerData(explosion, 0);
-		ComponentFactory.addShellWrappers(explosion);
+
+		explosion.addComponent(new ShellTransformWrapper(explosion));
 		explosion.addComponent(ComponentFactory.createBasicEncoder(explosion));
-
 		explosion.addComponent(new ServerLogic(explosion));
-
-		/*Thread thread = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				BulletCollisionHandlerLogic.this.getSystem().removeEntity(explosion);
-			}
-		});
-		thread.start();*/
 		return explosion;
 	}
 
@@ -75,7 +64,7 @@ public class BulletCollisionHandlerLogic extends CollisionHandlerLogic {
 	@Override
 	public void loadDependencies() {
 		m_damage = (DamageData) this.loadDependency(TypeManager.getType(DamageData.class));
-		m_position = (PositionWrapper) this.loadDependency(TypeManager.getType(PositionWrapper.class));
+		m_transform = (TransformWrapper) this.loadDependency(TypeManager.getType(TransformWrapper.class));
 	}
 
 	protected EntitySystem getSystem() {

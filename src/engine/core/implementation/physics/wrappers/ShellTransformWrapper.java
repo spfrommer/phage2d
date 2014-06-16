@@ -1,26 +1,36 @@
-package engine.core.implementation.physics.wrappers.shell;
+package engine.core.implementation.physics.wrappers;
 
+import utils.physics.Vector;
 import engine.core.framework.Aspect;
 import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.type.TypeManager;
 import engine.core.implementation.physics.data.PhysicsShellData;
-import engine.core.implementation.physics.wrappers.RotationWrapper;
 
 /**
- * Provides the rotation as defined by PhysicsShellData.
+ * A transform wrapper for PhysicsShellData.
  * 
  * @eng.dependencies PhysicsShellData
  */
-public class ShellRotationWrapper extends RotationWrapper {
+public class ShellTransformWrapper extends TransformWrapper {
 	private PhysicsShellData m_shell;
 
-	public ShellRotationWrapper() {
+	public ShellTransformWrapper() {
 		super(new Aspect(TypeManager.getType(PhysicsShellData.class)));
 	}
 
-	public ShellRotationWrapper(Entity parent) {
+	public ShellTransformWrapper(Entity parent) {
 		super(parent, new Aspect(TypeManager.getType(PhysicsShellData.class)));
+	}
+
+	@Override
+	public Vector getPosition() {
+		return m_shell.position;
+	}
+
+	@Override
+	public Vector getCenter() {
+		return m_shell.center;
 	}
 
 	@Override
@@ -35,6 +45,6 @@ public class ShellRotationWrapper extends RotationWrapper {
 
 	@Override
 	public Component copy() {
-		return new ShellRotationWrapper();
+		return new ShellTransformWrapper();
 	}
 }

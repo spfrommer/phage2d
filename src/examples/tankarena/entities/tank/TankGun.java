@@ -21,6 +21,7 @@ import engine.core.implementation.network.logic.ServerLogic;
 import engine.core.implementation.physics.activities.PhysicsActivity;
 import engine.core.implementation.physics.data.PhysicsData;
 import engine.core.implementation.physics.logic.filter.NoneCollisionFilterLogic;
+import engine.core.implementation.physics.wrappers.PhysicsTransformWrapper;
 import engine.core.implementation.rendering.base.Animator;
 import engine.core.implementation.rendering.data.AnimationData;
 import engine.core.implementation.rendering.logic.TextureRenderingLogic;
@@ -60,7 +61,7 @@ public class TankGun extends Entity {
 		ComponentFactory.addNetworkData(this);
 		ComponentFactory.addNameData(this, "tankgun");
 		ComponentFactory.addLayerData(this, layer);
-		ComponentFactory.addPhysicsWrappers(this);
+		this.addComponent(new PhysicsTransformWrapper(this));
 
 		this.addComponent(ComponentFactory.createBasicEncoder(this));
 

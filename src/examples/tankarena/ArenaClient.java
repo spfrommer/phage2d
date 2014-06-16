@@ -12,7 +12,7 @@ import engine.core.implementation.network.base.decoding.DecoderMapper;
 import engine.core.implementation.network.base.decoding.ErrorDecoder;
 import engine.core.implementation.physics.data.PhysicsData;
 import engine.core.implementation.physics.data.PhysicsShellData;
-import engine.core.implementation.physics.data.PhysicsShellDecoder;
+import engine.core.implementation.physics.data.ShellDecoder;
 import engine.core.implementation.rendering.data.AnimationData;
 import engine.core.implementation.rendering.data.TextureData;
 import engine.core.implementation.rendering.data.TextureDecoder;
@@ -44,7 +44,7 @@ public class ArenaClient extends Client {
 		s_decoder = new DecoderMapper();
 		s_decoder.addMapping(PhysicsData.class, new ErrorDecoder());
 		s_decoder.addMapping(AnimationData.class, new ErrorDecoder());
-		s_decoder.addMapping(PhysicsShellData.class, new PhysicsShellDecoder());
+		s_decoder.addMapping(PhysicsShellData.class, new ShellDecoder());
 		s_decoder.addMapping(TextureData.class, new TextureDecoder());
 	}
 
