@@ -1,8 +1,9 @@
-package engine.core.implementation.physics.data;
+package engine.core.implementation.physics.base;
 
 import utils.physics.Vector;
 import engine.core.framework.component.DataComponent;
 import engine.core.implementation.network.base.decoding.DataDecoder;
+import engine.core.implementation.physics.data.PhysicsShellData;
 
 /**
  * Decodes PhysicsShellData.

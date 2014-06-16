@@ -37,6 +37,10 @@ public abstract class Server {
 	private static final int DEFAULT_UPS = 30;
 	private int m_ups = DEFAULT_UPS;
 
+	private static final int DEFAULT_UPF = 1;
+	private int m_upf = DEFAULT_UPF;
+	private int m_updatesPassed = 1;
+
 	{
 		m_system = new EntitySystem();
 	}
@@ -78,12 +82,22 @@ public abstract class Server {
 	}
 
 	/**
-	 * How many times per second the server should send update messages to the clients
+	 * How many times per second the server should call update
 	 * 
 	 * @param ups
 	 */
 	public void setUPS(int ups) {
 		m_ups = ups;
+	}
+
+	/**
+	 * How many updates should the server perform before it transmits the data to the clients - 1 or below means it will
+	 * transmit every update
+	 * 
+	 * @param upf
+	 */
+	public void setUPF(int upf) {
+		m_upf = upf;
 	}
 
 	private void listen(int port) {
@@ -112,9 +126,14 @@ public abstract class Server {
 		int milliSkip = 1000 / m_ups;
 		while (true) {
 			update(1);
-			m_network.processWriters();
-			m_network.processMessages();
-			m_network.trasmitUpdates();
+			if (m_updatesPassed >= m_upf) {
+				m_network.processWriters();
+				m_network.processMessages();
+				m_network.trasmitUpdates();
+				m_updatesPassed = 1;
+			} else {
+				m_updatesPassed++;
+			}
 
 			nextGameTick += milliSkip;
 			long sleepTime = nextGameTick - System.currentTimeMillis();
@@ -134,6 +153,15 @@ public abstract class Server {
 
 	protected NetworkInputHub getInputHub() {
 		return m_inputHub;
+	}
+
+	/**
+	 * Gets the Activity used by the server to sync Entities.
+	 * 
+	 * @return
+	 */
+	public NetworkSyncActivity getSyncActivity() {
+		return m_network;
 	}
 
 	/**

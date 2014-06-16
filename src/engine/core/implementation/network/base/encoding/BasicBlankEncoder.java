@@ -4,12 +4,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Encodes a DependentComponent with its class name.
+ * Encodes a component with no data in it - normally a DependentComponent - with its class name.
  */
-public class BasicDependentEncoder implements DependentEncoder {
+public class BasicBlankEncoder implements BlankEncoder {
 	private Class<?> m_encodingClass;
 
-	public BasicDependentEncoder(Class<?> encodingClass) {
+	public BasicBlankEncoder(Class<?> encodingClass) {
 		m_encodingClass = encodingClass;
 	}
 
@@ -18,5 +18,4 @@ public class BasicDependentEncoder implements DependentEncoder {
 		Element element = doc.createElement(m_encodingClass.getName());
 		return element;
 	}
-
 }

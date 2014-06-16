@@ -1,10 +1,11 @@
-package engine.core.implementation.physics.data;
+package engine.core.implementation.physics.base;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import engine.core.framework.component.Component;
 import engine.core.implementation.network.base.encoding.DataEncoder;
+import engine.core.implementation.physics.data.PhysicsShellData;
 
 /**
  * Encodes a PhysicsShellData.

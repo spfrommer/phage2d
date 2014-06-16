@@ -233,6 +233,15 @@ public abstract class Client {
 	}
 
 	/**
+	 * Gets the Activity used by the client to sync Entities.
+	 * 
+	 * @return
+	 */
+	public NetworkSyncActivity getSyncActivity() {
+		return m_network;
+	}
+
+	/**
 	 * Called when the client connects to the server and receives its id
 	 */
 	protected abstract void onServerConnect();

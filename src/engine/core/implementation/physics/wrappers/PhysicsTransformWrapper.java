@@ -29,13 +29,28 @@ public class PhysicsTransformWrapper extends TransformWrapper {
 	}
 
 	@Override
+	public void setPosition(Vector position) {
+		m_physics.setPosition(position);
+	}
+
+	@Override
 	public Vector getCenter() {
 		return m_physics.getCenter();
 	}
 
 	@Override
+	public void setCenter(Vector center) {
+		m_physics.setCenter(center);
+	}
+
+	@Override
 	public double getRotation() {
 		return m_physics.getRotation();
+	}
+
+	@Override
+	public void setRotation(double rotation) {
+		m_physics.setRotation(rotation);
 	}
 
 	@Override

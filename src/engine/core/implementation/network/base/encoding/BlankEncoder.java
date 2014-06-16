@@ -4,12 +4,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Defines how to encode a DependentComponent. No Component parameter is needed because these dependencies are generated
- * dynamically when the Entity is reconstructed.
+ * Defines how to encode a Component without any data in it - normally a DependentComponent. No Component parameter is
+ * needed because these dependencies are generated dynamically when the Entity is reconstructed.
  */
-public interface DependentEncoder {
+public interface BlankEncoder {
 	/**
-	 * Returns the XML Element that represents this DependentComponent. No parameters are needed.
+	 * Returns the XML Element that represents this blankl component. No parameters are needed.
 	 * 
 	 * <fullpackage.component.class></fullpackage.component.class>
 	 * 

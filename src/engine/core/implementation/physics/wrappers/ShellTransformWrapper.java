@@ -29,13 +29,29 @@ public class ShellTransformWrapper extends TransformWrapper {
 	}
 
 	@Override
+	public void setPosition(Vector position) {
+		m_shell.position = position;
+	}
+
+	@Override
 	public Vector getCenter() {
 		return m_shell.center;
 	}
 
 	@Override
+	public void setCenter(Vector center) {
+		m_shell.center = center;
+	}
+
+	@Override
 	public double getRotation() {
 		return m_shell.rotation;
+	}
+
+	@Override
+	public void setRotation(double rotation) {
+		m_shell.rotation = rotation;
+
 	}
 
 	@Override
