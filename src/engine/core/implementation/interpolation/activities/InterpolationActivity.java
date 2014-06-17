@@ -47,6 +47,7 @@ public class InterpolationActivity extends AspectActivity {
 
 			Vector position = transform.getPosition();
 			Vector update = new Vector(interpolation.xDelta * timeDelta, interpolation.yDelta * timeDelta);
+			// System.out.println(update);
 			transform.setPosition(position.add(update));
 
 			transform.setRotation(transform.getRotation() + interpolation.rotationDelta * timeDelta);
@@ -72,19 +73,20 @@ public class InterpolationActivity extends AspectActivity {
 
 	private class UpdateListener implements TransmissionListener {
 		@Override
-		public void transmissionReceived() {
-			List<Entity> entities = InterpolationActivity.this.getEntities();
+		public void transmissionReceived(Entity receiver) {
+			System.out.println("Transmission received!");
+			if (receiver.getAspect().encapsulates(new Aspect(m_transformType, m_interpolationType))) {
+				double currentTime = System.currentTimeMillis();
 
-			double currentTime = System.currentTimeMillis();
-			for (Entity entity : entities) {
-				TransformWrapper transform = (TransformWrapper) entity.getComponent(m_transformType);
-				InterpolationData interpolation = (InterpolationData) entity.getComponent(m_interpolationType);
+				TransformWrapper transform = (TransformWrapper) receiver.getComponent(m_transformType);
+				InterpolationData interpolation = (InterpolationData) receiver.getComponent(m_interpolationType);
 
 				// calculate deltas from last transmission
 				double timeDifference = currentTime - interpolation.lastTimeStamp;
 				double xDifference = transform.getPosition().getX() - interpolation.lastX;
 				double yDifference = transform.getPosition().getY() - interpolation.lastY;
 				double rotationDifference = transform.getRotation() - interpolation.lastRotation;
+				System.out.println("Time difference: " + timeDifference);
 
 				interpolation.xDelta = xDifference / timeDifference;
 				interpolation.yDelta = yDifference / timeDifference;

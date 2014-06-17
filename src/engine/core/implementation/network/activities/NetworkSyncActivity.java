@@ -2,7 +2,9 @@ package engine.core.implementation.network.activities;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -204,12 +206,14 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 		try {
 			m_messageBufferLock.lock();
 
+			Set<Entity> updatedEntities = new HashSet<Entity>();
+
 			for (Message message : m_messageBuffer) {
 				if (message == null)
-					System.out.println("Message " + message + " equals null. (nsp.handleMessages) ");
+					System.err.println("Message " + message + " equals null. (nsp.handleMessages) ");
 
 				if (message.getCommand() == null)
-					System.out.println("Message " + message + " command equals null. (nsp.handleMessages) ");
+					System.err.println("Message " + message + " command equals null. (nsp.handleMessages) ");
 
 				if (message.getCommand().equals("update")) {
 					Entity receiver = m_idMapper.getBackward((message.getParameters()[0]).getIntValue());
@@ -220,6 +224,8 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 					NetworkSyncLogic syncLogic = (NetworkSyncLogic) receiver.getComponent(TypeManager
 							.getType(NetworkSyncLogic.class));
 					syncLogic.processMessage(message);
+
+					updatedEntities.add(receiver);
 				} else if (message.getCommand().equals("addentity")) {
 					Entity entity = EntityDecoder.decode(message.getParameters()[0].getStringValue(), m_decoder);
 					this.getSystem().addEntity(entity);
@@ -228,9 +234,10 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 					this.getSystem().removeEntity(receiver);
 				}
 			}
-			if (m_messageBuffer.size() > 0) {
+
+			for (Entity e : updatedEntities) {
 				for (TransmissionListener listener : m_transmissionListeners)
-					listener.transmissionReceived();
+					listener.transmissionReceived(e);
 			}
 
 			m_messageBuffer.clear();
