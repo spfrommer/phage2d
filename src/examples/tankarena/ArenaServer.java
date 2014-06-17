@@ -30,7 +30,7 @@ public class ArenaServer extends Server {
 		m_behavior = new BehaviorActivity(this.getEntitySystem());
 		m_animation = new AnimationActivity(this.getEntitySystem());
 		this.setUPS(60);
-		this.setUPF(15);
+		this.setUPF(4);
 	}
 
 	@Override

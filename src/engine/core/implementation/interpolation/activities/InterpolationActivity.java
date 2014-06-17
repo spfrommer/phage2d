@@ -15,7 +15,8 @@ import engine.core.implementation.interpolation.data.InterpolationData;
 import engine.core.implementation.physics.wrappers.TransformWrapper;
 
 /**
- * Interpolates the transform using timestamps and transform data stored in InterpolationData.
+ * Interpolates the transform using timestamps and transform data stored in InterpolationData. Uses a simple
+ * "dead reckoning" approach.
  * 
  * @eng.dependencies TransformWrapper, InterpolationData
  */
@@ -74,7 +75,6 @@ public class InterpolationActivity extends AspectActivity {
 	private class UpdateListener implements TransmissionListener {
 		@Override
 		public void transmissionReceived(Entity receiver) {
-			System.out.println("Transmission received!");
 			if (receiver.getAspect().encapsulates(new Aspect(m_transformType, m_interpolationType))) {
 				double currentTime = System.currentTimeMillis();
 
@@ -86,7 +86,12 @@ public class InterpolationActivity extends AspectActivity {
 				double xDifference = transform.getPosition().getX() - interpolation.lastX;
 				double yDifference = transform.getPosition().getY() - interpolation.lastY;
 				double rotationDifference = transform.getRotation() - interpolation.lastRotation;
-				System.out.println("Time difference: " + timeDifference);
+				// System.out.println("Prior rot dif: " + rotationDifference);
+				if (Math.abs(rotationDifference) > 180) {
+					double sign = rotationDifference / Math.abs(rotationDifference);
+					rotationDifference = -sign * (360 - Math.abs(rotationDifference));
+				}
+				// System.out.println("Rotation difference: " + rotationDifference);
 
 				interpolation.xDelta = xDifference / timeDifference;
 				interpolation.yDelta = yDifference / timeDifference;

@@ -4,6 +4,9 @@ import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.DataComponent;
 
+/**
+ * Data about the last transmission from the server.
+ */
 public class InterpolationData extends DataComponent {
 	public double lastX;
 	public double lastY;
