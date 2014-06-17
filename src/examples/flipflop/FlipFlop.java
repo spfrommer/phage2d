@@ -110,16 +110,13 @@ public class FlipFlop extends Game {
 	}
 
 	@Override
-	public void onInit() {
+	public void init() {
 		m_waterDrop = new SoundResource(SoundTest.class.getResource("/sounds/waterdrop.mp3"), new GenericDecoder());
 		m_wind = new SoundResource(SoundTest.class.getResource("/sounds/wind.mp3"), new GenericDecoder());
 		m_rain = new SoundResource(SoundTest.class.getResource("/sounds/rain.mp3"), new GenericDecoder());
 		m_city = new SoundResource(SoundTest.class.getResource("/sounds/city.mp3"), new GenericDecoder());
 		m_violin = new SoundResource(SoundTest.class.getResource("/sounds/violin.mp3"), new GenericDecoder());
-	}
 
-	@Override
-	public void initProcesses() {
 		m_physics = new PhysicsActivity(this.getEntitySystem());
 		m_animation = new AnimationActivity(this.getEntitySystem());
 		m_camera = new KeyboardCameraActivity(this.getEntitySystem(), LWJGLKeyboard.instance(), new MovementProfile(10,

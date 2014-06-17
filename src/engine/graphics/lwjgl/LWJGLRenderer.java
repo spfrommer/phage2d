@@ -57,18 +57,22 @@ public class LWJGLRenderer implements Renderer {
 	private LWJGLRenderer() {
 	}
 
+	@Override
 	public void addPostProcessor(PostProcessor p) {
 		m_postProcessors.add(p);
 	}
 
+	@Override
 	public void removePostProcessor(PostProcessor p) {
 		m_postProcessors.remove(p);
 	}
 
+	@Override
 	public ArrayList<PostProcessor> getPostProcessors() {
 		return m_postProcessors;
 	}
 
+	@Override
 	public void render(Renderable r) {
 		for (LWJGLPointLight light : m_pointLights) {
 			light.apply();
@@ -276,8 +280,7 @@ public class LWJGLRenderer implements Renderer {
 	public void drawPointLight(float x, float y, Color c, Vector3f attenuation) {
 		Point2f transformed = new Point2f();
 		getTransform().transform(new Point2f(x, y), transformed);
-		Vector2f trans = new Vector2f((float) transformed.getX(),
-				(float) transformed.getY());
+		Vector2f trans = new Vector2f((float) transformed.getX(), (float) transformed.getY());
 		m_pointLights.add(new LWJGLPointLight(trans, c, attenuation));
 	}
 
@@ -391,8 +394,7 @@ public class LWJGLRenderer implements Renderer {
 		float mat[] = new float[16];
 		ByteBuffer temp = ByteBuffer.allocateDirect(64);
 		temp.order(ByteOrder.nativeOrder());
-		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX,
-				(FloatBuffer) temp.asFloatBuffer());
+		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, temp.asFloatBuffer());
 		temp.asFloatBuffer().get(mat);
 		float M[][] = new float[4][4];
 		for (int i = 0; i < 16; i++) {
@@ -415,9 +417,8 @@ public class LWJGLRenderer implements Renderer {
 	@Override
 	public AffineTransform getTransform() {
 		float[][] m = getMatrix();
-		AffineTransform trans = new AffineTransform((double) m[0][0],
-				(double) m[1][0], (double) m[0][1], (double) m[1][1],
-				(double) m[0][3], (double) m[1][3]);
+		AffineTransform trans = new AffineTransform((double) m[0][0], (double) m[1][0], (double) m[0][1],
+				(double) m[1][1], (double) m[0][3], (double) m[1][3]);
 		return trans;
 	}
 
@@ -431,13 +432,13 @@ public class LWJGLRenderer implements Renderer {
 		GL11.glPopMatrix();
 	}
 
-	public void update(int targetFPS) {
+	public void update() {
 		for (PostProcessor p : m_postProcessors) {
 			GL11.glLoadIdentity();
 			// TODO: Fix post processors
 			p.run(this);
 		}
-		Display.sync(targetFPS);
+
 		Display.update();
 		// Clear the lights
 		m_pointLights.clear();
@@ -450,15 +451,13 @@ public class LWJGLRenderer implements Renderer {
 		doFrameSetup();
 	}
 
-
-
 	public static LWJGLRenderer instance() {
 		if (s_instance == null) {
 			s_instance = new LWJGLRenderer();
 		}
 		return s_instance;
 	}
-	
+
 	// Runs all setup commands needed to render the next frame
 	public static void doFrameSetup() {
 		s_defaultProgram.use();
@@ -466,6 +465,7 @@ public class LWJGLRenderer implements Renderer {
 		// Reset the color uniform
 		instance().setColor(instance().getColor());
 	}
+
 	/*
 	 * Static opengl setup functions TODO: Move to display system
 	 */
@@ -491,11 +491,9 @@ public class LWJGLRenderer implements Renderer {
 
 		try {
 			FragmentShader fragment = new FragmentShader();
-			fragment.setSource(new File(LWJGLRenderer.class.getResource(
-					"/shaders/default.frag").toURI()));
+			fragment.setSource(new File(LWJGLRenderer.class.getResource("/shaders/default.frag").toURI()));
 			VertexShader vertex = new VertexShader();
-			vertex.setSource(new File(LWJGLRenderer.class.getResource(
-					"/shaders/default.vert").toURI()));
+			vertex.setSource(new File(LWJGLRenderer.class.getResource("/shaders/default.vert").toURI()));
 			fragment.compile();
 			vertex.compile();
 

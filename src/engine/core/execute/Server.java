@@ -32,6 +32,14 @@ public abstract class Server {
 	public static final int PORT = 5000;
 
 	private boolean m_dumpMessages = false;
+	private double m_lastTimeStamp = System.currentTimeMillis();
+
+	private static final int DEFAULT_UPS = 30;
+	private int m_ups = DEFAULT_UPS;
+
+	private static final int DEFAULT_UPF = 1;
+	private int m_upf = DEFAULT_UPF;
+	private int m_updatesPassed = 1;
 
 	{
 		m_system = new EntitySystem();
@@ -41,11 +49,13 @@ public abstract class Server {
 		ImageUtils.initMapping(images);
 		m_interpreter = interpreter;
 
-		initProcesses();
 		m_network = new NetworkSyncActivity(this.getEntitySystem(), decoder);
 		m_port = port;
 	}
 
+	/**
+	 * Starts listening and game loop.
+	 */
 	public void start() {
 		Thread t = new Thread(new Runnable() {
 			@Override
@@ -62,8 +72,32 @@ public abstract class Server {
 		onStop();
 	}
 
+	/**
+	 * Whether this Server should print all incoming messages + the time difference
+	 * 
+	 * @param dumpMessages
+	 */
 	public void setDumpMessages(boolean dumpMessages) {
 		m_dumpMessages = dumpMessages;
+	}
+
+	/**
+	 * How many times per second the server should call update
+	 * 
+	 * @param ups
+	 */
+	public void setUPS(int ups) {
+		m_ups = ups;
+	}
+
+	/**
+	 * How many updates should the server perform before it transmits the data to the clients - 1 or below means it will
+	 * transmit every update
+	 * 
+	 * @param upf
+	 */
+	public void setUPF(int upf) {
+		m_upf = upf;
 	}
 
 	private void listen(int port) {
@@ -87,18 +121,21 @@ public abstract class Server {
 		}
 	}
 
-	// 60 is the updates per second
-	private final int MILLI_SKIP = 1000 / 60;
-
 	private void startGameLoop() {
 		long nextGameTick = System.currentTimeMillis();
+		int milliSkip = 1000 / m_ups;
 		while (true) {
 			update(1);
-			m_network.processWriters();
-			m_network.processMessages();
-			m_network.processUpdates();
+			if (m_updatesPassed >= m_upf) {
+				m_network.processWriters();
+				m_network.processMessages();
+				m_network.trasmitUpdates();
+				m_updatesPassed = 1;
+			} else {
+				m_updatesPassed++;
+			}
 
-			nextGameTick += MILLI_SKIP;
+			nextGameTick += milliSkip;
 			long sleepTime = nextGameTick - System.currentTimeMillis();
 			if (sleepTime > 0) {
 				try {
@@ -118,14 +155,37 @@ public abstract class Server {
 		return m_inputHub;
 	}
 
+	/**
+	 * Gets the Activity used by the server to sync Entities.
+	 * 
+	 * @return
+	 */
+	public NetworkSyncActivity getSyncActivity() {
+		return m_network;
+	}
+
+	/**
+	 * Called after listen() but before startGameLoop()
+	 */
 	public abstract void onStart();
 
+	/**
+	 * Called after startGameLoop() exits
+	 */
 	public abstract void onStop();
 
+	/**
+	 * Called when a client connects and knows its id
+	 * 
+	 * @param clientID
+	 */
 	public abstract void onClientConnect(int clientID);
 
-	public abstract void initProcesses();
-
+	/**
+	 * Called every update loop
+	 * 
+	 * @param ticks
+	 */
 	public abstract void update(int ticks);
 
 	private static int s_clientCount = 0;
@@ -174,8 +234,12 @@ public abstract class Server {
 					System.exit(0);
 				}
 
-				if (m_dumpMessages)
-					System.out.println(message);
+				if (m_dumpMessages) {
+					double timeStamp = System.currentTimeMillis();
+					if (timeStamp - m_lastTimeStamp > 1)
+						System.out.println((timeStamp - m_lastTimeStamp) + "---" + message);
+					m_lastTimeStamp = timeStamp;
+				}
 
 				if (message.getCommand().contains("input")) {
 					m_inputHub.broadcast(message);

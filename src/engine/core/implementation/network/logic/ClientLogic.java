@@ -56,10 +56,6 @@ public class ClientLogic extends NetworkSyncLogic {
 			m_shellComponent.rotation = update.getParameters()[2].getDoubleValue();
 		}
 		if (type == 2) {
-			m_shellComponent.velocity = new Vector(update.getParameters()[2].getDoubleValue(),
-					update.getParameters()[3].getDoubleValue());
-		}
-		if (type == 3) {
 			m_textureComponent.texture.setImageID(update.getParameters()[2].getIntValue());
 		}
 	}

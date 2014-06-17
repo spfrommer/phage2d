@@ -15,7 +15,7 @@ public interface DataEncoder {
 	 * <fullpackage.component.class> <param1> val1 </param1> <param2> val2 </param2> </fullpackage.component.class>
 	 * 
 	 * @param component
-	 *            the org.w3c.dom.Element that has a code for building the DataComponent
+	 *            the Component to build the Element from
 	 * @param doc
 	 *            the Document needed to create a new Element
 	 * 

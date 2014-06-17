@@ -8,16 +8,16 @@ import engine.core.framework.component.type.ComponentType;
 import engine.core.framework.component.type.TypeManager;
 import engine.core.implementation.camera.base.Camera;
 import engine.core.implementation.camera.data.CameraFocusData;
-import engine.core.implementation.physics.wrappers.PositionWrapper;
+import engine.core.implementation.physics.wrappers.TransformWrapper;
 
 /**
  * An Activity that will control a Camera to chase an Entity.
  * 
- * @eng.dependencies CameraFocusData, PositionWrapper
+ * @eng.dependencies CameraFocusData, TransformWrapper
  */
 public class ChaseCameraActivity extends CameraActivity {
 	private ComponentType m_focusType;
-	private ComponentType m_positionType;
+	private ComponentType m_transformType;
 
 	/**
 	 * Contains the focusID of the entity it should follow
@@ -31,7 +31,7 @@ public class ChaseCameraActivity extends CameraActivity {
 
 	{
 		m_focusType = TypeManager.getType(CameraFocusData.class);
-		m_positionType = TypeManager.getType(PositionWrapper.class);
+		m_transformType = TypeManager.getType(TransformWrapper.class);
 	}
 
 	/**
@@ -42,15 +42,15 @@ public class ChaseCameraActivity extends CameraActivity {
 	 * @param focusID
 	 */
 	public ChaseCameraActivity(EntitySystem system, int focusID) {
-		super(system,
-				new Aspect(TypeManager.getType(CameraFocusData.class), TypeManager.getType(PositionWrapper.class)));
+		super(system, new Aspect(TypeManager.getType(CameraFocusData.class),
+				TypeManager.getType(TransformWrapper.class)));
 		m_focusID = focusID;
 	}
 
 	@Override
 	public void control(Camera camera, int ticks) {
 		if (m_focusEntity != null) {
-			PositionWrapper position = (PositionWrapper) m_focusEntity.getComponent(m_positionType);
+			TransformWrapper position = (TransformWrapper) m_focusEntity.getComponent(m_transformType);
 			Vector focus = position.getPosition();
 			if (Math.abs(m_lastX - focus.getX()) > UPDATE_THRESHOLD) {
 				camera.setX(focus.getX());

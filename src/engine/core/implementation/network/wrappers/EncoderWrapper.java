@@ -25,7 +25,7 @@ import engine.core.framework.component.DataComponent;
 import engine.core.framework.component.WrapperComponent;
 import engine.core.framework.component.type.ComponentType;
 import engine.core.implementation.network.base.encoding.DataEncoder;
-import engine.core.implementation.network.base.encoding.DependentEncoder;
+import engine.core.implementation.network.base.encoding.BlankEncoder;
 
 /**
  * A Wrapper that combines various Components into an Entity XML Document. Needed by ServerLogic to send Entities to the
@@ -50,13 +50,13 @@ public class EncoderWrapper extends WrapperComponent {
 	 * to any specific DataComponents because these dependencies will be rebuilt when the Entity is constructed from the
 	 * XML.
 	 */
-	private List<DependentEncoder> m_dependentEncoders;
+	private List<BlankEncoder> m_blankEncoders;
 
 	{
 		m_dataTypes = new HashMap<ComponentType, DataEncoder>();
 
 		m_dataEncoders = new HashMap<DataComponent, DataEncoder>();
-		m_dependentEncoders = new ArrayList<DependentEncoder>();
+		m_blankEncoders = new ArrayList<BlankEncoder>();
 	}
 
 	public EncoderWrapper() {
@@ -83,8 +83,8 @@ public class EncoderWrapper extends WrapperComponent {
 	 * 
 	 * @param encoder
 	 */
-	public void addDependentEncoder(DependentEncoder encoder) {
-		m_dependentEncoders.add(encoder);
+	public void addBlankEncoder(BlankEncoder encoder) {
+		m_blankEncoders.add(encoder);
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class EncoderWrapper extends WrapperComponent {
 			rootElement.appendChild(element);
 		}
 
-		for (DependentEncoder encoder : m_dependentEncoders) {
+		for (BlankEncoder encoder : m_blankEncoders) {
 			Element element = encoder.encode(doc);
 			rootElement.appendChild(element);
 		}
@@ -137,8 +137,8 @@ public class EncoderWrapper extends WrapperComponent {
 			logic.addDataEncoder(type, m_dataTypes.get(type));
 		}
 
-		for (DependentEncoder encoder : m_dependentEncoders)
-			logic.addDependentEncoder(encoder);
+		for (BlankEncoder encoder : m_blankEncoders)
+			logic.addBlankEncoder(encoder);
 
 		return logic;
 	}

@@ -42,8 +42,8 @@ public class HealthActivity extends AspectActivity {
 
 	public void update(int ticks) {
 		List<Entity> entities = this.getEntities();
-		for (int i = 0; i < entities.size(); i++) {
-			Entity entity = entities.get(i);
+		// concurrent modification exception?
+		for (Entity entity : entities) {
 			HealthData health = (HealthData) entity.getComponent(m_healthType);
 
 			if (health.health <= 0) {

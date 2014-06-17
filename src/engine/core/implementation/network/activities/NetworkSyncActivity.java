@@ -2,7 +2,9 @@ package engine.core.implementation.network.activities;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -13,6 +15,8 @@ import engine.core.framework.Entity;
 import engine.core.framework.EntitySystem;
 import engine.core.framework.component.type.ComponentType;
 import engine.core.framework.component.type.TypeManager;
+import engine.core.implementation.interpolation.base.TransmissionListener;
+import engine.core.implementation.interpolation.base.TransmissionReceiver;
 import engine.core.implementation.network.base.decoding.DecoderMapper;
 import engine.core.implementation.network.base.decoding.EntityDecoder;
 import engine.core.implementation.network.data.NetworkData;
@@ -25,7 +29,7 @@ import engine.core.network.message.Message;
  * 
  * @eng.dependencies NetworkSyncLogic, NetworkData
  */
-public class NetworkSyncActivity extends AspectActivity {
+public class NetworkSyncActivity extends AspectActivity implements TransmissionReceiver {
 	/**
 	 * The MessageWriters that should be managed by this Activity
 	 */
@@ -44,6 +48,7 @@ public class NetworkSyncActivity extends AspectActivity {
 	 * Maps Entities to their NetworkIDs
 	 */
 	private TwoWayHashMap<Entity, Integer> m_idMapper;
+
 	/**
 	 * The current id - for assigning new ids to entities
 	 */
@@ -53,18 +58,22 @@ public class NetworkSyncActivity extends AspectActivity {
 	 * buffers the received messages until the next update loop
 	 */
 	private List<Message> m_messageBuffer;
+
 	/**
 	 * Makes sure that the receiving thread can't add objects while the buffer is being analyzed
 	 */
 	private Lock m_messageBufferLock;
+
 	/**
 	 * Writers to add in the next update loop
 	 */
 	private List<MessageWriter> m_writerAddBuffer;
+
 	/**
 	 * Writers to remove in the next update loop
 	 */
 	private List<MessageWriter> m_writerRemoveBuffer;
+
 	/**
 	 * Makes sure that m_writers is being modified while writers are being added or removed
 	 */
@@ -74,6 +83,11 @@ public class NetworkSyncActivity extends AspectActivity {
 	 * Defines how to decode an entity
 	 */
 	private DecoderMapper m_decoder;
+
+	/**
+	 * A list of listeners which are fired when the NetworkSyncActivity processes the message buffer.
+	 */
+	private List<TransmissionListener> m_transmissionListeners;
 
 	{
 		m_messageBuffer = new ArrayList<Message>();
@@ -86,6 +100,8 @@ public class NetworkSyncActivity extends AspectActivity {
 		m_writers = new ArrayList<MessageWriter>();
 
 		m_idMapper = new TwoWayHashMap<Entity, Integer>();
+
+		m_transmissionListeners = new ArrayList<TransmissionListener>();
 
 		m_syncType = TypeManager.getType(NetworkSyncLogic.class);
 		m_dataType = TypeManager.getType(NetworkData.class);
@@ -141,6 +157,16 @@ public class NetworkSyncActivity extends AspectActivity {
 		}
 	}
 
+	@Override
+	public void addTransmissionListener(TransmissionListener listener) {
+		m_transmissionListeners.add(listener);
+	}
+
+	@Override
+	public void removeTransmissionListener(TransmissionListener listener) {
+		m_transmissionListeners.remove(listener);
+	}
+
 	/**
 	 * Adds and removes MessageWriters
 	 */
@@ -179,20 +205,27 @@ public class NetworkSyncActivity extends AspectActivity {
 	public void processMessages() {
 		try {
 			m_messageBufferLock.lock();
+
+			Set<Entity> updatedEntities = new HashSet<Entity>();
+
 			for (Message message : m_messageBuffer) {
 				if (message == null)
-					System.out.println("Message " + message + " equals null. (nsp.handleMessages) ");
+					System.err.println("Message " + message + " equals null. (nsp.handleMessages) ");
 
 				if (message.getCommand() == null)
-					System.out.println("Message " + message + " command equals null. (nsp.handleMessages) ");
+					System.err.println("Message " + message + " command equals null. (nsp.handleMessages) ");
 
 				if (message.getCommand().equals("update")) {
 					Entity receiver = m_idMapper.getBackward((message.getParameters()[0]).getIntValue());
+
 					if (receiver == null)
 						System.err.println("Null receiver in NetworkSyncProcess.handleMessages(): " + message);
-					NetworkSyncLogic component = (NetworkSyncLogic) receiver.getComponent(TypeManager
+
+					NetworkSyncLogic syncLogic = (NetworkSyncLogic) receiver.getComponent(TypeManager
 							.getType(NetworkSyncLogic.class));
-					component.processMessage(message);
+					syncLogic.processMessage(message);
+
+					updatedEntities.add(receiver);
 				} else if (message.getCommand().equals("addentity")) {
 					Entity entity = EntityDecoder.decode(message.getParameters()[0].getStringValue(), m_decoder);
 					this.getSystem().addEntity(entity);
@@ -201,6 +234,12 @@ public class NetworkSyncActivity extends AspectActivity {
 					this.getSystem().removeEntity(receiver);
 				}
 			}
+
+			for (Entity e : updatedEntities) {
+				for (TransmissionListener listener : m_transmissionListeners)
+					listener.transmissionReceived(e);
+			}
+
 			m_messageBuffer.clear();
 		} finally {
 			m_messageBufferLock.unlock();
@@ -209,13 +248,14 @@ public class NetworkSyncActivity extends AspectActivity {
 
 	/**
 	 * Transmits all updates that Components want the other side to know.
+	 * 
+	 * @return if any data was transmitted
 	 */
-	public void processUpdates() {
+	public boolean trasmitUpdates() {
 		List<Entity> entities = this.getEntities();
-		// concurrent mod
-		// for (Entity entity : entities) {
-		for (int i = 0; i < entities.size(); i++) {
-			Entity entity = entities.get(i);
+
+		boolean transmitted = false;
+		for (Entity entity : entities) {
 			NetworkSyncLogic component = (NetworkSyncLogic) entity.getComponent(m_syncType);
 			ArrayList<Message> updateMessages = component.getUpdateMessages();
 			for (Message updateMessage : updateMessages) {
@@ -226,8 +266,10 @@ public class NetworkSyncActivity extends AspectActivity {
 						e.printStackTrace();
 					}
 				}
+				transmitted = true;
 			}
 		}
+		return transmitted;
 	}
 
 	/**

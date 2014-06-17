@@ -28,6 +28,8 @@ public interface Display {
 
 	public Renderer getRenderer();
 
+	public void update();
+
 	public void update(int fps);
 
 	/**

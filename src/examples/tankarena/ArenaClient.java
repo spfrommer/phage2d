@@ -8,11 +8,14 @@ import engine.core.implementation.camera.activities.CameraActivity;
 import engine.core.implementation.camera.activities.KeyboardCameraActivity;
 import engine.core.implementation.camera.activities.MovementProfile;
 import engine.core.implementation.camera.base.ViewPort;
+import engine.core.implementation.interpolation.activities.InterpolationActivity;
+import engine.core.implementation.interpolation.data.InterpolationData;
+import engine.core.implementation.network.base.decoding.BlankDataDecoder;
 import engine.core.implementation.network.base.decoding.DecoderMapper;
 import engine.core.implementation.network.base.decoding.ErrorDecoder;
+import engine.core.implementation.physics.base.ShellDecoder;
 import engine.core.implementation.physics.data.PhysicsData;
 import engine.core.implementation.physics.data.PhysicsShellData;
-import engine.core.implementation.physics.data.PhysicsShellDecoder;
 import engine.core.implementation.rendering.data.AnimationData;
 import engine.core.implementation.rendering.data.TextureData;
 import engine.core.implementation.rendering.data.TextureDecoder;
@@ -37,6 +40,7 @@ import engine.inputs.mouse.MouseWorldYTrigger;
  */
 public class ArenaClient extends Client {
 	private CameraActivity m_cam;
+	private InterpolationActivity m_interpolation;
 
 	private static DecoderMapper s_decoder;
 
@@ -44,25 +48,23 @@ public class ArenaClient extends Client {
 		s_decoder = new DecoderMapper();
 		s_decoder.addMapping(PhysicsData.class, new ErrorDecoder());
 		s_decoder.addMapping(AnimationData.class, new ErrorDecoder());
-		s_decoder.addMapping(PhysicsShellData.class, new PhysicsShellDecoder());
+		s_decoder.addMapping(PhysicsShellData.class, new ShellDecoder());
 		s_decoder.addMapping(TextureData.class, new TextureDecoder());
+		s_decoder.addMapping(InterpolationData.class, new BlankDataDecoder());
 	}
 
 	public ArenaClient(CommandInterpreter interpreter, String server, int port) {
 		super(interpreter, server, port, s_decoder, "images-all.txt");
 		this.getViewPort().getCamera().setZoom(1);
+
+		m_cam = new KeyboardCameraActivity(this.getEntitySystem(), LWJGLKeyboard.instance(), new MovementProfile(10,
+				0.05));
+		m_interpolation = new InterpolationActivity(this.getEntitySystem(), this.getSyncActivity());
 	}
 
 	@Override
 	protected void onServerConnect() {
 		createInputManager(this.getID());
-	}
-
-	@Override
-	public void initProcesses() {
-		// m_cam = new ChaseCameraActivity(this.getEntitySystem(), this.getID());
-		m_cam = new KeyboardCameraActivity(this.getEntitySystem(), LWJGLKeyboard.instance(), new MovementProfile(20,
-				0.05));
 	}
 
 	@Override
@@ -72,6 +74,7 @@ public class ArenaClient extends Client {
 
 	@Override
 	public void update(int ticks) {
+		m_interpolation.update();
 		m_cam.control(this.getViewPort().getCamera(), ticks);
 	}
 

@@ -28,7 +28,8 @@ import engine.graphics.Renderer;
 import engine.graphics.lwjgl.LWJGLDisplay;
 
 /**
- * An abstract Client that manages networking details. Extend this class if you want to make a multiplayer game.
+ * An abstract Client that manages networking details and rendering. Extend this class if you want to make a multiplayer
+ * game.
  */
 public abstract class Client {
 	private Socket m_socket;
@@ -50,6 +51,10 @@ public abstract class Client {
 	private Display m_display;
 
 	private boolean m_dumpMessages = false;
+	private double m_lastTimeStamp = System.currentTimeMillis();
+
+	private static final int DEFAULT_FPS = 60;
+	private int m_fps = DEFAULT_FPS;
 
 	{
 		m_system = new EntitySystem();
@@ -72,21 +77,41 @@ public abstract class Client {
 		splash.setVisible(false);
 	}
 
+	/**
+	 * Connects to the host, initializes processes, listens for messages, and starts rendering.
+	 */
 	public void start() {
 		connect(m_host, m_port);
-
-		initProcesses();
 
 		listen();
 		startRenderingLoop(m_display);
 	}
 
+	/**
+	 * Sets the RendingActivity that this Client should use in rendering
+	 * 
+	 * @param rendering
+	 */
 	public void setRenderingActivity(RenderingActivity rendering) {
 		m_rendering = rendering;
 	}
 
+	/**
+	 * Whether this Client should dump incoming messages and their timestamp
+	 * 
+	 * @param dumpMessages
+	 */
 	public void setDumpMessages(boolean dumpMessages) {
 		m_dumpMessages = dumpMessages;
+	}
+
+	/**
+	 * Sets the rendering FPS.
+	 * 
+	 * @param fps
+	 */
+	public void setFPS(int fps) {
+		m_fps = fps;
 	}
 
 	/**
@@ -141,11 +166,9 @@ public abstract class Client {
 		return display;
 	}
 
-	private final int FPS = 60;
-
 	private void startRenderingLoop(Display display) {
 		long nextGameTick = System.currentTimeMillis();
-		int milliSkip = 1000 / FPS;
+		int milliSkip = 1000 / m_fps;
 		while (!display.destroyRequested()) {
 			m_messageBuffer.flush();
 
@@ -153,7 +176,7 @@ public abstract class Client {
 			m_network.processMessages();
 
 			update(1);
-
+			// this call is actually blocking 16 milliseconds
 			render(display);
 
 			nextGameTick += milliSkip;
@@ -185,7 +208,7 @@ public abstract class Client {
 
 		display.getRenderer().setColor(Color.WHITE);
 		display.render();
-		display.update(FPS);
+		display.update();
 	}
 
 	protected void writeMessage(Message message) {
@@ -200,16 +223,41 @@ public abstract class Client {
 		return m_system;
 	}
 
+	/**
+	 * Gets the id assigned to this client by the server
+	 * 
+	 * @return
+	 */
 	public int getID() {
 		return m_id;
 	}
 
+	/**
+	 * Gets the Activity used by the client to sync Entities.
+	 * 
+	 * @return
+	 */
+	public NetworkSyncActivity getSyncActivity() {
+		return m_network;
+	}
+
+	/**
+	 * Called when the client connects to the server and receives its id
+	 */
 	protected abstract void onServerConnect();
 
-	public abstract void initProcesses();
-
+	/**
+	 * Called every update loop
+	 * 
+	 * @param ticks
+	 */
 	public abstract void update(int ticks);
 
+	/**
+	 * Called so that every subclass can render its specific gui
+	 * 
+	 * @param renderer
+	 */
 	public abstract void renderGui(Renderer renderer);
 
 	private class ServerReader implements Runnable {
@@ -226,8 +274,14 @@ public abstract class Client {
 					System.err.println("Socket connection closed.");
 					System.exit(0);
 				}
-				if (m_dumpMessages)
-					System.out.println(message);
+
+				if (m_dumpMessages) {
+					double timeStamp = System.currentTimeMillis();
+					if (timeStamp - m_lastTimeStamp > 1)
+						System.out.println((timeStamp - m_lastTimeStamp) + "---" + message);
+					m_lastTimeStamp = timeStamp;
+				}
+
 				m_network.bufferMessage(message);
 			}
 		}

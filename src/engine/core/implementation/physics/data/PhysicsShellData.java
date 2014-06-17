@@ -15,9 +15,6 @@ public class PhysicsShellData extends DataComponent {
 	public double rotation;
 	public Vector center;
 
-	// for interpolation
-	public Vector velocity;
-
 	public PhysicsShellData() {
 		super();
 	}

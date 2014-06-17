@@ -10,24 +10,18 @@ import engine.core.implementation.NameData;
 import engine.core.implementation.camera.data.CameraFocusData;
 import engine.core.implementation.extras.data.DamageData;
 import engine.core.implementation.extras.data.HealthData;
+import engine.core.implementation.interpolation.data.InterpolationData;
+import engine.core.implementation.network.base.encoding.BasicBlankEncoder;
 import engine.core.implementation.network.base.encoding.BasicDataEncoder;
-import engine.core.implementation.network.base.encoding.BasicDependentEncoder;
 import engine.core.implementation.network.data.NetworkData;
 import engine.core.implementation.network.data.NetworkEncoder;
 import engine.core.implementation.network.logic.ClientLogic;
 import engine.core.implementation.network.wrappers.EncoderWrapper;
+import engine.core.implementation.physics.base.PhysicsToShellEncoder;
+import engine.core.implementation.physics.base.ShellEncoder;
 import engine.core.implementation.physics.data.PhysicsData;
 import engine.core.implementation.physics.data.PhysicsShellData;
-import engine.core.implementation.physics.data.PhysicsToShellEncoder;
-import engine.core.implementation.physics.data.ShellEncoder;
-import engine.core.implementation.physics.wrappers.physics.PhysicsCenterWrapper;
-import engine.core.implementation.physics.wrappers.physics.PhysicsPositionWrapper;
-import engine.core.implementation.physics.wrappers.physics.PhysicsRotationWrapper;
-import engine.core.implementation.physics.wrappers.physics.PhysicsVelocityWrapper;
-import engine.core.implementation.physics.wrappers.shell.ShellCenterWrapper;
-import engine.core.implementation.physics.wrappers.shell.ShellPositionWrapper;
-import engine.core.implementation.physics.wrappers.shell.ShellRotationWrapper;
-import engine.core.implementation.physics.wrappers.shell.ShellVelocityWrapper;
+import engine.core.implementation.physics.wrappers.ShellTransformWrapper;
 import engine.core.implementation.rendering.data.LayerData;
 import engine.core.implementation.rendering.data.TextureData;
 import engine.core.implementation.rendering.data.TextureEncoder;
@@ -72,7 +66,6 @@ public class ComponentFactory {
 	public static PhysicsShellData addShellData(Entity entity, Vector position, double rotation) {
 		PhysicsShellData shell = new PhysicsShellData(entity);
 		shell.center = new Vector(0, 0);
-		shell.velocity = new Vector(0, 0);
 		shell.position = position;
 		shell.rotation = rotation;
 		entity.addComponent(shell);
@@ -177,35 +170,12 @@ public class ComponentFactory {
 	}
 
 	/**
-	 * Adds a Position, Rotation, Velocity, and Center PhysicsWrappers to this Entity - used mainly for rendering single
-	 * player games or for the ServerLogic to transmit updates to the client
-	 * 
-	 * @param entity
-	 */
-	public static void addPhysicsWrappers(Entity entity) {
-		entity.addComponent(new PhysicsPositionWrapper(entity));
-		entity.addComponent(new PhysicsRotationWrapper(entity));
-		entity.addComponent(new PhysicsVelocityWrapper(entity));
-		entity.addComponent(new PhysicsCenterWrapper(entity));
-	}
-
-	/**
-	 * Adds a Position, Rotation, Velocity, and Center ShellWrappers to this Entity
-	 * 
-	 * @param entity
-	 */
-	public static void addShellWrappers(Entity entity) {
-		entity.addComponent(new ShellPositionWrapper(entity));
-		entity.addComponent(new ShellRotationWrapper(entity));
-		entity.addComponent(new ShellVelocityWrapper(entity));
-		entity.addComponent(new ShellCenterWrapper(entity));
-	}
-
-	/**
 	 * Adds all the encoders to a server-side entity that it will need to get a client terminal to render an entity to
 	 * an EncoderWrapper, which it DOES NOTE ADD to the Entity then returns. Works with either physics or shell data.
+	 * Includes Interpolation Data.
 	 * 
 	 * @param entity
+	 * @param interpolation
 	 * @return
 	 */
 	public static EncoderWrapper createBasicEncoder(Entity entity) {
@@ -215,12 +185,10 @@ public class ComponentFactory {
 		encoder.addDataEncoder(TypeManager.getType(TextureData.class), new TextureEncoder());
 		encoder.addDataEncoder(TypeManager.getType(LayerData.class), new BasicDataEncoder());
 		encoder.addDataEncoder(TypeManager.getType(NetworkData.class), new NetworkEncoder(false));
-		encoder.addDependentEncoder(new BasicDependentEncoder(ShellPositionWrapper.class));
-		encoder.addDependentEncoder(new BasicDependentEncoder(ShellRotationWrapper.class));
-		encoder.addDependentEncoder(new BasicDependentEncoder(ShellCenterWrapper.class));
-		encoder.addDependentEncoder(new BasicDependentEncoder(ClientLogic.class));
-		encoder.addDependentEncoder(new BasicDependentEncoder(TextureRenderingLogic.class));
-
+		encoder.addBlankEncoder(new BasicBlankEncoder(InterpolationData.class));
+		encoder.addBlankEncoder(new BasicBlankEncoder(ShellTransformWrapper.class));
+		encoder.addBlankEncoder(new BasicBlankEncoder(ClientLogic.class));
+		encoder.addBlankEncoder(new BasicBlankEncoder(TextureRenderingLogic.class));
 		return encoder;
 	}
 }
