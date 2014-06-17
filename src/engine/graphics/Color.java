@@ -8,6 +8,7 @@ public class Color {
 	public static Color BLUE = new Color(0f, 0f, 1f, 1f);
 	public static Color GREEN = new Color(0f, 1f, 0f, 1f);
 	public static Color WHITE = new Color(1f, 1f, 1f, 1f);
+	public static Color YELLOW = new Color(1f, 1f, 0f, 1f);
 
 	private float m_red = 1f;
 	private float m_green = 1f;

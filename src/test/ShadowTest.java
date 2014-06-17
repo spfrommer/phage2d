@@ -34,8 +34,10 @@ public class ShadowTest implements Renderable {
 	}
 	public void renderAll(Renderer r) {
 		r.drawPointLight(m_lightPos.getX(), m_lightPos.getY(), new Color(1, 1, 1, 1), new Vector3f(0.5f, 0.0005f, 0.0000001f));
-		r.fillRect(m_lightPos.getX() - 25, m_lightPos.getY() - 25, 50, 50);
 		r.render(this);
+		r.setColor(Color.BLUE);
+		r.fillRect(m_lightPos.getX() - 25, m_lightPos.getY() - 25, 50, 50);
+		r.setColor(Color.WHITE);
 	}
 	public void updateLightPos(Keyboard k) {
 		if (k.isKeyPressed('w')) {
@@ -54,12 +56,12 @@ public class ShadowTest implements Renderable {
 		r.clearClip();
 		//r.clearClip();
 		Rectangle rect = new Rectangle(200, 200, 100, 100);
-		ArrayList<Point2D> shape = ShapeUtils.createShadowArea(rect, new Vector2f(0, 0), m_lightPos, 500);
+		System.out.println(ShapeUtils.getVectors(rect, true));
+		ArrayList<Point2D> shape = ShapeUtils.createShadowArea(rect, m_lightPos, 500);
 		Shape s  = ShapeUtils.createShape(shape);
 		r.occlude(s);
 		r.fill(rect);
 		//r.draw(s);
-		r.setColor(Color.RED);
 		//r.fill(s);
 
 		/*for (Side s : sides) {
@@ -68,7 +70,6 @@ public class ShadowTest implements Renderable {
 			Vector2f perp = s.getPerpendicular();
 			r.drawLine(midpt.getX(), midpt.getY(), midpt.getX() + perp.getX(), midpt.getY() + perp.getY());
 		}*/
-		r.setColor(Color.WHITE);		
 		r.drawImage(TANK_BODY, 0, 0, 1024, 1024);
 		
 	}

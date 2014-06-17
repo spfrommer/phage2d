@@ -76,6 +76,7 @@ public class LWJGLRenderer implements Renderer {
 			r.render(this);
 			light.clear();
 		}
+		s_defaultProgram.use();
 	}
 
 	public void pushProgram() {
@@ -238,6 +239,7 @@ public class LWJGLRenderer implements Renderer {
 
 	@Override
 	public void fill(Shape shape) {
+		if (shape == null) return;
 		ArrayList<Vector2f> points = ShapeUtils.getVectors(shape, true);
 		ArrayList<Triangle> tris = Triangulator.s_triangulate(points);
 		System.out.println("Filling: " + points.size());
