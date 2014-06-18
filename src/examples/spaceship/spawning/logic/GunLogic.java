@@ -35,14 +35,6 @@ public class GunLogic extends SpawningLogic {
 		m_velocity = velocity;
 	}
 
-	public GunLogic(Entity parent, Entity spawn, InputManager input, long spawnInterval, double velocity) {
-		super(parent, new Aspect(TypeManager.getType(TransformWrapper.class)));
-		m_spawningEntity = spawn;
-		m_input = input;
-		m_spawnInterval = spawnInterval;
-		m_velocity = velocity;
-	}
-
 	@Override
 	public ArrayList<Entity> spawn(int ticks) {
 		ticksElapsed += ticks;

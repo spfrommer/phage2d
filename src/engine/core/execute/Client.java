@@ -179,7 +179,7 @@ public abstract class Client {
 			// this call is actually blocking 16 milliseconds
 			render(display);
 
-			nextGameTick += milliSkip;
+			/*nextGameTick += milliSkip;
 			long sleepTime = nextGameTick - System.currentTimeMillis();
 			if (sleepTime > 0) {
 				try {
@@ -187,7 +187,7 @@ public abstract class Client {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-			}
+			}*/
 		}
 		try {
 			m_socket.close();

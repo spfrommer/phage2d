@@ -1,9 +1,7 @@
 package engine.core.implementation.extras.logic;
 
 import engine.core.framework.Aspect;
-import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
-import engine.core.framework.component.type.ComponentType;
 import engine.core.framework.component.type.TypeManager;
 import engine.core.implementation.rendering.base.Animator;
 import engine.core.implementation.rendering.data.AnimationData;
@@ -15,11 +13,6 @@ public class AnimationDeathLogic extends DeathLogic {
 
 	public AnimationDeathLogic() {
 		super(new Aspect(TypeManager.getType(TextureData.class), TypeManager.getType(AnimationData.class)));
-	}
-
-	public AnimationDeathLogic(Entity parent) {
-		super(parent, new Aspect(new ComponentType[] { TypeManager.getType(TextureData.class),
-				TypeManager.getType(AnimationData.class) }));
 	}
 
 	@Override

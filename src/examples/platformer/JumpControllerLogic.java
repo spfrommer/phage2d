@@ -2,7 +2,6 @@ package examples.platformer;
 
 import utils.physics.Vector;
 import engine.core.framework.Aspect;
-import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.LogicComponent;
 import engine.core.framework.component.type.TypeManager;
@@ -20,10 +19,6 @@ public class JumpControllerLogic extends LogicComponent implements ActionExecuta
 
 	public JumpControllerLogic() {
 		super(new Aspect(TypeManager.getType(PhysicsData.class)));
-	}
-
-	public JumpControllerLogic(Entity parent) {
-		super(parent, new Aspect(TypeManager.getType(PhysicsData.class)));
 	}
 
 	@Override

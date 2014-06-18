@@ -2,7 +2,6 @@ package engine.core.implementation.physics.wrappers;
 
 import utils.physics.Vector;
 import engine.core.framework.Aspect;
-import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.type.TypeManager;
 import engine.core.implementation.physics.data.PhysicsShellData;
@@ -17,10 +16,6 @@ public class ShellTransformWrapper extends TransformWrapper {
 
 	public ShellTransformWrapper() {
 		super(new Aspect(TypeManager.getType(PhysicsShellData.class)));
-	}
-
-	public ShellTransformWrapper(Entity parent) {
-		super(parent, new Aspect(TypeManager.getType(PhysicsShellData.class)));
 	}
 
 	@Override

@@ -30,11 +30,6 @@ public class BulletCollisionHandlerLogic extends CollisionHandlerLogic {
 		m_system = system;
 	}
 
-	public BulletCollisionHandlerLogic(Entity parent, EntitySystem system) {
-		super(parent, new Aspect(TypeManager.getType(DamageData.class), TypeManager.getType(TransformWrapper.class)));
-		m_system = system;
-	}
-
 	private Entity makeExplosion() {
 		final Entity explosion = new Entity();
 
@@ -44,9 +39,9 @@ public class BulletCollisionHandlerLogic extends CollisionHandlerLogic {
 		ComponentFactory.addNameData(explosion, "explosion");
 		ComponentFactory.addLayerData(explosion, 0);
 
-		explosion.addComponent(new ShellTransformWrapper(explosion));
+		explosion.addComponent(new ShellTransformWrapper());
 		explosion.addComponent(ComponentFactory.createBasicEncoder(explosion));
-		explosion.addComponent(new ServerLogic(explosion));
+		explosion.addComponent(new ServerLogic());
 		return explosion;
 	}
 

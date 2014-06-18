@@ -18,10 +18,6 @@ public class ListenerCollisionHandlerLogic extends CollisionHandlerLogic {
 
 	}
 
-	public ListenerCollisionHandlerLogic(Entity entity) {
-		super(entity);
-	}
-
 	public void addListener(CollisionListener listener) {
 		m_listeners.add(listener);
 	}

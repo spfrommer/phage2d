@@ -1,6 +1,5 @@
 package engine.core.implementation;
 
-import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.DataComponent;
 
@@ -12,10 +11,6 @@ public class NameData extends DataComponent {
 
 	public NameData() {
 		super();
-	}
-
-	public NameData(Entity entity) {
-		super(entity);
 	}
 
 	@Override

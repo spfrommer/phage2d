@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import utils.physics.Vector;
 import engine.core.framework.Aspect;
-import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.type.TypeManager;
 import engine.core.implementation.physics.data.PhysicsShellData;
@@ -22,10 +21,6 @@ public class ClientLogic extends NetworkSyncLogic {
 
 	public ClientLogic() {
 		super(new Aspect(TypeManager.getType(PhysicsShellData.class), TypeManager.getType(TextureData.class)));
-	}
-
-	public ClientLogic(Entity parent) {
-		super(parent, new Aspect(TypeManager.getType(PhysicsShellData.class), TypeManager.getType(TextureData.class)));
 	}
 
 	@Override

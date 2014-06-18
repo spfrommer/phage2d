@@ -1,6 +1,5 @@
 package engine.core.implementation.interpolation.data;
 
-import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.DataComponent;
 
@@ -19,10 +18,6 @@ public class InterpolationData extends DataComponent {
 
 	public InterpolationData() {
 		super();
-	}
-
-	public InterpolationData(Entity parent) {
-		super(parent);
 	}
 
 	@Override

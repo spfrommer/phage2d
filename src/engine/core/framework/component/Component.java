@@ -14,10 +14,6 @@ public abstract class Component {
 	Component() {
 	}
 
-	Component(Entity parent) {
-		m_parent = parent;
-	}
-
 	/**
 	 * Sets the Entity this Component belongs to
 	 * 

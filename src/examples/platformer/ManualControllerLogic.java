@@ -2,7 +2,6 @@ package examples.platformer;
 
 import utils.physics.Vector;
 import engine.core.framework.Aspect;
-import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.LogicComponent;
 import engine.core.framework.component.type.TypeManager;
@@ -20,11 +19,6 @@ public class ManualControllerLogic extends LogicComponent implements ActionExecu
 
 	public ManualControllerLogic(InputManager manager) {
 		super(new Aspect(TypeManager.getType(PhysicsData.class)));
-		m_inputManager = manager;
-	}
-
-	public ManualControllerLogic(Entity parent, InputManager manager) {
-		super(parent, new Aspect(TypeManager.getType(PhysicsData.class)));
 		m_inputManager = manager;
 	}
 

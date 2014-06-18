@@ -29,8 +29,8 @@ public class ArenaServer extends Server {
 		m_physics = new PhysicsActivity(this.getEntitySystem());
 		m_behavior = new BehaviorActivity(this.getEntitySystem());
 		m_animation = new AnimationActivity(this.getEntitySystem());
-		this.setUPS(60);
-		this.setUPF(4);
+		this.setUPS(50);
+		this.setUPF(1);
 	}
 
 	@Override

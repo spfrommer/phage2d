@@ -1,9 +1,10 @@
-package engine.core.implementation.physics.logic.filter;
+package engine.core.implementation.physics.base;
 
 import org.dyn4j.collision.Filter;
 
 import engine.core.framework.Entity;
 import engine.core.framework.component.type.TypeManager;
+import engine.core.implementation.physics.logic.filter.CollisionFilterLogic;
 
 /**
  * Supplied to the physics Body and directly interfaces the physics library and the CollisionFilterLogic.

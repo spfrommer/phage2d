@@ -19,7 +19,7 @@ import utils.physics.Vector;
 import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.DataComponent;
-import engine.core.implementation.physics.logic.filter.PhysicsFilter;
+import engine.core.implementation.physics.base.PhysicsFilter;
 
 /**
  * Stores the Body and BodyFixture for physics computations.
@@ -35,13 +35,6 @@ public class PhysicsData extends DataComponent {
 	public PhysicsData(Convex convex) {
 		super();
 		initializeData(convex);
-	}
-
-	public PhysicsData(Entity parent, Convex convex) {
-		super(parent);
-		initializeData(convex);
-
-		m_fixture.setFilter(new PhysicsFilter(this.getEntity()));
 	}
 
 	private final void initializeData(Convex convex) {

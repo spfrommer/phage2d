@@ -74,7 +74,7 @@ public class ArenaClient extends Client {
 
 	@Override
 	public void update(int ticks) {
-		m_interpolation.update();
+		// m_interpolation.update();
 		m_cam.control(this.getViewPort().getCamera(), ticks);
 	}
 

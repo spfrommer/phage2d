@@ -11,10 +11,6 @@ public class AllCollisionFilterLogic extends CollisionFilterLogic {
 		super();
 	}
 
-	public AllCollisionFilterLogic(Entity parent) {
-		super(parent);
-	}
-
 	@Override
 	public boolean allowCollision(Entity parent) {
 		return true;

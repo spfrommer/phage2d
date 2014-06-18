@@ -1,7 +1,6 @@
 package engine.core.framework.component;
 
 import engine.core.framework.Aspect;
-import engine.core.framework.Entity;
 import engine.core.framework.component.type.ComponentType;
 
 /**
@@ -15,16 +14,8 @@ public abstract class WrapperComponent extends DependentComponent {
 		super();
 	}
 
-	public WrapperComponent(Entity parent) {
-		super(parent);
-	}
-
 	public WrapperComponent(Aspect dependencies) {
-		super(dependencies);
-	}
-
-	public WrapperComponent(Entity parent, Aspect dependencies) {
-		super(parent, filterAspect(dependencies));
+		super(filterAspect(dependencies));
 	}
 
 	@Override

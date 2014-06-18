@@ -102,7 +102,9 @@ public abstract class Game {
 			// timer.start();
 			update(1);
 
+			long time = System.currentTimeMillis();
 			render(display);
+			System.out.println(System.currentTimeMillis() - time);
 
 			/*nextGameTick += milliSkip;
 			long sleepTime = nextGameTick - System.currentTimeMillis();

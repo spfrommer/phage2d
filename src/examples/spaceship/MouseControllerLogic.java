@@ -2,7 +2,6 @@ package examples.spaceship;
 
 import utils.physics.Vector;
 import engine.core.framework.Aspect;
-import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.LogicComponent;
 import engine.core.framework.component.type.TypeManager;
@@ -27,16 +26,6 @@ public class MouseControllerLogic extends LogicComponent implements ActionExecut
 
 	public MouseControllerLogic(Aspect dependences, InputManager manager) {
 		super(new Aspect(TypeManager.getType(PhysicsData.class)).addTypes(dependences));
-		m_inputManager = manager;
-	}
-
-	public MouseControllerLogic(Entity parent, InputManager manager) {
-		super(parent, new Aspect(TypeManager.getType(PhysicsData.class)));
-		m_inputManager = manager;
-	}
-
-	public MouseControllerLogic(Entity parent, Aspect dependencies, InputManager manager) {
-		super(parent, new Aspect(TypeManager.getType(PhysicsData.class)).addTypes(dependencies));
 		m_inputManager = manager;
 	}
 

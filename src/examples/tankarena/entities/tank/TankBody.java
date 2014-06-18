@@ -53,15 +53,15 @@ public class TankBody extends Entity {
 		ComponentFactory.addNameData(this, "tankbody");
 		ComponentFactory.addLayerData(this, layer);
 		ComponentFactory.addCameraFocusData(this, focusID);
-		this.addComponent(new PhysicsTransformWrapper(this));
+		this.addComponent(new PhysicsTransformWrapper());
 
 		EncoderWrapper encoder = ComponentFactory.createBasicEncoder(this);
 		encoder.addDataEncoder(TypeManager.getType(CameraFocusData.class), new BasicDataEncoder());
 		this.addComponent(encoder);
 
 		// for single player mode
-		this.addComponent(new TextureRenderingLogic(this));
+		this.addComponent(new TextureRenderingLogic());
 
-		this.addComponent(new ServerLogic(this));
+		this.addComponent(new ServerLogic());
 	}
 }

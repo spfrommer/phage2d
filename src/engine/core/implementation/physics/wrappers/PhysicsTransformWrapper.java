@@ -2,7 +2,6 @@ package engine.core.implementation.physics.wrappers;
 
 import utils.physics.Vector;
 import engine.core.framework.Aspect;
-import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.type.TypeManager;
 import engine.core.implementation.physics.data.PhysicsData;
@@ -17,10 +16,6 @@ public class PhysicsTransformWrapper extends TransformWrapper {
 
 	public PhysicsTransformWrapper() {
 		super(new Aspect(TypeManager.getType(PhysicsData.class)));
-	}
-
-	public PhysicsTransformWrapper(Entity parent) {
-		super(parent, new Aspect(TypeManager.getType(PhysicsData.class)));
 	}
 
 	@Override

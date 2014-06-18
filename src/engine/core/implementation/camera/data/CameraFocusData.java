@@ -1,6 +1,5 @@
 package engine.core.implementation.camera.data;
 
-import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.DataComponent;
 
@@ -12,10 +11,6 @@ public class CameraFocusData extends DataComponent {
 
 	public CameraFocusData() {
 		super();
-	}
-
-	public CameraFocusData(Entity entity) {
-		super(entity);
 	}
 
 	@Override

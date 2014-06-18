@@ -2,7 +2,6 @@ package examples.tankarena.entities.tank;
 
 import utils.physics.Vector;
 import engine.core.framework.Aspect;
-import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.LogicComponent;
 import engine.core.framework.component.type.TypeManager;
@@ -28,13 +27,6 @@ public class PlayerTreadLogic extends LogicComponent implements ActionExecutable
 
 	public PlayerTreadLogic(InputManager inputManager, int direction) {
 		super(new Aspect(TypeManager.getType(PhysicsData.class), TypeManager.getType(AnimationData.class),
-				TypeManager.getType(TextureData.class)));
-		m_inputManager = inputManager;
-		m_direction = direction;
-	}
-
-	public PlayerTreadLogic(Entity entity, InputManager inputManager, int direction) {
-		super(entity, new Aspect(TypeManager.getType(PhysicsData.class), TypeManager.getType(AnimationData.class),
 				TypeManager.getType(TextureData.class)));
 		m_inputManager = inputManager;
 		m_direction = direction;

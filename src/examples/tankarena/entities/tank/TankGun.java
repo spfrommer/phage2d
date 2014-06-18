@@ -41,7 +41,7 @@ public class TankGun extends Entity {
 		physics.setMovementFriction(0);
 		physics.setMass(20);
 
-		this.addComponent(new NoneCollisionFilterLogic(this));
+		this.addComponent(new NoneCollisionFilterLogic());
 
 		Joint weld = PhysicsData.JointFactory.createJoint(tankPhysics, physics, tankPhysics.getPosition().clone(),
 				JointType.REVOLUTE);
@@ -54,27 +54,27 @@ public class TankGun extends Entity {
 			textureList.add(new Texture(ImageUtils.getID(frame), width, height));
 		}
 
-		AnimationData animation = new AnimationData(this);
+		AnimationData animation = new AnimationData();
 		animation.addAnimator("fire", new Animator(textureList, 3));
 		this.addComponent(animation);
 
 		ComponentFactory.addNetworkData(this);
 		ComponentFactory.addNameData(this, "tankgun");
 		ComponentFactory.addLayerData(this, layer);
-		this.addComponent(new PhysicsTransformWrapper(this));
+		this.addComponent(new PhysicsTransformWrapper());
 
 		this.addComponent(ComponentFactory.createBasicEncoder(this));
 
-		this.addComponent(new ServerLogic(this));
+		this.addComponent(new ServerLogic());
 
 		// for single player mode
-		this.addComponent(new TextureRenderingLogic(this));
+		this.addComponent(new TextureRenderingLogic());
 
-		this.addComponent(new PlayerGunAimerLogic(this, input));
-		this.addComponent(new ShootingLogic(this, system, new Missile(new Rectangle(20, 20), layer, new Texture(
-				ImageUtils.getID("portal1.png"), 20, 20))));
+		this.addComponent(new PlayerGunAimerLogic(input));
+		this.addComponent(new ShootingLogic(system, new Missile(new Rectangle(20, 20), layer, new Texture(ImageUtils
+				.getID("portal1.png"), 20, 20))));
 
-		TreeLogic tree = new TreeLogic(this);
+		TreeLogic tree = new TreeLogic();
 
 		ParallelComposite concurrent = new ParallelComposite();
 
