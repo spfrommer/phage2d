@@ -25,6 +25,7 @@ public class ShapeUtils {
 	 * @return
 	 */
 	public static Shape createShape(ArrayList<Point2D> points) {
+		if (points.size() == 0) return null;
 		GeneralPath gp = new GeneralPath();
 		for (int i = 0; i < points.size(); i++) {
 			Point2D point = points.get(i);
@@ -46,7 +47,6 @@ public class ShapeUtils {
 	 */
 	public static ArrayList<Point2D> getPoints(Shape s, boolean clockwise) {
 		ArrayList<Point2D> points = getPointLoop(s);
-
 		// Remove closing segment
 		if (points.size() != 0) points.remove(points.size() - 1);
 		if (!clockwise) Collections.reverse(points);
@@ -66,12 +66,12 @@ public class ShapeUtils {
 			iterator.currentSegment(coords);
 			float x = (float) coords[0];
 			float y = (float) coords[1];
-			points.add(new Vector2f(x, y));
+			Vector2f vec = new Vector2f(x, y);
+			if (!points.contains(vec)) points.add(vec);
 			iterator.next();
 		}
-
 		// Remove closing segment
-		if (points.size() != 0) points.remove(points.size() - 1);
+		//if (points.size() != 0) points.remove(points.size() - 1);
 		if (!clockwise) Collections.reverse(points);
 		return points;
 	}
@@ -159,6 +159,7 @@ public class ShapeUtils {
 		}
 		return passed;
 	}
+	//TODO: Make faces perpendicular to view vector return neither front nor back
 	public static boolean facing(Side side, Vector2f sPos, Vector2f pos) {
 		Vector2f perpendicular = side.getPerpendicular();
 
@@ -171,15 +172,17 @@ public class ShapeUtils {
 		boolean facingTowards = Vector2f.dot(start, perpendicular) >= 0 || Vector2f.dot(end, perpendicular) >= 0;
 		return facingTowards;
 	}
-	public static ArrayList<Point2D> createShadowArea(Shape s, Vector2f loc, Vector2f lightPos, float infinity) {
+	public static ArrayList<Point2D> createShadowArea(Shape s, Vector2f lightPos, float infinity) {
+		if (s.contains(new Point2f(lightPos))) {
+			return new ArrayList<Point2D>();
+		}
 		ArrayList<Point2D> points = new ArrayList<Point2D>();
 		
 		ArrayList<Side> sides = getSides(s, false);
 		//System.out.println("Got Sides");
-		ArrayList<Side> back = cullSides(sides, loc, lightPos, true);
+		ArrayList<Side> back = cullSides(sides, new Vector2f(0, 0), lightPos, true);
 		//System.out.println("Culled sides");
 		ArrayList<Vector2f> backPoints = Side.getPoints(back);
-		System.out.println("Points: " + backPoints.size() + " Sides: " + back.size());
 		//Add the backPoints to the point list
 		for (Vector2f vec : backPoints) {
 			points.add(new Point2f(vec.getX(), vec.getY()));
