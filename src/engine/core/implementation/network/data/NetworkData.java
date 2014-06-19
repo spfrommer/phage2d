@@ -1,6 +1,5 @@
 package engine.core.implementation.network.data;
 
-import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.DataComponent;
 
@@ -24,10 +23,6 @@ public class NetworkData extends DataComponent {
 
 	public NetworkData() {
 		super();
-	}
-
-	public NetworkData(Entity parent) {
-		super(parent);
 	}
 
 	@Override

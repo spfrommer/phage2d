@@ -54,8 +54,9 @@ public class Entity {
 	}
 
 	/**
-	 * Adds a Component to this Entity. Only one Component of each ComponentType allowed. If it's a LogicComponent,
-	 * there will also be checking to ensure that all dependencies are satisfied.
+	 * Adds a Component to this Entity and sets the Component's parent to this Entity. Only one Component of each
+	 * ComponentType allowed. If it's a LogicComponent, there will also be checking to ensure that all dependencies are
+	 * satisfied.
 	 * 
 	 * @param comp
 	 */
@@ -69,6 +70,7 @@ public class Entity {
 
 			m_aspect.addType(TypeManager.getType(comp.getClass()));
 			m_components.put(TypeManager.getType(comp.getClass()), comp);
+			comp.setEntity(this);
 
 			if (comp instanceof DependentComponent)
 				((DependentComponent) comp).loadDependencies();

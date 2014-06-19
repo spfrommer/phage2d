@@ -1,7 +1,6 @@
 package examples.platformer;
 
 import engine.core.framework.Aspect;
-import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.LogicComponent;
 import engine.core.framework.component.type.TypeManager;
@@ -19,11 +18,6 @@ public class RollControllerLogic extends LogicComponent implements ActionExecuta
 
 	public RollControllerLogic(double torque) {
 		super(new Aspect(TypeManager.getType(PhysicsData.class)));
-		m_torque = torque;
-	}
-
-	public RollControllerLogic(Entity parent, double torque) {
-		super(parent, new Aspect(TypeManager.getType(PhysicsData.class)));
 		m_torque = torque;
 	}
 

@@ -2,11 +2,21 @@ package examples.tankarena;
 
 import java.util.ArrayList;
 
+import org.dyn4j.geometry.Mass;
+import org.dyn4j.geometry.Rectangle;
+
+import utils.image.ImageUtils;
+import utils.image.Texture;
 import utils.physics.Vector;
 import engine.core.execute.Server;
+import engine.core.factory.ComponentFactory;
+import engine.core.framework.Entity;
 import engine.core.implementation.behavior.activity.BehaviorActivity;
 import engine.core.implementation.network.base.decoding.DecoderMapper;
+import engine.core.implementation.network.logic.ServerLogic;
 import engine.core.implementation.physics.activities.PhysicsActivity;
+import engine.core.implementation.physics.data.PhysicsData;
+import engine.core.implementation.physics.wrappers.PhysicsTransformWrapper;
 import engine.core.implementation.rendering.activities.AnimationActivity;
 import engine.core.network.NetworkInputHub;
 import engine.core.network.NetworkInputTrigger;
@@ -29,12 +39,30 @@ public class ArenaServer extends Server {
 		m_physics = new PhysicsActivity(this.getEntitySystem());
 		m_behavior = new BehaviorActivity(this.getEntitySystem());
 		m_animation = new AnimationActivity(this.getEntitySystem());
-		this.setUPS(60);
-		this.setUPF(4);
+		this.setUPS(50);
+		this.setUPF(1);
 	}
 
 	@Override
 	public void onStart() {
+		this.getEntitySystem().addEntity(makeWall(new Vector(1000, 0), 20, 2000));
+		this.getEntitySystem().addEntity(makeWall(new Vector(-1000, 0), 20, 2000));
+		this.getEntitySystem().addEntity(makeWall(new Vector(0, 1000), 2000, 20));
+		this.getEntitySystem().addEntity(makeWall(new Vector(0, -1000), 2000, 20));
+
+		this.getEntitySystem().addEntity(makeWall(new Vector(200, 100), 200, 20));
+		this.getEntitySystem().addEntity(makeWall(new Vector(60, 400), 20, 200));
+		this.getEntitySystem().addEntity(makeWall(new Vector(0, -4000), 20, 200));
+		this.getEntitySystem().addEntity(makeWall(new Vector(-200, 100), 200, 200));
+		this.getEntitySystem().addEntity(makeWall(new Vector(300, -300), 200, 100));
+		this.getEntitySystem().addEntity(makeWall(new Vector(600, 600), 400, 100));
+		this.getEntitySystem().addEntity(makeWall(new Vector(600, -400), 200, 200));
+		this.getEntitySystem().addEntity(makeWall(new Vector(-400, 600), 400, 400));
+		this.getEntitySystem().addEntity(makeWall(new Vector(-60, 200), 400, 40));
+		this.getEntitySystem().addEntity(makeWall(new Vector(-500, 0), 100, 100));
+		this.getEntitySystem().addEntity(makeWall(new Vector(800, 0), 200, 40));
+		this.getEntitySystem().addEntity(makeWall(new Vector(-700, -700), 100, 200));
+		this.getEntitySystem().addEntity(makeWall(new Vector(-700, -400), 300, 200));
 	}
 
 	@Override
@@ -85,6 +113,24 @@ public class ArenaServer extends Server {
 		NetworkInputTrigger trigger = new NetworkInputTrigger(id, message);
 		inputManager.addBinding(binding, trigger);
 		inputHub.addNetworkReceiver(trigger);
+	}
+
+	private Entity makeWall(Vector position, double width, double height) {
+		Entity wall = new Entity();
+
+		PhysicsData physics = ComponentFactory.addPhysicsData(wall, position, 0, new Rectangle(width, height));
+		physics.setMassType(Mass.Type.INFINITE);
+
+		ComponentFactory.addTextureData(wall, new Texture(ImageUtils.getID("darkmetal.jpg"), width, height));
+		ComponentFactory.addNetworkData(wall);
+		ComponentFactory.addNameData(wall, "wall");
+		ComponentFactory.addLayerData(wall, 1);
+
+		wall.addComponent(new PhysicsTransformWrapper());
+		wall.addComponent(ComponentFactory.createBasicEncoder(wall));
+		wall.addComponent(new ServerLogic());
+
+		return wall;
 	}
 
 	public static void main(String[] args) {

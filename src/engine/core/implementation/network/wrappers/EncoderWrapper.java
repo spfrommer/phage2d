@@ -19,13 +19,12 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.DataComponent;
 import engine.core.framework.component.WrapperComponent;
 import engine.core.framework.component.type.ComponentType;
-import engine.core.implementation.network.base.encoding.DataEncoder;
 import engine.core.implementation.network.base.encoding.BlankEncoder;
+import engine.core.implementation.network.base.encoding.DataEncoder;
 
 /**
  * A Wrapper that combines various Components into an Entity XML Document. Needed by ServerLogic to send Entities to the
@@ -61,10 +60,6 @@ public class EncoderWrapper extends WrapperComponent {
 
 	public EncoderWrapper() {
 		super();
-	}
-
-	public EncoderWrapper(Entity parent) {
-		super(parent);
 	}
 
 	/**

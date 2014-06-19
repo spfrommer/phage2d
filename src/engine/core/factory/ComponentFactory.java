@@ -47,7 +47,7 @@ public class ComponentFactory {
 	 * @return
 	 */
 	public static PhysicsData addPhysicsData(Entity entity, Vector position, double rotation, Convex convex) {
-		PhysicsData physics = new PhysicsData(entity, convex);
+		PhysicsData physics = new PhysicsData(convex);
 		physics.setPosition(position);
 		physics.setRotation(rotation);
 		entity.addComponent(physics);
@@ -64,7 +64,7 @@ public class ComponentFactory {
 	 * @return
 	 */
 	public static PhysicsShellData addShellData(Entity entity, Vector position, double rotation) {
-		PhysicsShellData shell = new PhysicsShellData(entity);
+		PhysicsShellData shell = new PhysicsShellData();
 		shell.center = new Vector(0, 0);
 		shell.position = position;
 		shell.rotation = rotation;
@@ -80,7 +80,7 @@ public class ComponentFactory {
 	 * @return
 	 */
 	public static TextureData addTextureData(Entity entity, Texture texture) {
-		TextureData textureData = new TextureData(entity);
+		TextureData textureData = new TextureData();
 		textureData.texture = texture;
 		entity.addComponent(textureData);
 		return textureData;
@@ -94,7 +94,7 @@ public class ComponentFactory {
 	 * @return
 	 */
 	public static LayerData addLayerData(Entity entity, double layer) {
-		LayerData layerData = new LayerData(entity);
+		LayerData layerData = new LayerData();
 		layerData.layer = layer;
 		entity.addComponent(layerData);
 		return layerData;
@@ -107,7 +107,7 @@ public class ComponentFactory {
 	 * @return
 	 */
 	public static NetworkData addNetworkData(Entity entity) {
-		NetworkData network = new NetworkData(entity);
+		NetworkData network = new NetworkData();
 		entity.addComponent(network);
 		return network;
 	}
@@ -121,7 +121,7 @@ public class ComponentFactory {
 	 * @return
 	 */
 	public static HealthData addHealthData(Entity entity, double health) {
-		HealthData healthData = new HealthData(entity);
+		HealthData healthData = new HealthData();
 		healthData.health = health;
 		entity.addComponent(healthData);
 		return healthData;
@@ -135,7 +135,7 @@ public class ComponentFactory {
 	 * @return
 	 */
 	public static DamageData addDamageData(Entity entity, double damage) {
-		DamageData damageData = new DamageData(entity);
+		DamageData damageData = new DamageData();
 		damageData.damage = damage;
 		entity.addComponent(damageData);
 		return damageData;
@@ -149,7 +149,7 @@ public class ComponentFactory {
 	 * @return
 	 */
 	public static CameraFocusData addCameraFocusData(Entity entity, int focusID) {
-		CameraFocusData focus = new CameraFocusData(entity);
+		CameraFocusData focus = new CameraFocusData();
 		focus.cameraID = focusID;
 		entity.addComponent(focus);
 		return focus;
@@ -163,7 +163,7 @@ public class ComponentFactory {
 	 * @return
 	 */
 	public static NameData addNameData(Entity entity, String name) {
-		NameData nameData = new NameData(entity);
+		NameData nameData = new NameData();
 		nameData.name = name;
 		entity.addComponent(nameData);
 		return nameData;
@@ -179,7 +179,7 @@ public class ComponentFactory {
 	 * @return
 	 */
 	public static EncoderWrapper createBasicEncoder(Entity entity) {
-		EncoderWrapper encoder = new EncoderWrapper(entity);
+		EncoderWrapper encoder = new EncoderWrapper();
 		encoder.addDataEncoder(TypeManager.getType(PhysicsData.class), new PhysicsToShellEncoder());
 		encoder.addDataEncoder(TypeManager.getType(PhysicsShellData.class), new ShellEncoder());
 		encoder.addDataEncoder(TypeManager.getType(TextureData.class), new TextureEncoder());

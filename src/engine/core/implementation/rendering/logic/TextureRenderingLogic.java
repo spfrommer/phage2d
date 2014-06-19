@@ -1,7 +1,6 @@
 package engine.core.implementation.rendering.logic;
 
 import engine.core.framework.Aspect;
-import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.type.TypeManager;
 import engine.core.implementation.physics.wrappers.TransformWrapper;
@@ -19,10 +18,6 @@ public class TextureRenderingLogic extends RenderingLogic {
 
 	public TextureRenderingLogic() {
 		super(new Aspect(TypeManager.getType(TextureData.class), TypeManager.getType(TransformWrapper.class)));
-	}
-
-	public TextureRenderingLogic(Entity parent) {
-		super(parent, new Aspect(TypeManager.getType(TextureData.class), TypeManager.getType(TransformWrapper.class)));
 	}
 
 	@Override

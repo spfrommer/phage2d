@@ -1,6 +1,5 @@
 package engine.core.implementation.rendering.data;
 
-import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.DataComponent;
 
@@ -12,10 +11,6 @@ public class LayerData extends DataComponent {
 
 	public LayerData() {
 		super();
-	}
-
-	public LayerData(Entity parent) {
-		super(parent);
 	}
 
 	@Override

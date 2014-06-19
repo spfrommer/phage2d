@@ -41,6 +41,8 @@ public abstract class Server {
 	private int m_upf = DEFAULT_UPF;
 	private int m_updatesPassed = 1;
 
+	private int m_clientCount = 0;
+
 	{
 		m_system = new EntitySystem();
 	}
@@ -110,8 +112,28 @@ public abstract class Server {
 							clientSocket.getOutputStream()), m_interpreter));
 					MessageReader reader = new MessageReader(new ByteReaderInterpreter(new ByteReader(
 							clientSocket.getInputStream()), m_interpreter));
+
+					Message clientIDMessage = new Message("setclientid", new MessageParameter[] { new MessageParameter(
+							m_clientCount) });
+					try {
+						writer.writeMessage(clientIDMessage);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+
+					// Make sure the client has processed its id before we begin syncing
+					// the world to it
+					/*try {
+						Thread.sleep(300);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}*/
+
+					onClientConnect(m_clientCount);
+
 					Thread t = new Thread(new ClientHandler(reader, writer));
 					t.start();
+					m_clientCount++;
 				}
 			} finally {
 				s.close();
@@ -129,8 +151,10 @@ public abstract class Server {
 			if (m_updatesPassed >= m_upf) {
 				m_network.processWriters();
 				m_network.processMessages();
-				m_network.trasmitUpdates();
+				boolean transmitted = m_network.trasmitUpdates();
 				m_updatesPassed = 1;
+				// if (transmitted)
+				// System.out.println("Transmitting");
 			} else {
 				m_updatesPassed++;
 			}
@@ -188,40 +212,17 @@ public abstract class Server {
 	 */
 	public abstract void update(int ticks);
 
-	private static int s_clientCount = 0;
-
 	private class ClientHandler implements Runnable {
 		private MessageReader m_reader;
 		private MessageWriter m_writer;
-		private int m_clientID;
 
 		public ClientHandler(MessageReader reader, MessageWriter writer) {
 			m_reader = reader;
 			m_writer = writer;
-
-			m_clientID = s_clientCount++;
 		}
 
 		@Override
 		public void run() {
-			Message clientIDMessage = new Message("setclientid", new MessageParameter[] { new MessageParameter(
-					m_clientID) });
-			try {
-				m_writer.writeMessage(clientIDMessage);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			// Make sure the client has processed its id before we begin syncing
-			// the world to it
-			try {
-				Thread.sleep(300);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-			onClientConnect(m_clientID);
-
 			// Syncs world to client
 			m_network.bufferAddWriter(m_writer);
 
@@ -231,12 +232,14 @@ public abstract class Server {
 					message = m_reader.readMessage();
 				} catch (IOException ex) {
 					System.err.println("Socket connection closed.");
-					System.exit(0);
+					// System.exit(0);
+					m_network.bufferRemoveWriter(m_writer);
+					return;
 				}
 
 				if (m_dumpMessages) {
 					double timeStamp = System.currentTimeMillis();
-					if (timeStamp - m_lastTimeStamp > 1)
+					if (!(message.getCommand().equals("inputmousex") || message.getCommand().equals("inputmousey")))
 						System.out.println((timeStamp - m_lastTimeStamp) + "---" + message);
 					m_lastTimeStamp = timeStamp;
 				}

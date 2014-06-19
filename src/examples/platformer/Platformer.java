@@ -102,8 +102,8 @@ public class Platformer extends Game {
 		ComponentFactory.addNameData(background, "background");
 		ComponentFactory.addLayerData(background, 0);
 
-		background.addComponent(new ShellTransformWrapper(background));
-		background.addComponent(new TextureRenderingLogic(background));
+		background.addComponent(new ShellTransformWrapper());
+		background.addComponent(new TextureRenderingLogic());
 		return background;
 	}
 
@@ -116,8 +116,8 @@ public class Platformer extends Game {
 		ComponentFactory.addNameData(background, "background");
 		ComponentFactory.addLayerData(background, 1);
 
-		background.addComponent(new ShellTransformWrapper(background));
-		background.addComponent(new TextureRenderingLogic(background));
+		background.addComponent(new ShellTransformWrapper());
+		background.addComponent(new TextureRenderingLogic());
 		return background;
 	}
 
@@ -133,12 +133,12 @@ public class Platformer extends Game {
 		ComponentFactory.addNameData(player, "player");
 		ComponentFactory.addLayerData(player, 2);
 
-		player.addComponent(new PhysicsTransformWrapper(player));
-		player.addComponent(new TextureRenderingLogic(player));
-		player.addComponent(new JumpControllerLogic(player));
-		player.addComponent(new RollControllerLogic(player, -10000000));
+		player.addComponent(new PhysicsTransformWrapper());
+		player.addComponent(new TextureRenderingLogic());
+		player.addComponent(new JumpControllerLogic());
+		player.addComponent(new RollControllerLogic(-10000000));
 
-		TreeLogic tree = new TreeLogic(player);
+		TreeLogic tree = new TreeLogic();
 
 		PrioritySelectorComposite priority = new PrioritySelectorComposite(new int[] { 0, 1 });
 
@@ -170,8 +170,8 @@ public class Platformer extends Game {
 		ComponentFactory.addNameData(platform, "platform");
 		ComponentFactory.addLayerData(platform, 2);
 
-		platform.addComponent(new PhysicsTransformWrapper(platform));
-		platform.addComponent(new TextureRenderingLogic(platform));
+		platform.addComponent(new PhysicsTransformWrapper());
+		platform.addComponent(new TextureRenderingLogic());
 		return platform;
 	}
 

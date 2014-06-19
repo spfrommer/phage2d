@@ -12,16 +12,8 @@ public abstract class CollisionFilterLogic extends LogicComponent {
 		super();
 	}
 
-	public CollisionFilterLogic(Entity parent) {
-		super(parent);
-	}
-
 	public CollisionFilterLogic(Aspect dependencies) {
 		super(dependencies);
-	}
-
-	public CollisionFilterLogic(Entity parent, Aspect dependencies) {
-		super(parent, dependencies);
 	}
 
 	public abstract boolean allowCollision(Entity entity);

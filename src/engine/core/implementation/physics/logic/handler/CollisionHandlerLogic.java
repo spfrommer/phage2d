@@ -16,14 +16,6 @@ public abstract class CollisionHandlerLogic extends LogicComponent {
 		super(dependencies);
 	}
 
-	public CollisionHandlerLogic(Entity parent) {
-		super(parent);
-	}
-
-	public CollisionHandlerLogic(Entity parent, Aspect dependencies) {
-		super(parent, dependencies);
-	}
-
 	/**
 	 * Returns if the collision should happen in the physics world
 	 * 

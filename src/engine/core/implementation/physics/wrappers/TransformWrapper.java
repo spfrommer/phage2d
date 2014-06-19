@@ -2,7 +2,6 @@ package engine.core.implementation.physics.wrappers;
 
 import utils.physics.Vector;
 import engine.core.framework.Aspect;
-import engine.core.framework.Entity;
 import engine.core.framework.component.WrapperComponent;
 
 /**
@@ -11,10 +10,6 @@ import engine.core.framework.component.WrapperComponent;
 public abstract class TransformWrapper extends WrapperComponent {
 	public TransformWrapper(Aspect dependencies) {
 		super(dependencies);
-	}
-
-	public TransformWrapper(Entity parent, Aspect dependencies) {
-		super(parent, dependencies);
 	}
 
 	/**

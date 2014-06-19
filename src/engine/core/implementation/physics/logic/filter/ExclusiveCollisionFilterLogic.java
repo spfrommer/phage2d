@@ -16,14 +16,9 @@ public class ExclusiveCollisionFilterLogic extends CollisionFilterLogic {
 		m_physics = other;
 	}
 
-	public ExclusiveCollisionFilterLogic(Entity parent, Entity other) {
-		super(parent);
+	public ExclusiveCollisionFilterLogic(Entity other) {
+		super();
 		m_physics = (PhysicsData) other.getComponent(TypeManager.getType(PhysicsData.class));
-	}
-
-	public ExclusiveCollisionFilterLogic(Entity parent, PhysicsData other) {
-		super(parent);
-		m_physics = other;
 	}
 
 	@Override

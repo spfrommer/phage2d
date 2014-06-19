@@ -93,7 +93,6 @@ public class LWJGLKeyboard extends Keyboard {
 		if (key.isPressed() != state) {
 			if (state) {
 				// Key was not pressed, but now is
-				// System.out.println("Key pressed: " + key.getName());
 				key.onKeyEvent(new KeyPressedEvent(key));
 				key.onKeyEvent(new KeyTypedEvent(key));
 			} else {

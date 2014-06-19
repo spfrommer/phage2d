@@ -1,7 +1,6 @@
 package engine.core.framework.component;
 
 import engine.core.framework.Aspect;
-import engine.core.framework.Entity;
 import engine.core.framework.component.type.ComponentType;
 
 /**
@@ -10,40 +9,25 @@ import engine.core.framework.component.type.ComponentType;
 public abstract class DependentComponent extends Component {
 	private Aspect m_dependencies;
 
-	DependentComponent() {
-		super();
+	{
 		m_dependencies = new Aspect();
 	}
 
 	/**
 	 * Constructs a new Component with no dependencies.
-	 * 
-	 * @param entity
 	 */
-	DependentComponent(Entity entity) {
-		super(entity);
-		m_dependencies = new Aspect();
-	}
-
-	/**
-	 * Constructs a new Component that doesn't belong to an Entity, but defines its Aspect
-	 * 
-	 * @param dependencies
-	 */
-	DependentComponent(Aspect dependencies) {
+	DependentComponent() {
 		super();
-		m_dependencies = dependencies;
 	}
 
 	/**
 	 * Constructs a new Component with a set of dependencies. If these dependencies are not met by the Entity, the
 	 * Component won't be added to the Entity.
 	 * 
-	 * @param entity
 	 * @param dependencies
 	 */
-	DependentComponent(Entity entity, Aspect dependencies) {
-		super(entity);
+	DependentComponent(Aspect dependencies) {
+		super();
 		m_dependencies = dependencies;
 	}
 

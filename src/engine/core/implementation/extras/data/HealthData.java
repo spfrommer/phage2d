@@ -1,6 +1,5 @@
 package engine.core.implementation.extras.data;
 
-import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.DataComponent;
 
@@ -14,10 +13,6 @@ public class HealthData extends DataComponent {
 
 	public HealthData() {
 		super();
-	}
-
-	public HealthData(Entity parent) {
-		super(parent);
 	}
 
 	@Override

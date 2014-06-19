@@ -14,10 +14,6 @@ public abstract class SpawningLogic extends LogicComponent {
 		super(dependencies);
 	}
 
-	public SpawningLogic(Entity parent, Aspect dependencies) {
-		super(parent, dependencies);
-	}
-
 	/**
 	 * Returns a List of spawned Entities that should be added.
 	 * 

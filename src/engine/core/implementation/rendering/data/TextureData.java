@@ -1,7 +1,6 @@
 package engine.core.implementation.rendering.data;
 
 import utils.image.Texture;
-import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.DataComponent;
 
@@ -13,10 +12,6 @@ public class TextureData extends DataComponent {
 
 	public TextureData() {
 		super();
-	}
-
-	public TextureData(Entity parent) {
-		super(parent);
 	}
 
 	@Override

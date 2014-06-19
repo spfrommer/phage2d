@@ -1,7 +1,6 @@
 package engine.core.framework.component;
 
 import engine.core.framework.Aspect;
-import engine.core.framework.Entity;
 import engine.core.framework.component.type.ComponentType;
 
 /**
@@ -14,16 +13,8 @@ public abstract class LogicComponent extends DependentComponent {
 		super();
 	}
 
-	public LogicComponent(Entity parent) {
-		super(parent);
-	}
-
 	public LogicComponent(Aspect dependencies) {
-		super(dependencies);
-	}
-
-	public LogicComponent(Entity parent, Aspect dependencies) {
-		super(parent, filterAspect(dependencies));
+		super(filterAspect(dependencies));
 	}
 
 	@Override

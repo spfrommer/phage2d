@@ -3,7 +3,6 @@ package engine.core.implementation.network.logic;
 import java.util.ArrayList;
 
 import engine.core.framework.Aspect;
-import engine.core.framework.Entity;
 import engine.core.framework.component.LogicComponent;
 import engine.core.framework.component.type.TypeManager;
 import engine.core.implementation.network.data.NetworkData;
@@ -17,10 +16,6 @@ public abstract class NetworkSyncLogic extends LogicComponent {
 
 	public NetworkSyncLogic(Aspect dependencies) {
 		super(dependencies.addType(TypeManager.getType(NetworkData.class)));
-	}
-
-	public NetworkSyncLogic(Entity parent, Aspect dependencies) {
-		super(parent, dependencies.addType(TypeManager.getType(NetworkData.class)));
 	}
 
 	/**

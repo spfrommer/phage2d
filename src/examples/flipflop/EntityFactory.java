@@ -32,7 +32,7 @@ public class EntityFactory {
 
 		ComponentFactory.addTextureData(portal, new Texture(ImageUtils.getID("portal1.png"), 50, 50));
 
-		AnimationData animation = new AnimationData(portal);
+		AnimationData animation = new AnimationData();
 		List<Texture> frames = new ArrayList<Texture>();
 		for (int i = 1; i <= 9; i++)
 			frames.add(new Texture(ImageUtils.getID("portal" + i + ".png"), 50, 50));
@@ -43,11 +43,11 @@ public class EntityFactory {
 		ComponentFactory.addNameData(portal, "portal");
 		ComponentFactory.addLayerData(portal, 2);
 
-		portal.addComponent(new PhysicsTransformWrapper(portal));
+		portal.addComponent(new PhysicsTransformWrapper());
 
-		ListenerCollisionHandlerLogic handler = new ListenerCollisionHandlerLogic(portal);
+		ListenerCollisionHandlerLogic handler = new ListenerCollisionHandlerLogic();
 		portal.addComponent(handler);
-		portal.addComponent(new TextureRenderingLogic(portal));
+		portal.addComponent(new TextureRenderingLogic());
 		return portal;
 	}
 
@@ -59,7 +59,7 @@ public class EntityFactory {
 
 		ComponentFactory.addTextureData(portal, new Texture(ImageUtils.getID("portal1.png"), 50, 50));
 
-		AnimationData animation = new AnimationData(portal);
+		AnimationData animation = new AnimationData();
 		List<Texture> frames = new ArrayList<Texture>();
 		for (int i = 1; i <= 9; i++)
 			frames.add(new Texture(ImageUtils.getID("portal" + i + ".png"), 50, 50));
@@ -70,13 +70,13 @@ public class EntityFactory {
 		ComponentFactory.addNameData(portal, "portal");
 		ComponentFactory.addLayerData(portal, 2);
 
-		portal.addComponent(new PhysicsTransformWrapper(portal));
+		portal.addComponent(new PhysicsTransformWrapper());
 
-		ListenerCollisionHandlerLogic handler = new ListenerCollisionHandlerLogic(portal);
+		ListenerCollisionHandlerLogic handler = new ListenerCollisionHandlerLogic();
 		handler.addListener(listener);
 		portal.addComponent(handler);
 
-		portal.addComponent(new TextureRenderingLogic(portal));
+		portal.addComponent(new TextureRenderingLogic());
 		return portal;
 	}
 
@@ -89,8 +89,8 @@ public class EntityFactory {
 		ComponentFactory.addNameData(scenery, "scenery");
 		ComponentFactory.addLayerData(scenery, 1);
 
-		scenery.addComponent(new ShellTransformWrapper(scenery));
-		scenery.addComponent(new TextureRenderingLogic(scenery));
+		scenery.addComponent(new ShellTransformWrapper());
+		scenery.addComponent(new TextureRenderingLogic());
 		return scenery;
 	}
 
@@ -103,8 +103,8 @@ public class EntityFactory {
 		ComponentFactory.addNameData(scenery, "scenery");
 		ComponentFactory.addLayerData(scenery, layer);
 
-		scenery.addComponent(new ShellTransformWrapper(scenery));
-		scenery.addComponent(new TextureRenderingLogic(scenery));
+		scenery.addComponent(new ShellTransformWrapper());
+		scenery.addComponent(new TextureRenderingLogic());
 		return scenery;
 	}
 
@@ -122,8 +122,8 @@ public class EntityFactory {
 		ComponentFactory.addNameData(player, "ball");
 		ComponentFactory.addLayerData(player, 2);
 
-		player.addComponent(new PhysicsTransformWrapper(player));
-		player.addComponent(new TextureRenderingLogic(player));
+		player.addComponent(new PhysicsTransformWrapper());
+		player.addComponent(new TextureRenderingLogic());
 		return player;
 	}
 
@@ -138,8 +138,8 @@ public class EntityFactory {
 		ComponentFactory.addNameData(platform, "platform");
 		ComponentFactory.addLayerData(platform, 2);
 
-		platform.addComponent(new PhysicsTransformWrapper(platform));
-		platform.addComponent(new TextureRenderingLogic(platform));
+		platform.addComponent(new PhysicsTransformWrapper());
+		platform.addComponent(new TextureRenderingLogic());
 		return platform;
 	}
 
@@ -152,8 +152,8 @@ public class EntityFactory {
 		ComponentFactory.addNameData(background, "background");
 		ComponentFactory.addLayerData(background, 0);
 
-		background.addComponent(new ShellTransformWrapper(background));
-		background.addComponent(new TextureRenderingLogic(background));
+		background.addComponent(new ShellTransformWrapper());
+		background.addComponent(new TextureRenderingLogic());
 		return background;
 	}
 
@@ -166,8 +166,8 @@ public class EntityFactory {
 		ComponentFactory.addNameData(background, "background");
 		ComponentFactory.addLayerData(background, 0);
 
-		background.addComponent(new ShellTransformWrapper(background));
-		background.addComponent(new TextureRenderingLogic(background));
+		background.addComponent(new ShellTransformWrapper());
+		background.addComponent(new TextureRenderingLogic());
 		return background;
 	}
 }

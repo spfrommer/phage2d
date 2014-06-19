@@ -38,20 +38,6 @@ public class ShootingLogic extends LogicComponent implements ActionExecutable {
 	}
 
 	/**
-	 * The parent entity as well as the projectile to shoot and the system it should be spawned into.
-	 * 
-	 * @param entity
-	 * @param system
-	 * @param projectile
-	 */
-	public ShootingLogic(Entity entity, EntitySystem system, Entity projectile) {
-		super(entity, new Aspect(TypeManager.getType(TransformWrapper.class)));
-		m_system = system;
-
-		m_projectile = projectile;
-	}
-
-	/**
 	 * Sets the heat generated when the gun is fired. This is decreased every tick until the heat is zero, when it can
 	 * fire again.
 	 * 

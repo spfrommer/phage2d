@@ -51,7 +51,7 @@ public class TankTread extends Entity {
 			textureBackward.add(new Texture(ImageUtils.getID(textures[i]), width, height));
 		}
 
-		AnimationData animation = new AnimationData(this);
+		AnimationData animation = new AnimationData();
 		animation.addAnimator("treadforward", new Animator(textureForward, 3));
 		animation.addAnimator("treadbackward", new Animator(textureBackward, 3));
 		this.addComponent(animation);
@@ -59,17 +59,17 @@ public class TankTread extends Entity {
 		ComponentFactory.addNetworkData(this);
 		ComponentFactory.addNameData(this, "tanktread");
 		ComponentFactory.addLayerData(this, layer);
-		this.addComponent(new PhysicsTransformWrapper(this));
+		this.addComponent(new PhysicsTransformWrapper());
 
 		this.addComponent(ComponentFactory.createBasicEncoder(this));
-		this.addComponent(new ServerLogic(this));
+		this.addComponent(new ServerLogic());
 
 		// for single player mode
-		this.addComponent(new TextureRenderingLogic(this));
+		this.addComponent(new TextureRenderingLogic());
 
-		this.addComponent(new PlayerTreadLogic(this, input, direction));
+		this.addComponent(new PlayerTreadLogic(input, direction));
 
-		TreeLogic tree = new TreeLogic(this);
+		TreeLogic tree = new TreeLogic();
 		tree.setRoot(new ActionExecutorLeaf<PlayerTreadLogic>(PlayerTreadLogic.class));
 		this.addComponent(tree);
 	}

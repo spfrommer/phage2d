@@ -1,6 +1,5 @@
 package engine.core.implementation.extras.data;
 
-import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.DataComponent;
 
@@ -12,10 +11,6 @@ public class DamageData extends DataComponent {
 
 	public DamageData() {
 		super();
-	}
-
-	public DamageData(Entity parent) {
-		super(parent);
 	}
 
 	@Override

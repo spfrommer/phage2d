@@ -2,7 +2,6 @@ package examples.tankarena.entities.tank;
 
 import utils.physics.Vector;
 import engine.core.framework.Aspect;
-import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.LogicComponent;
 import engine.core.framework.component.type.TypeManager;
@@ -33,13 +32,6 @@ public class PlayerTreadLogic extends LogicComponent implements ActionExecutable
 		m_direction = direction;
 	}
 
-	public PlayerTreadLogic(Entity entity, InputManager inputManager, int direction) {
-		super(entity, new Aspect(TypeManager.getType(PhysicsData.class), TypeManager.getType(AnimationData.class),
-				TypeManager.getType(TextureData.class)));
-		m_inputManager = inputManager;
-		m_direction = direction;
-	}
-
 	@Override
 	public ExecutionState update(int ticks) {
 		float forewards = m_inputManager.getValue("Forwards");
@@ -56,20 +48,20 @@ public class PlayerTreadLogic extends LogicComponent implements ActionExecutable
 		Vector direction = Vector.normalVector(-m_physics.getRotation());
 
 		if (acceleration != 0f && turn == 0f) {
-			m_physics.applyForce(direction.scalarMultiply(acceleration * ticks * 100000));
+			m_physics.applyForce(direction.scalarMultiply(acceleration * ticks * 200000));
 
 			Animator treads = m_animation.getAnimator((acceleration > 0) ? "treadforward" : "treadbackward");
 			if (treads.isFinished() || treads.isReset())
 				treads.animate(m_texture.texture);
 		} else if (acceleration != 0f && turn != 0f) {
-			m_physics.applyForce(direction.scalarMultiply(acceleration * ticks * 100000).add(
-					direction.scalarMultiply(turn * m_direction * ticks * 500000)));
+			m_physics.applyForce(direction.scalarMultiply(acceleration * ticks * 200000).add(
+					direction.scalarMultiply(turn * m_direction * ticks * 1000000)));
 
 			Animator treads = m_animation.getAnimator((acceleration > 0) ? "treadforward" : "treadbackward");
 			if (treads.isFinished() || treads.isReset())
 				treads.animate(m_texture.texture);
 		} else if (acceleration == 0f && turn != 0f) {
-			m_physics.applyForce(direction.scalarMultiply(turn * m_direction * ticks * 500000));
+			m_physics.applyForce(direction.scalarMultiply(turn * m_direction * ticks * 1000000));
 
 			Animator treads = m_animation.getAnimator((turn * m_direction > 0) ? "treadforward" : "treadbackward");
 			if (treads.isFinished() || treads.isReset())

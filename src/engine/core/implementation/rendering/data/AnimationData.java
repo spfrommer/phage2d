@@ -3,7 +3,6 @@ package engine.core.implementation.rendering.data;
 import java.util.Collection;
 import java.util.HashMap;
 
-import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.DataComponent;
 import engine.core.implementation.rendering.base.Animator;
@@ -20,10 +19,6 @@ public class AnimationData extends DataComponent {
 
 	public AnimationData() {
 		super();
-	}
-
-	public AnimationData(Entity parent) {
-		super(parent);
 	}
 
 	/**

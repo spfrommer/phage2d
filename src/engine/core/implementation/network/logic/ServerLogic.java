@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import utils.physics.Vector;
 import engine.core.framework.Aspect;
-import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.type.TypeManager;
 import engine.core.implementation.network.wrappers.EncoderWrapper;
@@ -25,11 +24,6 @@ public class ServerLogic extends NetworkSyncLogic {
 
 	public ServerLogic() {
 		super(new Aspect(TypeManager.getType(EncoderWrapper.class), TypeManager.getType(TextureData.class),
-				TypeManager.getType(TransformWrapper.class)));
-	}
-
-	public ServerLogic(Entity parent) {
-		super(parent, new Aspect(TypeManager.getType(EncoderWrapper.class), TypeManager.getType(TextureData.class),
 				TypeManager.getType(TransformWrapper.class)));
 	}
 

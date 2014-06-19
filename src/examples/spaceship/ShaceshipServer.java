@@ -107,9 +107,9 @@ public class ShaceshipServer extends Server {
 		ComponentFactory.addNameData(background, "background");
 		ComponentFactory.addLayerData(background, 0);
 
-		background.addComponent(new ShellTransformWrapper(background));
+		background.addComponent(new ShellTransformWrapper());
 		background.addComponent(ComponentFactory.createBasicEncoder(background));
-		background.addComponent(new ServerLogic(background));
+		background.addComponent(new ServerLogic());
 		return background;
 	}
 
@@ -124,9 +124,9 @@ public class ShaceshipServer extends Server {
 		ComponentFactory.addNameData(wall, "wall");
 		ComponentFactory.addLayerData(wall, 1);
 
-		wall.addComponent(new PhysicsTransformWrapper(wall));
+		wall.addComponent(new PhysicsTransformWrapper());
 		wall.addComponent(ComponentFactory.createBasicEncoder(wall));
-		wall.addComponent(new ServerLogic(wall));
+		wall.addComponent(new ServerLogic());
 
 		return wall;
 	}
@@ -149,25 +149,25 @@ public class ShaceshipServer extends Server {
 		ComponentFactory.addNameData(spaceship, "bumper");
 		ComponentFactory.addLayerData(spaceship, 1);
 		ComponentFactory.addCameraFocusData(spaceship, clientID);
-		spaceship.addComponent(new PhysicsTransformWrapper(spaceship));
+		spaceship.addComponent(new PhysicsTransformWrapper());
 
 		EncoderWrapper encoder = ComponentFactory.createBasicEncoder(spaceship);
 		encoder.addDataEncoder(TypeManager.getType(CameraFocusData.class), new BasicDataEncoder());
 		spaceship.addComponent(encoder);
 
-		spaceship.addComponent(new ServerLogic(spaceship));
+		spaceship.addComponent(new ServerLogic());
 
 		InputManager input = makeInputManager(getInputHub(), clientID);
 
-		spaceship.addComponent(new MouseControllerLogic(spaceship, input));
+		spaceship.addComponent(new MouseControllerLogic(input));
 
-		TreeLogic tree = new TreeLogic(spaceship);
+		TreeLogic tree = new TreeLogic();
 		tree.setRoot(new ActionExecutorLeaf<MouseControllerLogic>(MouseControllerLogic.class));
 		spaceship.addComponent(tree);
 
-		spaceship.addComponent(new GunLogic(spaceship, makeBullet(spaceship, 5), input, 10, 3000));
+		spaceship.addComponent(new GunLogic(makeBullet(spaceship, 5), input, 10, 3000));
 
-		spaceship.addComponent(new AllCollisionFilterLogic(spaceship));
+		spaceship.addComponent(new AllCollisionFilterLogic());
 
 		return spaceship;
 	}
@@ -183,15 +183,15 @@ public class ShaceshipServer extends Server {
 		ComponentFactory.addDamageData(bullet, bulletDamage);
 		ComponentFactory.addNameData(bullet, "bullet");
 		ComponentFactory.addLayerData(bullet, 1);
-		bullet.addComponent(new PhysicsTransformWrapper(bullet));
+		bullet.addComponent(new PhysicsTransformWrapper());
 
 		bullet.addComponent(ComponentFactory.createBasicEncoder(bullet));
 
-		bullet.addComponent(new ServerLogic(bullet));
+		bullet.addComponent(new ServerLogic());
 
-		bullet.addComponent(new ExclusiveCollisionFilterLogic(bullet, exclude));
+		bullet.addComponent(new ExclusiveCollisionFilterLogic(exclude));
 
-		bullet.addComponent(new BulletCollisionHandlerLogic(bullet, this.getEntitySystem()));
+		bullet.addComponent(new BulletCollisionHandlerLogic(this.getEntitySystem()));
 
 		return bullet;
 	}

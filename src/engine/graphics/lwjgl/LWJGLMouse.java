@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import org.lwjgl.LWJGLException;
 
-import engine.core.implementation.camera.base.ViewPort;
 import engine.inputs.mouse.Mouse;
 import engine.inputs.mouse.MouseButton;
 
@@ -20,7 +19,7 @@ public class LWJGLMouse extends Mouse {
 		addMouseButton(right);
 		addMouseButton(middle);
 	}
-	
+
 	public Rectangle m_viewRect;
 
 	public LWJGLMouse(Rectangle viewRect) {
@@ -28,7 +27,9 @@ public class LWJGLMouse extends Mouse {
 		EventLoop.instance().attach(this);
 	}
 
-	public Rectangle getViewRect() { return m_viewRect; }
+	public Rectangle getViewRect() {
+		return m_viewRect;
+	}
 
 	public static class EventLoop implements Runnable {
 		private static EventLoop s_instance = null;

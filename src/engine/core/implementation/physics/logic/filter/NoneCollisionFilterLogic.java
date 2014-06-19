@@ -8,10 +8,6 @@ public class NoneCollisionFilterLogic extends CollisionFilterLogic {
 		super();
 	}
 
-	public NoneCollisionFilterLogic(Entity parent) {
-		super(parent);
-	}
-
 	@Override
 	public boolean allowCollision(Entity entity) {
 		return false;

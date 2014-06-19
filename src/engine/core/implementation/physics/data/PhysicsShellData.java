@@ -1,7 +1,6 @@
 package engine.core.implementation.physics.data;
 
 import utils.physics.Vector;
-import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.DataComponent;
 
@@ -17,10 +16,6 @@ public class PhysicsShellData extends DataComponent {
 
 	public PhysicsShellData() {
 		super();
-	}
-
-	public PhysicsShellData(Entity parent) {
-		super(parent);
 	}
 
 	@Override

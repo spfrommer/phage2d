@@ -11,10 +11,6 @@ public class PrintCollisionHandlerLogic extends CollisionHandlerLogic {
 		super();
 	}
 
-	public PrintCollisionHandlerLogic(Entity parent) {
-		super(parent);
-	}
-
 	@Override
 	public boolean handleCollision(Entity entity) {
 		System.out.println("Collided with: " + entity);

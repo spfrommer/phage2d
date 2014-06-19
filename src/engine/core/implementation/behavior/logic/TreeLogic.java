@@ -17,10 +17,6 @@ public class TreeLogic extends LogicComponent {
 		super();
 	}
 
-	public TreeLogic(Entity entity) {
-		super(entity);
-	}
-
 	/**
 	 * Updates the root Node by the given number of ticks.
 	 * 

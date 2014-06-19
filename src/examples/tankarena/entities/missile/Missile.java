@@ -19,8 +19,8 @@ public class Missile extends Entity {
 		ComponentFactory.addNameData(this, "tanktread");
 		ComponentFactory.addLayerData(this, layer);
 
-		this.addComponent(new PhysicsTransformWrapper(this));
+		this.addComponent(new PhysicsTransformWrapper());
 		this.addComponent(ComponentFactory.createBasicEncoder(this));
-		this.addComponent(new ServerLogic(this));
+		this.addComponent(new ServerLogic());
 	}
 }

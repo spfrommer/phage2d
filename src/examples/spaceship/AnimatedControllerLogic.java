@@ -1,7 +1,6 @@
 package examples.spaceship;
 
 import engine.core.framework.Aspect;
-import engine.core.framework.Entity;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.type.TypeManager;
 import engine.core.implementation.rendering.base.Animator;
@@ -21,11 +20,6 @@ public class AnimatedControllerLogic extends MouseControllerLogic {
 
 	public AnimatedControllerLogic(InputManager manager) {
 		super(new Aspect(TypeManager.getType(TextureData.class), TypeManager.getType(AnimationData.class)), manager);
-	}
-
-	public AnimatedControllerLogic(Entity parent, InputManager manager) {
-		super(parent, new Aspect(TypeManager.getType(TextureData.class), TypeManager.getType(AnimationData.class)),
-				manager);
 	}
 
 	@Override

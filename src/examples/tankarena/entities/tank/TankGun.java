@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.dyn4j.dynamics.joint.Joint;
+import org.dyn4j.geometry.Circle;
 import org.dyn4j.geometry.Rectangle;
 
 import utils.image.ImageUtils;
@@ -41,7 +42,7 @@ public class TankGun extends Entity {
 		physics.setMovementFriction(0);
 		physics.setMass(20);
 
-		this.addComponent(new NoneCollisionFilterLogic(this));
+		this.addComponent(new NoneCollisionFilterLogic());
 
 		Joint weld = PhysicsData.JointFactory.createJoint(tankPhysics, physics, tankPhysics.getPosition().clone(),
 				JointType.REVOLUTE);
@@ -54,27 +55,30 @@ public class TankGun extends Entity {
 			textureList.add(new Texture(ImageUtils.getID(frame), width, height));
 		}
 
-		AnimationData animation = new AnimationData(this);
+		AnimationData animation = new AnimationData();
 		animation.addAnimator("fire", new Animator(textureList, 3));
 		this.addComponent(animation);
 
 		ComponentFactory.addNetworkData(this);
 		ComponentFactory.addNameData(this, "tankgun");
 		ComponentFactory.addLayerData(this, layer);
-		this.addComponent(new PhysicsTransformWrapper(this));
+		this.addComponent(new PhysicsTransformWrapper());
 
 		this.addComponent(ComponentFactory.createBasicEncoder(this));
 
-		this.addComponent(new ServerLogic(this));
+		this.addComponent(new ServerLogic());
 
 		// for single player mode
-		this.addComponent(new TextureRenderingLogic(this));
+		this.addComponent(new TextureRenderingLogic());
 
-		this.addComponent(new PlayerGunAimerLogic(this, input));
-		this.addComponent(new ShootingLogic(this, system, new Missile(new Rectangle(20, 20), layer, new Texture(
-				ImageUtils.getID("portal1.png"), 20, 20))));
+		this.addComponent(new PlayerGunAimerLogic(input));
+		Missile bouncy = new Missile(new Circle(10), layer, new Texture(ImageUtils.getID("portal1.png"), 20, 20));
+		PhysicsData missilePhysics = (PhysicsData) bouncy.getComponent(TypeManager.getType(PhysicsData.class));
+		missilePhysics.setRestitution(1);
 
-		TreeLogic tree = new TreeLogic(this);
+		this.addComponent(new ShootingLogic(system, bouncy));
+
+		TreeLogic tree = new TreeLogic();
 
 		ParallelComposite concurrent = new ParallelComposite();
 
