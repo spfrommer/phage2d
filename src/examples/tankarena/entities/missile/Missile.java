@@ -10,7 +10,7 @@ import engine.core.implementation.network.logic.ServerLogic;
 import engine.core.implementation.physics.wrappers.PhysicsTransformWrapper;
 
 public class Missile extends Entity {
-	public Missile(Convex collisionShape, double layer, Texture texture) {
+	public Missile(Convex collisionShape, double layer, Texture texture, double damage) {
 		super();
 		ComponentFactory.addPhysicsData(this, new Vector(0, 0), 0, collisionShape);
 
@@ -18,6 +18,7 @@ public class Missile extends Entity {
 		ComponentFactory.addNetworkData(this);
 		ComponentFactory.addNameData(this, "tanktread");
 		ComponentFactory.addLayerData(this, layer);
+		ComponentFactory.addDamageData(this, damage);
 
 		this.addComponent(new PhysicsTransformWrapper());
 		this.addComponent(ComponentFactory.createBasicEncoder(this));

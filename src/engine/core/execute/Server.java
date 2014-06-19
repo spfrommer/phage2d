@@ -147,11 +147,12 @@ public abstract class Server {
 		long nextGameTick = System.currentTimeMillis();
 		int milliSkip = 1000 / m_ups;
 		while (true) {
+			m_system.update();
 			update(1);
 			if (m_updatesPassed >= m_upf) {
 				m_network.processWriters();
 				m_network.processMessages();
-				boolean transmitted = m_network.trasmitUpdates();
+				boolean transmitted = m_network.transmitUpdates();
 				m_updatesPassed = 1;
 				// if (transmitted)
 				// System.out.println("Transmitting");

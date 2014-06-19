@@ -236,9 +236,11 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 				} else if (message.getCommand().equals("addentity")) {
 					Entity entity = EntityDecoder.decode(message.getParameters()[0].getStringValue(), m_decoder);
 					this.getSystem().addEntity(entity);
+					this.getSystem().update();
 				} else if (message.getCommand().equals("removeentity")) {
 					Entity receiver = m_idMapper.getBackward((message.getParameters()[0]).getIntValue());
 					this.getSystem().removeEntity(receiver);
+					this.getSystem().update();
 				}
 			}
 
@@ -258,7 +260,7 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 	 * 
 	 * @return if any data was transmitted
 	 */
-	public boolean trasmitUpdates() {
+	public boolean transmitUpdates() {
 		List<Entity> entities = this.getEntities();
 
 		boolean transmitted = false;

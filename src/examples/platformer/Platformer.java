@@ -15,7 +15,6 @@ import engine.core.implementation.behavior.base.composite.PrioritySelectorCompos
 import engine.core.implementation.behavior.base.composite.SequencerComposite;
 import engine.core.implementation.behavior.base.decorator.SuccessDecorator;
 import engine.core.implementation.behavior.base.decorator.TimeDecorator;
-import engine.core.implementation.behavior.base.leaf.action.executor.ActionExecutorLeaf;
 import engine.core.implementation.behavior.logic.TreeLogic;
 import engine.core.implementation.camera.activities.CameraActivity;
 import engine.core.implementation.camera.activities.KeyboardCameraActivity;
@@ -135,8 +134,6 @@ public class Platformer extends Game {
 
 		player.addComponent(new PhysicsTransformWrapper());
 		player.addComponent(new TextureRenderingLogic());
-		player.addComponent(new JumpControllerLogic());
-		player.addComponent(new RollControllerLogic(-10000000));
 
 		TreeLogic tree = new TreeLogic();
 
@@ -145,13 +142,13 @@ public class Platformer extends Game {
 		SequencerComposite sequencer = new SequencerComposite();
 		sequencer.addChild(new LateralCollisionCondition());
 		TimeDecorator timer = new TimeDecorator(100);
-		timer.setChild(new ActionExecutorLeaf<RollControllerLogic>(RollControllerLogic.class));
+		timer.setChild(new RollAction(-10000000));
 		sequencer.addChild(timer);
-		sequencer.addChild(new ActionExecutorLeaf<JumpControllerLogic>(JumpControllerLogic.class));
+		sequencer.addChild(new JumpAction());
 		priority.addChild(sequencer);
 
 		SuccessDecorator success = new SuccessDecorator();
-		success.setChild(new ActionExecutorLeaf<RollControllerLogic>(RollControllerLogic.class));
+		success.setChild(new RollAction(-100000000));
 		priority.addChild(success);
 
 		tree.setRoot(priority);

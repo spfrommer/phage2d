@@ -20,12 +20,12 @@ import engine.core.implementation.physics.wrappers.TransformWrapper;
  * 
  * @eng.dependencies DamageData, TransformWrapper
  */
-public class BulletCollisionHandlerLogic extends CollisionHandlerLogic {
+public class BulletCollisionLogic extends CollisionHandlerLogic {
 	private EntitySystem m_system;
 	private DamageData m_damage;
 	private TransformWrapper m_transform;
 
-	public BulletCollisionHandlerLogic(EntitySystem system) {
+	public BulletCollisionLogic(EntitySystem system) {
 		super(new Aspect(TypeManager.getType(DamageData.class), TypeManager.getType(TransformWrapper.class)));
 		m_system = system;
 	}
@@ -68,6 +68,6 @@ public class BulletCollisionHandlerLogic extends CollisionHandlerLogic {
 
 	@Override
 	public Component copy() {
-		return new BulletCollisionHandlerLogic(m_system);
+		return new BulletCollisionLogic(m_system);
 	}
 }

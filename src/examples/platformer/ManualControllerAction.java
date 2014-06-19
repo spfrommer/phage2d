@@ -1,24 +1,23 @@
 package examples.platformer;
 
 import utils.physics.Vector;
-import engine.core.framework.Aspect;
-import engine.core.framework.component.Component;
-import engine.core.framework.component.LogicComponent;
+import engine.core.framework.Entity;
 import engine.core.framework.component.type.TypeManager;
 import engine.core.implementation.behavior.base.ExecutionState;
-import engine.core.implementation.behavior.base.leaf.action.executor.ActionExecutable;
+import engine.core.implementation.behavior.base.Node;
+import engine.core.implementation.behavior.base.leaf.action.ActionLeaf;
 import engine.core.implementation.physics.data.PhysicsData;
 import engine.inputs.InputManager;
 
 /**
  * A controller for a bouncing ball.
  */
-public class ManualControllerLogic extends LogicComponent implements ActionExecutable {
+public class ManualControllerAction extends ActionLeaf {
 	private PhysicsData m_physics;
 	private InputManager m_inputManager;
 
-	public ManualControllerLogic(InputManager manager) {
-		super(new Aspect(TypeManager.getType(PhysicsData.class)));
+	public ManualControllerAction(InputManager manager) {
+		super();
 		m_inputManager = manager;
 	}
 
@@ -39,12 +38,13 @@ public class ManualControllerLogic extends LogicComponent implements ActionExecu
 	}
 
 	@Override
-	public void loadDependencies() {
-		m_physics = (PhysicsData) this.loadDependency(TypeManager.getType(PhysicsData.class));
+	public boolean load(Entity entity) {
+		m_physics = (PhysicsData) entity.getComponent(TypeManager.getType(PhysicsData.class));
+		return true;
 	}
 
 	@Override
-	public Component copy() {
-		return new ManualControllerLogic(m_inputManager);
+	public Node copy() {
+		return new ManualControllerAction(m_inputManager);
 	}
 }

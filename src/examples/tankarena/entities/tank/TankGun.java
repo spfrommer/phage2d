@@ -27,7 +27,7 @@ import engine.core.implementation.rendering.base.Animator;
 import engine.core.implementation.rendering.data.AnimationData;
 import engine.core.implementation.rendering.logic.TextureRenderingLogic;
 import engine.inputs.InputManager;
-import examples.tankarena.entities.missile.Missile;
+import examples.tankarena.entities.missile.bounce.BouncyMissile;
 
 public class TankGun extends Entity {
 	public TankGun(double width, double height, String[] textures, int layer, InputManager input, TankBody body,
@@ -72,11 +72,9 @@ public class TankGun extends Entity {
 		this.addComponent(new TextureRenderingLogic());
 
 		this.addComponent(new PlayerGunAimerLogic(input));
-		Missile bouncy = new Missile(new Circle(10), layer, new Texture(ImageUtils.getID("portal1.png"), 20, 20));
-		PhysicsData missilePhysics = (PhysicsData) bouncy.getComponent(TypeManager.getType(PhysicsData.class));
-		missilePhysics.setRestitution(1);
 
-		this.addComponent(new ShootingLogic(system, bouncy));
+		this.addComponent(new ShootingLogic(system, new BouncyMissile(new Circle(10), layer, new Texture(ImageUtils
+				.getID("portal1.png"), 20, 20), system, 3, 10)));
 
 		TreeLogic tree = new TreeLogic();
 

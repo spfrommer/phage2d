@@ -100,11 +100,11 @@ public abstract class Game {
 		long nextGameTick = System.currentTimeMillis();
 		while (!display.destroyRequested()) {
 			// timer.start();
+			m_system.update();
 			update(1);
-
 			render(display);
 
-			/*nextGameTick += milliSkip;
+			nextGameTick += milliSkip;
 			long sleepTime = nextGameTick - System.currentTimeMillis();
 			System.out.println("Next time: " + nextGameTick + "; current time: " + System.currentTimeMillis());
 			if (sleepTime > 0) {
@@ -114,7 +114,7 @@ public abstract class Game {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-			}*/
+			}
 			// capFrameRate();
 			// timer.stop();
 

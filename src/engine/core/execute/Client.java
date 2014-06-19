@@ -292,6 +292,7 @@ public abstract class Client {
 				}
 				m_messageBuffer.flush();
 				update(1);
+				m_system.update();
 
 				nextGameTick += milliSkip;
 				long sleepTime = nextGameTick - System.currentTimeMillis();

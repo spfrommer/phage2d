@@ -8,10 +8,15 @@ public class EntitySystem {
 	private List<SystemListener> m_listeners;
 	private SystemAspectManager m_manager;
 
+	private List<Entity> m_addQueue;
+	private List<Entity> m_removeQueue;
+
 	{
 		m_entities = new ArrayList<Entity>();
 		m_listeners = new ArrayList<SystemListener>();
 		m_manager = new SystemAspectManager(this);
+		m_addQueue = new ArrayList<Entity>();
+		m_removeQueue = new ArrayList<Entity>();
 	}
 
 	/**
@@ -30,26 +35,41 @@ public class EntitySystem {
 	}
 
 	/**
-	 * Adds an Entity to the EntitySystem and notifies SystemListeners
+	 * Proccesses the add and remove queues and notifies listeners
+	 */
+	public void update() {
+		for (Entity entity : m_addQueue) {
+			m_entities.add(entity);
+
+			for (SystemListener esl : m_listeners)
+				esl.entityAdded(entity);
+		}
+		for (Entity entity : m_removeQueue) {
+			m_entities.remove(entity);
+
+			for (SystemListener esl : m_listeners)
+				esl.entityRemoved(entity);
+		}
+		m_addQueue.clear();
+		m_removeQueue.clear();
+	}
+
+	/**
+	 * Adds an Entity to the add queue
 	 * 
 	 * @param entity
 	 */
 	public void addEntity(Entity entity) {
-		m_entities.add(entity);
-		for (SystemListener esl : m_listeners)
-			esl.entityAdded(entity);
+		m_addQueue.add(entity);
 	}
 
 	/**
-	 * Removes an Entity to the EntitySystem and notifies SystemListeners
+	 * Queues a removal of the Entity
 	 * 
 	 * @param entity
 	 */
 	public void removeEntity(Entity entity) {
-		m_entities.remove(entity);
-
-		for (SystemListener esl : m_listeners)
-			esl.entityRemoved(entity);
+		m_removeQueue.add(entity);
 	}
 
 	/**

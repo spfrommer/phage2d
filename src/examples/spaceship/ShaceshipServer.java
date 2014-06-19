@@ -191,7 +191,7 @@ public class ShaceshipServer extends Server {
 
 		bullet.addComponent(new ExclusiveCollisionFilterLogic(exclude));
 
-		bullet.addComponent(new BulletCollisionHandlerLogic(this.getEntitySystem()));
+		bullet.addComponent(new BulletCollisionLogic(this.getEntitySystem()));
 
 		return bullet;
 	}

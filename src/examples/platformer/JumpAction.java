@@ -1,24 +1,23 @@
 package examples.platformer;
 
 import utils.physics.Vector;
-import engine.core.framework.Aspect;
-import engine.core.framework.component.Component;
-import engine.core.framework.component.LogicComponent;
+import engine.core.framework.Entity;
 import engine.core.framework.component.type.TypeManager;
 import engine.core.implementation.behavior.base.ExecutionState;
-import engine.core.implementation.behavior.base.leaf.action.executor.ActionExecutable;
+import engine.core.implementation.behavior.base.Node;
+import engine.core.implementation.behavior.base.leaf.action.ActionLeaf;
 import engine.core.implementation.physics.data.PhysicsData;
 
 /**
  * Will make the ball jump - return SUCCESS if the ball completed the jump and RUNNING if it is jumping.
  */
-public class JumpControllerLogic extends LogicComponent implements ActionExecutable {
+public class JumpAction extends ActionLeaf {
 	private PhysicsData m_physics;
 	// Our velocity one tick ago
 	private int m_atRestTicks;
 
-	public JumpControllerLogic() {
-		super(new Aspect(TypeManager.getType(PhysicsData.class)));
+	public JumpAction() {
+		super();
 	}
 
 	@Override
@@ -36,12 +35,13 @@ public class JumpControllerLogic extends LogicComponent implements ActionExecuta
 	}
 
 	@Override
-	public void loadDependencies() {
-		m_physics = (PhysicsData) this.loadDependency(TypeManager.getType(PhysicsData.class));
+	public boolean load(Entity entity) {
+		m_physics = (PhysicsData) entity.getComponent(TypeManager.getType(PhysicsData.class));
+		return true;
 	}
 
 	@Override
-	public Component copy() {
-		return new JumpControllerLogic();
+	public Node copy() {
+		return new JumpAction();
 	}
 }

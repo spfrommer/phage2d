@@ -4,7 +4,7 @@ import engine.core.framework.component.Component;
 import engine.core.framework.component.DataComponent;
 
 /**
- * Contains this Entity deals (for bullets / missiles).
+ * Contains the damage this Entity deals (for bullets / missiles).
  */
 public class DamageData extends DataComponent {
 	public double damage;
