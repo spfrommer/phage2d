@@ -58,13 +58,14 @@ public class ArenaClient extends Client {
 
 		// m_cam = new KeyboardCameraActivity(this.getEntitySystem(), LWJGLKeyboard.instance(), new MovementProfile(10,
 		// 0.05));
-		m_cam = new ChaseCameraActivity(this.getEntitySystem(), this.getID());
 		m_interpolation = new InterpolationActivity(this.getEntitySystem(), this.getSyncActivity());
 	}
 
 	@Override
 	protected void onServerConnect() {
 		createInputManager(this.getID());
+
+		m_cam = new ChaseCameraActivity(this.getEntitySystem(), this.getID());
 	}
 
 	@Override

@@ -210,17 +210,23 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 			Set<Entity> updatedEntities = new HashSet<Entity>();
 
 			for (Message message : m_messageBuffer) {
-				if (message == null)
+				if (message == null) {
 					System.err.println("Message " + message + " equals null. (nsp.handleMessages) ");
+					continue;
+				}
 
-				if (message.getCommand() == null)
+				if (message.getCommand() == null) {
 					System.err.println("Message " + message + " command equals null. (nsp.handleMessages) ");
+					continue;
+				}
 
 				if (message.getCommand().equals("update")) {
 					Entity receiver = m_idMapper.getBackward((message.getParameters()[0]).getIntValue());
 
-					if (receiver == null)
+					if (receiver == null) {
 						System.err.println("Null receiver in NetworkSyncProcess.handleMessages(): " + message);
+						continue;
+					}
 
 					NetworkSyncLogic syncLogic = (NetworkSyncLogic) receiver.getComponent(TypeManager
 							.getType(NetworkSyncLogic.class));

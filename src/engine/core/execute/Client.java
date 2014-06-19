@@ -190,7 +190,6 @@ public abstract class Client {
 			}
 
 			if (message.getCommand().equals("endtransmission")) {
-				System.out.println("Transmission ended");
 				m_network.processMessages();
 				try {
 					synchronized (m_display) {
