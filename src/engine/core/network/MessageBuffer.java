@@ -48,7 +48,8 @@ public class MessageBuffer {
 	 * Writes all the Messages to all the MessageWriters, then clears the buffer.
 	 */
 	public void flush() {
-		// System.out.println("Flushing " + m_buffer.size() + " messages");
+		/*if (m_buffer.size() != 0)
+			System.out.println("Flushing " + m_buffer.size() + " messages");*/
 		m_lock.lock();
 		for (Message message : m_buffer) {
 			for (MessageWriter writer : m_writers) {

@@ -129,8 +129,10 @@ public abstract class Server {
 			if (m_updatesPassed >= m_upf) {
 				m_network.processWriters();
 				m_network.processMessages();
-				m_network.trasmitUpdates();
+				boolean transmitted = m_network.trasmitUpdates();
 				m_updatesPassed = 1;
+				// if (transmitted)
+				// System.out.println("Transmitting");
 			} else {
 				m_updatesPassed++;
 			}
@@ -238,7 +240,7 @@ public abstract class Server {
 
 				if (m_dumpMessages) {
 					double timeStamp = System.currentTimeMillis();
-					if (timeStamp - m_lastTimeStamp > 1)
+					if (!(message.getCommand().equals("inputmousex") || message.getCommand().equals("inputmousey")))
 						System.out.println((timeStamp - m_lastTimeStamp) + "---" + message);
 					m_lastTimeStamp = timeStamp;
 				}

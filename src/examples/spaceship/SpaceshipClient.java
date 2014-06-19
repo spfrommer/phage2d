@@ -57,13 +57,12 @@ public class SpaceshipClient extends Client {
 	}
 
 	@Override
-	public void renderGui(Renderer renderer) {
-
+	public void onRender(Renderer renderer) {
+		m_cam.control(this.getViewPort().getCamera(), 1);
 	}
 
 	@Override
 	public void update(int ticks) {
-		m_cam.control(this.getViewPort().getCamera(), ticks);
 	}
 
 	public InputManager createInputManager(final int id) {

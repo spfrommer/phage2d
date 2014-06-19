@@ -4,6 +4,8 @@ import java.awt.geom.AffineTransform;
 import java.io.IOException;
 import java.net.Socket;
 
+import org.lwjgl.LWJGLException;
+
 import utils.image.ImageUtils;
 import engine.core.framework.EntitySystem;
 import engine.core.implementation.camera.base.Camera;
@@ -53,8 +55,8 @@ public abstract class Client {
 	private boolean m_dumpMessages = false;
 	private double m_lastTimeStamp = System.currentTimeMillis();
 
-	private static final int DEFAULT_FPS = 60;
-	private int m_fps = DEFAULT_FPS;
+	private static final int DEFAULT_UPS = 60;
+	private int m_ups = DEFAULT_UPS;
 
 	{
 		m_system = new EntitySystem();
@@ -83,8 +85,12 @@ public abstract class Client {
 	public void start() {
 		connect(m_host, m_port);
 
-		listen();
-		startRenderingLoop(m_display);
+		Thread t = new Thread(new NativeHandler());
+		t.start();
+
+		// listen();
+		// startRenderingLoop(m_display);
+		startServerHandlerLoop(m_display);
 	}
 
 	/**
@@ -106,12 +112,12 @@ public abstract class Client {
 	}
 
 	/**
-	 * Sets the rendering FPS.
+	 * Sets the frequency at which update() is called and the MessageBuffer is flushed.
 	 * 
-	 * @param fps
+	 * @param ups
 	 */
-	public void setFPS(int fps) {
-		m_fps = fps;
+	public void setUPS(int ups) {
+		m_ups = ups;
 	}
 
 	/**
@@ -134,23 +140,23 @@ public abstract class Client {
 			Message idMessage = m_serverReader.readMessage();
 			m_id = idMessage.getParameters()[0].getIntValue();
 
+			m_network.processWriters();
+
 			onServerConnect();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	/**
-	 * Listens for server messages
-	 */
-	private void listen() {
-		Thread t = new Thread(new ServerReader());
-		t.start();
-	}
-
 	private Display setupDisplay() {
 		LWJGLDisplay display = new LWJGLDisplay(1024, 1024);
 		display.init();
+
+		try {
+			org.lwjgl.opengl.Display.releaseContext();
+		} catch (LWJGLException e) {
+			e.printStackTrace();
+		}
 
 		SingleViewPortLayout layout = new SingleViewPortLayout(display);
 
@@ -166,35 +172,39 @@ public abstract class Client {
 		return display;
 	}
 
-	private void startRenderingLoop(Display display) {
-		long nextGameTick = System.currentTimeMillis();
-		int milliSkip = 1000 / m_fps;
+	private void startServerHandlerLoop(Display display) {
 		while (!display.destroyRequested()) {
-			m_messageBuffer.flush();
+			Message message = null;
+			try {
+				message = m_serverReader.readMessage();
+			} catch (IOException e) {
+				System.err.println("Socket connection closed.");
+				System.exit(0);
+			}
 
-			m_network.processWriters();
-			m_network.processMessages();
+			if (m_dumpMessages) {
+				double timeStamp = System.currentTimeMillis();
+				if (timeStamp - m_lastTimeStamp > 1)
+					System.out.println((timeStamp - m_lastTimeStamp) + "---" + message);
+				m_lastTimeStamp = timeStamp;
+			}
 
-			update(1);
-			// this call is actually blocking 16 milliseconds
-			render(display);
-
-			/*nextGameTick += milliSkip;
-			long sleepTime = nextGameTick - System.currentTimeMillis();
-			if (sleepTime > 0) {
+			if (message.getCommand().equals("endtransmission")) {
+				System.out.println("Transmission ended");
+				m_network.processMessages();
 				try {
-					Thread.sleep(sleepTime);
-				} catch (InterruptedException e) {
+					synchronized (m_display) {
+						org.lwjgl.opengl.Display.makeCurrent();
+						render(display);
+						org.lwjgl.opengl.Display.releaseContext();
+					}
+				} catch (LWJGLException e) {
 					e.printStackTrace();
 				}
-			}*/
+			} else {
+				m_network.bufferMessage(message);
+			}
 		}
-		try {
-			m_socket.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.exit(0);
 	}
 
 	private void render(Display display) {
@@ -204,7 +214,7 @@ public abstract class Client {
 		m_rendering.render(r);
 
 		r.setTransform(new AffineTransform());
-		renderGui(r);
+		onRender(r);
 
 		display.getRenderer().setColor(Color.WHITE);
 		display.render();
@@ -254,35 +264,45 @@ public abstract class Client {
 	public abstract void update(int ticks);
 
 	/**
-	 * Called so that every subclass can render its specific gui
+	 * Called after the Client receives a transmission and renders it. This can be used for rendering a gui.
 	 * 
 	 * @param renderer
 	 */
-	public abstract void renderGui(Renderer renderer);
+	public abstract void onRender(Renderer renderer);
 
-	private class ServerReader implements Runnable {
-		public ServerReader() {
-		}
-
+	private class NativeHandler implements Runnable {
 		@Override
 		public void run() {
+			try {
+				Thread.sleep(300);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+			long nextGameTick = System.currentTimeMillis();
+			int milliSkip = 1000 / m_ups;
 			while (true) {
-				Message message = null;
+				// System.out.println("Flushing buffer");
 				try {
-					message = m_serverReader.readMessage();
-				} catch (IOException e) {
-					System.err.println("Socket connection closed.");
-					System.exit(0);
+					synchronized (m_display) {
+						org.lwjgl.opengl.Display.makeCurrent();
+						org.lwjgl.opengl.Display.processMessages();
+						org.lwjgl.opengl.Display.releaseContext();
+					}
+				} catch (LWJGLException e) {
+					e.printStackTrace();
 				}
+				m_messageBuffer.flush();
+				update(1);
 
-				if (m_dumpMessages) {
-					double timeStamp = System.currentTimeMillis();
-					if (timeStamp - m_lastTimeStamp > 1)
-						System.out.println((timeStamp - m_lastTimeStamp) + "---" + message);
-					m_lastTimeStamp = timeStamp;
+				nextGameTick += milliSkip;
+				long sleepTime = nextGameTick - System.currentTimeMillis();
+				if (sleepTime > 0) {
+					try {
+						Thread.sleep(sleepTime);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
-
-				m_network.bufferMessage(message);
 			}
 		}
 	}

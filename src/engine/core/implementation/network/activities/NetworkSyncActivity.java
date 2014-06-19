@@ -23,6 +23,7 @@ import engine.core.implementation.network.data.NetworkData;
 import engine.core.implementation.network.logic.NetworkSyncLogic;
 import engine.core.network.lowlevel.MessageWriter;
 import engine.core.network.message.Message;
+import engine.core.network.message.parameter.MessageParameter;
 
 /**
  * Syncs Entities across a network
@@ -255,6 +256,7 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 		List<Entity> entities = this.getEntities();
 
 		boolean transmitted = false;
+		// concurrent modification exception?
 		for (Entity entity : entities) {
 			NetworkSyncLogic component = (NetworkSyncLogic) entity.getComponent(m_syncType);
 			ArrayList<Message> updateMessages = component.getUpdateMessages();
@@ -269,6 +271,17 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 				transmitted = true;
 			}
 		}
+
+		if (transmitted) {
+			for (MessageWriter writer : m_writers) {
+				try {
+					writer.writeMessage(new Message("endtransmission", new MessageParameter[0]));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
 		return transmitted;
 	}
 

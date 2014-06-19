@@ -68,14 +68,14 @@ public class ArenaClient extends Client {
 	}
 
 	@Override
-	public void renderGui(Renderer renderer) {
+	public void update(int ticks) {
+		// m_interpolation.update();
 
 	}
 
 	@Override
-	public void update(int ticks) {
-		// m_interpolation.update();
-		m_cam.control(this.getViewPort().getCamera(), ticks);
+	public void onRender(Renderer renderer) {
+		m_cam.control(this.getViewPort().getCamera(), 1);
 	}
 
 	public InputManager createInputManager(final int id) {

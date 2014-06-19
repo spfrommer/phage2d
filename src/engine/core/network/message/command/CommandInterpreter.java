@@ -23,6 +23,8 @@ public class CommandInterpreter {
 		defaultIDs.put("removeentity", 4);
 
 		defaultIDs.put("update", 5);
+
+		defaultIDs.put("endtransmission", 6);
 	}
 
 	{
