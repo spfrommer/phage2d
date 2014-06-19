@@ -56,7 +56,7 @@ public class FontTest implements Renderable {
 	}
 	
 	public static void main(String[] args) {
-		Display display = new LWJGLDisplay(1024, 1024);
+		Display display = new LWJGLDisplay(1024, 1024, true);
 		display.init();
 
 

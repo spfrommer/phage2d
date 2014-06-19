@@ -36,7 +36,7 @@ public class LWJGLTest {
 		}
 	*/
 	public void run(boolean lwjgl) {
-		LWJGLRenderer.initDisplayWithoutCanvas(1024, 1024);
+		LWJGLRenderer.initDisplayWithoutCanvas(1024, 1024, true);
 
 		LWJGLRenderer renderer = LWJGLRenderer.instance();
 

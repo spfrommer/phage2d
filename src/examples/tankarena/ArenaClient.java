@@ -122,7 +122,7 @@ public class ArenaClient extends Client {
 		declarations.add(new MessageDeclaration("inputmousey"));
 		declarations.add(new MessageDeclaration("inputleftmousedown"));
 		declarations.add(new MessageDeclaration("inputrightmousedown"));
-		ArenaClient client = new ArenaClient(new CommandInterpreter(declarations), "localhost", Server.PORT);
+		ArenaClient client = new ArenaClient(new CommandInterpreter(declarations), "playroom-1", Server.PORT);
 		client.start();
 	}
 }

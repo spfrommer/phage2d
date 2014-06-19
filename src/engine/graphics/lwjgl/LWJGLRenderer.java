@@ -438,14 +438,13 @@ public class LWJGLRenderer implements Renderer {
 			// TODO: Fix post processors
 			p.run(this);
 		}
-
 		Display.update();
 		// Clear the lights
 		m_pointLights.clear();
 
 		GL11.glLoadIdentity();
-
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 		GL11.glLoadIdentity();
 		doFrameSetup();
@@ -471,12 +470,6 @@ public class LWJGLRenderer implements Renderer {
 	 */
 
 	public static void initDisplay(int width, int height) {
-		Display.setVSyncEnabled(true);
-		try {
-			Display.create();
-		} catch (LWJGLException e) {
-			e.printStackTrace();
-		}
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
 		GL11.glOrtho(0, width, height, 0, 1, -1);
@@ -519,9 +512,11 @@ public class LWJGLRenderer implements Renderer {
 		LWJGLPointLight.init(width, height);
 	}
 
-	public static void initDisplayWithoutCanvas(int width, int height) {
+	public static void initDisplayWithoutCanvas(int width, int height, boolean vsync) {
 		try {
 			Display.setDisplayMode(new DisplayMode(width, height));
+			Display.setVSyncEnabled(vsync);
+			Display.create();
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 		}

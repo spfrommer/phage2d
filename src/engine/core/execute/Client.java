@@ -149,7 +149,7 @@ public abstract class Client {
 	}
 
 	private Display setupDisplay() {
-		LWJGLDisplay display = new LWJGLDisplay(1024, 1024);
+		LWJGLDisplay display = new LWJGLDisplay(1024, 1024, false);
 		display.init();
 
 		SingleViewPortLayout layout = new SingleViewPortLayout(display);

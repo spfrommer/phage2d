@@ -19,7 +19,7 @@ import engine.inputs.mouse.Mouse;
 
 public class ResizingTest {
 	public static void main(String[] args) {
-		LWJGLRenderer.instance().initDisplayWithoutCanvas(1024, 1024);
+		LWJGLRenderer.instance().initDisplayWithoutCanvas(1024, 1024, true);
 		// Graphics2D graphics = LWJGLGraphics2D.instance();
 		Renderer renderer = LWJGLRenderer.instance();
 		ViewPort fakePort = new ViewPort(null);
