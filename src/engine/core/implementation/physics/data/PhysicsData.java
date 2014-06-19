@@ -507,5 +507,4 @@ public class PhysicsData extends DataComponent {
 			return joint;
 		}
 	}
-
 }

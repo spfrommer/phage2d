@@ -73,4 +73,92 @@ public class TankTread extends Entity {
 		tree.setRoot(new ActionExecutorLeaf<PlayerTreadLogic>(PlayerTreadLogic.class));
 		this.addComponent(tree);
 	}
+
+	public class TreadBuilder {
+		Vector position;
+		double width;
+		double height;
+		String[] textures;
+		int layer;
+		InputManager input;
+		TankBody body;
+		PhysicsActivity activity;
+		int direction;
+
+		public TankTread build() {
+			return new TankTread(position, width, height, textures, layer, input, body, activity, direction);
+		}
+
+		/**
+		 * @param position
+		 *            the position to set
+		 */
+		public void setPosition(Vector position) {
+			this.position = position;
+		}
+
+		/**
+		 * @param width
+		 *            the width to set
+		 */
+		public void setWidth(double width) {
+			this.width = width;
+		}
+
+		/**
+		 * @param height
+		 *            the height to set
+		 */
+		public void setHeight(double height) {
+			this.height = height;
+		}
+
+		/**
+		 * @param textures
+		 *            the textures to set
+		 */
+		public void setTextures(String[] textures) {
+			this.textures = textures;
+		}
+
+		/**
+		 * @param layer
+		 *            the layer to set
+		 */
+		public void setLayer(int layer) {
+			this.layer = layer;
+		}
+
+		/**
+		 * @param input
+		 *            the input to set
+		 */
+		public void setInputManager(InputManager input) {
+			this.input = input;
+		}
+
+		/**
+		 * @param body
+		 *            the body to set
+		 */
+		public void setBody(TankBody body) {
+			this.body = body;
+		}
+
+		/**
+		 * @param activity
+		 *            the activity to set
+		 */
+		public void setPhysicsActivity(PhysicsActivity activity) {
+			this.activity = activity;
+		}
+
+		/**
+		 * @param direction
+		 *            the direction to set
+		 */
+		public void setDirection(int direction) {
+			this.direction = direction;
+		}
+	}
 }
