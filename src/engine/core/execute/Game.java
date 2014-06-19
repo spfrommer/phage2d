@@ -73,7 +73,7 @@ public abstract class Game {
 	}
 
 	private LWJGLDisplay setupDisplay(int width, int height) {
-		LWJGLDisplay display = new LWJGLDisplay(width, height);
+		LWJGLDisplay display = new LWJGLDisplay(width, height, true);
 		display.init();
 
 		SingleViewPortLayout layout = new SingleViewPortLayout(display);
@@ -102,9 +102,7 @@ public abstract class Game {
 			// timer.start();
 			update(1);
 
-			long time = System.currentTimeMillis();
 			render(display);
-			System.out.println(System.currentTimeMillis() - time);
 
 			/*nextGameTick += milliSkip;
 			long sleepTime = nextGameTick - System.currentTimeMillis();

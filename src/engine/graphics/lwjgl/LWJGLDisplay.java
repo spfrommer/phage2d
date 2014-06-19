@@ -10,13 +10,15 @@ import engine.graphics.Renderer;
 public class LWJGLDisplay implements Display {
 	private final int m_width;
 	private final int m_height;
+	private final boolean m_sync;
 
 	private ArrayList<ResizeListener> m_listeners = new ArrayList<ResizeListener>();
 	private ArrayList<Renderable> m_renderables = new ArrayList<Renderable>();
 
-	public LWJGLDisplay(int width, int height) {
+	public LWJGLDisplay(int width, int height, boolean sync) {
 		m_width = width;
 		m_height = height;
+		m_sync = sync;
 	}
 
 	@Override
@@ -47,7 +49,7 @@ public class LWJGLDisplay implements Display {
 
 	@Override
 	public void init() {
-		LWJGLRenderer.initDisplayWithoutCanvas(m_width, m_height);
+		LWJGLRenderer.initDisplayWithoutCanvas(m_width, m_height, m_sync);
 	}
 
 	@Override

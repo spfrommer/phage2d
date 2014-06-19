@@ -6,7 +6,7 @@ import engine.inputs.InputManager;
 
 public class InputManagerTest {
 	public static void main(String[] args) {
-		LWJGLRenderer.initDisplayWithoutCanvas(1024, 1024);
+		LWJGLRenderer.initDisplayWithoutCanvas(1024, 1024, true);
 
 		LWJGLKeyboard keyboard = LWJGLKeyboard.instance();
 

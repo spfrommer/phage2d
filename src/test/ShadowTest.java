@@ -23,7 +23,7 @@ public class ShadowTest implements Renderable {
 	private static BufferedImage TANK_BODY = ImageUtils.readImage("/images/chassis1.png");
 	public Vector2f m_lightPos = new Vector2f(100f, 100f);
 	public void run() {
-		LWJGLDisplay display = new LWJGLDisplay(1024, 1024);
+		LWJGLDisplay display = new LWJGLDisplay(1024, 1024, true);
 		LWJGLKeyboard keyboard = LWJGLKeyboard.instance();
 		display.init();
 		while(!display.destroyRequested()) {
