@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import engine.core.execute.Client;
 import engine.core.execute.Server;
 import engine.core.implementation.camera.activities.CameraActivity;
-import engine.core.implementation.camera.activities.KeyboardCameraActivity;
-import engine.core.implementation.camera.activities.MovementProfile;
+import engine.core.implementation.camera.activities.ChaseCameraActivity;
 import engine.core.implementation.camera.base.ViewPort;
 import engine.core.implementation.interpolation.activities.InterpolationActivity;
 import engine.core.implementation.interpolation.data.InterpolationData;
@@ -57,8 +56,9 @@ public class ArenaClient extends Client {
 		super(interpreter, server, port, s_decoder, "images-all.txt");
 		this.getViewPort().getCamera().setZoom(1);
 
-		m_cam = new KeyboardCameraActivity(this.getEntitySystem(), LWJGLKeyboard.instance(), new MovementProfile(10,
-				0.05));
+		// m_cam = new KeyboardCameraActivity(this.getEntitySystem(), LWJGLKeyboard.instance(), new MovementProfile(10,
+		// 0.05));
+		m_cam = new ChaseCameraActivity(this.getEntitySystem(), this.getID());
 		m_interpolation = new InterpolationActivity(this.getEntitySystem(), this.getSyncActivity());
 	}
 

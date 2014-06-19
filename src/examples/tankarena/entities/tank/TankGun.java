@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.dyn4j.dynamics.joint.Joint;
+import org.dyn4j.geometry.Circle;
 import org.dyn4j.geometry.Rectangle;
 
 import utils.image.ImageUtils;
@@ -71,8 +72,11 @@ public class TankGun extends Entity {
 		this.addComponent(new TextureRenderingLogic());
 
 		this.addComponent(new PlayerGunAimerLogic(input));
-		this.addComponent(new ShootingLogic(system, new Missile(new Rectangle(20, 20), layer, new Texture(ImageUtils
-				.getID("portal1.png"), 20, 20))));
+		Missile bouncy = new Missile(new Circle(10), layer, new Texture(ImageUtils.getID("portal1.png"), 20, 20));
+		PhysicsData missilePhysics = (PhysicsData) bouncy.getComponent(TypeManager.getType(PhysicsData.class));
+		missilePhysics.setRestitution(1);
+
+		this.addComponent(new ShootingLogic(system, bouncy));
 
 		TreeLogic tree = new TreeLogic();
 

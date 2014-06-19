@@ -465,6 +465,7 @@ public class PhysicsData extends DataComponent {
 		component.setPosition(this.getPosition());
 		component.setRotation(this.getRotation());
 		component.setVelocity(this.getVelocity());
+		component.setRestitution(this.getRestitution());
 		component.setRotationalVelocity(this.getRotationalVelocity());
 
 		component.setCollisionFriction(this.getCollisionFriction());

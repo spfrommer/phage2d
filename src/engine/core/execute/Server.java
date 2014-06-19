@@ -231,7 +231,9 @@ public abstract class Server {
 					message = m_reader.readMessage();
 				} catch (IOException ex) {
 					System.err.println("Socket connection closed.");
-					System.exit(0);
+					// System.exit(0);
+					m_network.bufferRemoveWriter(m_writer);
+					return;
 				}
 
 				if (m_dumpMessages) {
