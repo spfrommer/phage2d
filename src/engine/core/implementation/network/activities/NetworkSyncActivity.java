@@ -111,6 +111,7 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 		if (network.sync) {
 			NetworkSyncLogic component = (NetworkSyncLogic) entity.getComponent(m_syncType);
 			writeAll(component.getCreationMessage());
+			writeAll(new Message("endtransmission", new MessageParameter[0]));
 		}
 	}
 
@@ -120,7 +121,10 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 		if (network.sync) {
 			NetworkSyncLogic component = (NetworkSyncLogic) entity.getComponent(m_syncType);
 			writeAll(component.getRemovalMessage());
+			writeAll(new Message("endtransmission", new MessageParameter[0]));
 		}
+
+		m_idMapper.removeForward(entity);
 	}
 
 	@Override

@@ -83,12 +83,12 @@ public class ArenaClient extends Client {
 		InputManager inputManager = new InputManager();
 		LWJGLMouse mouse = new LWJGLMouse(getViewPort().getViewShape());
 		ViewPort port = getViewPort();
-		addNetworkBinding(inputManager, new KeyTrigger(LWJGLKeyboard.instance().getKey('k')), "Backwards",
-				"inputbackwards", id);
-		addNetworkBinding(inputManager, new KeyTrigger(LWJGLKeyboard.instance().getKey('i')), "Forwards",
+		addNetworkBinding(inputManager, new KeyTrigger(LWJGLKeyboard.instance().getKey('w')), "Forwards",
 				"inputforwards", id);
-		addNetworkBinding(inputManager, new KeyTrigger(LWJGLKeyboard.instance().getKey('j')), "Left", "inputleft", id);
-		addNetworkBinding(inputManager, new KeyTrigger(LWJGLKeyboard.instance().getKey('l')), "Right", "inputright", id);
+		addNetworkBinding(inputManager, new KeyTrigger(LWJGLKeyboard.instance().getKey('s')), "Backwards",
+				"inputbackwards", id);
+		addNetworkBinding(inputManager, new KeyTrigger(LWJGLKeyboard.instance().getKey('a')), "Left", "inputleft", id);
+		addNetworkBinding(inputManager, new KeyTrigger(LWJGLKeyboard.instance().getKey('d')), "Right", "inputright", id);
 		addNetworkBinding(inputManager, new MouseWorldXTrigger(mouse, port), "MouseWorldX", "inputmousex", id);
 		addNetworkBinding(inputManager, new MouseWorldYTrigger(mouse, port), "MouseWorldY", "inputmousey", id);
 		addNetworkBinding(inputManager, new MouseButtonTrigger(mouse.getMouseButton(MouseButton.LEFT_NAME)),

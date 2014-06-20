@@ -36,4 +36,14 @@ public class TwoWayHashMap<K extends Object, V extends Object> {
 	public synchronized Set<V> getValues() {
 		return backward.keySet();
 	}
+
+	public synchronized void removeForward(K key) {
+		backward.remove(forward.get(key));
+		forward.remove(key);
+	}
+
+	public synchronized void removeBackward(V key) {
+		forward.remove(backward.get(key));
+		backward.remove(key);
+	}
 }

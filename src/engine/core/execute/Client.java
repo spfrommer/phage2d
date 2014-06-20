@@ -184,8 +184,8 @@ public abstract class Client {
 
 			if (m_dumpMessages) {
 				double timeStamp = System.currentTimeMillis();
-				if (timeStamp - m_lastTimeStamp > 1)
-					System.out.println((timeStamp - m_lastTimeStamp) + "---" + message);
+				// if (timeStamp - m_lastTimeStamp > 1)
+				System.out.println((timeStamp - m_lastTimeStamp) + "---" + message);
 				m_lastTimeStamp = timeStamp;
 			}
 
@@ -209,12 +209,12 @@ public abstract class Client {
 	private void render(Display display) {
 		Renderer r = display.getRenderer();
 
+		onRender(r);
+
 		m_viewport.lookThrough(r);
 		m_rendering.render(r);
 
 		r.setTransform(new AffineTransform());
-		onRender(r);
-
 		display.getRenderer().setColor(Color.WHITE);
 		display.render();
 		display.update();
