@@ -3,20 +3,20 @@ package engine.core.framework;
 import java.util.ArrayList;
 import java.util.List;
 
+import utils.collections.TwoWayBuffer;
+
 public class EntitySystem {
 	private List<Entity> m_entities;
 	private List<SystemListener> m_listeners;
 	private SystemAspectManager m_manager;
 
-	private List<Entity> m_addQueue;
-	private List<Entity> m_removeQueue;
+	private TwoWayBuffer<Entity> m_buffer;
 
 	{
 		m_entities = new ArrayList<Entity>();
 		m_listeners = new ArrayList<SystemListener>();
 		m_manager = new SystemAspectManager(this);
-		m_addQueue = new ArrayList<Entity>();
-		m_removeQueue = new ArrayList<Entity>();
+		m_buffer = new TwoWayBuffer<Entity>();
 	}
 
 	/**
@@ -38,26 +38,21 @@ public class EntitySystem {
 	 * Proccesses the add and remove queues and notifies listeners
 	 */
 	public void update() {
-		synchronized (m_addQueue) {
-			for (Entity entity : m_addQueue) {
-				m_entities.add(entity);
+		m_buffer.lock();
+		for (Entity entity : m_buffer.getAddBuffer()) {
+			m_entities.add(entity);
 
-				for (SystemListener esl : m_listeners)
-					esl.entityAdded(entity);
-			}
-			m_addQueue.clear();
+			for (SystemListener esl : m_listeners)
+				esl.entityAdded(entity);
 		}
-		synchronized (m_removeQueue) {
-			// System.out.println(m_entities.size());
-			for (Entity entity : m_removeQueue) {
-				m_entities.remove(entity);
+		for (Entity entity : m_buffer.getRemoveBuffer()) {
+			m_entities.remove(entity);
 
-				for (SystemListener esl : m_listeners)
-					esl.entityRemoved(entity);
-			}
-			// System.out.println(m_entities.size());
-			m_removeQueue.clear();
+			for (SystemListener esl : m_listeners)
+				esl.entityRemoved(entity);
 		}
+		m_buffer.clear();
+		m_buffer.unlock();
 	}
 
 	/**
@@ -66,9 +61,7 @@ public class EntitySystem {
 	 * @param entity
 	 */
 	public void addEntity(Entity entity) {
-		synchronized (m_addQueue) {
-			m_addQueue.add(entity);
-		}
+		m_buffer.bufferAdd(entity);
 	}
 
 	/**
@@ -77,10 +70,7 @@ public class EntitySystem {
 	 * @param entity
 	 */
 	public void removeEntity(Entity entity) {
-		// Thread.dumpStack();
-		synchronized (m_removeQueue) {
-			m_removeQueue.add(entity);
-		}
+		m_buffer.bufferRemove(entity);
 	}
 
 	/**

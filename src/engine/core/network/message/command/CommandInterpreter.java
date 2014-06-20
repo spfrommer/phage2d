@@ -2,7 +2,7 @@ package engine.core.network.message.command;
 
 import java.util.ArrayList;
 
-import utils.TwoWayHashMap;
+import utils.collections.TwoWayHashMap;
 import engine.core.network.message.MessageDeclaration;
 
 public class CommandInterpreter {

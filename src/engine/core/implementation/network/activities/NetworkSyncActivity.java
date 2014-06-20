@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
-import utils.TwoWayHashMap;
+import utils.collections.SingularBuffer;
+import utils.collections.TwoWayBuffer;
+import utils.collections.TwoWayHashMap;
 import engine.core.framework.Aspect;
 import engine.core.framework.AspectActivity;
 import engine.core.framework.Entity;
@@ -37,11 +37,12 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 	private List<MessageWriter> m_writers;
 
 	/**
-	 * Buffered ComponentType for fetching Components
+	 * ComponentType for fetching Components
 	 */
 	private ComponentType m_syncType;
+
 	/**
-	 * Buffered ComponentType for fetching Components
+	 * ComponentType for fetching Components
 	 */
 	private ComponentType m_dataType;
 
@@ -55,30 +56,9 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 	 */
 	private int currentID = 0;
 
-	/**
-	 * buffers the received messages until the next update loop
-	 */
-	private List<Message> m_messageBuffer;
+	private SingularBuffer<Message> m_messageBuffer;
 
-	/**
-	 * Makes sure that the receiving thread can't add objects while the buffer is being analyzed
-	 */
-	private Lock m_messageBufferLock;
-
-	/**
-	 * Writers to add in the next update loop
-	 */
-	private List<MessageWriter> m_writerAddBuffer;
-
-	/**
-	 * Writers to remove in the next update loop
-	 */
-	private List<MessageWriter> m_writerRemoveBuffer;
-
-	/**
-	 * Makes sure that m_writers is being modified while writers are being added or removed
-	 */
-	private Lock m_writerModifyLock;
+	private TwoWayBuffer<MessageWriter> m_writerBuffer;
 
 	/**
 	 * Defines how to decode an entity
@@ -91,12 +71,9 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 	private List<TransmissionListener> m_transmissionListeners;
 
 	{
-		m_messageBuffer = new ArrayList<Message>();
-		m_messageBufferLock = new ReentrantLock();
+		m_messageBuffer = new SingularBuffer<Message>();
 
-		m_writerAddBuffer = new ArrayList<MessageWriter>();
-		m_writerRemoveBuffer = new ArrayList<MessageWriter>();
-		m_writerModifyLock = new ReentrantLock();
+		m_writerBuffer = new TwoWayBuffer<MessageWriter>();
 
 		m_writers = new ArrayList<MessageWriter>();
 
@@ -133,13 +110,7 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 
 		if (network.sync) {
 			NetworkSyncLogic component = (NetworkSyncLogic) entity.getComponent(m_syncType);
-			for (MessageWriter writer : m_writers) {
-				try {
-					writer.writeMessage(component.getCreationMessage());
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+			writeAll(component.getCreationMessage());
 		}
 	}
 
@@ -148,13 +119,7 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 		NetworkData network = (NetworkData) entity.getComponent(m_dataType);
 		if (network.sync) {
 			NetworkSyncLogic component = (NetworkSyncLogic) entity.getComponent(m_syncType);
-			for (MessageWriter writer : m_writers) {
-				try {
-					writer.writeMessage(component.getRemovalMessage());
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+			writeAll(component.getRemovalMessage());
 		}
 	}
 
@@ -172,91 +137,75 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 	 * Adds and removes MessageWriters
 	 */
 	public void processWriters() {
-		try {
-			m_writerModifyLock.lock();
-			for (MessageWriter writer : m_writerAddBuffer) {
+		m_writerBuffer.lock();
+		for (MessageWriter writer : m_writerBuffer.getAddBuffer()) {
+			try {
 				for (Entity entity : m_idMapper.getKeys()) {
 					NetworkData data = (NetworkData) entity.getComponent(m_dataType);
 					if (data.sync) {
 						NetworkSyncLogic sync = (NetworkSyncLogic) entity.getComponent(m_syncType);
-						try {
-							writer.writeMessage(sync.getCreationMessage());
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+						writer.writeMessage(sync.getCreationMessage());
 					}
 				}
-				try {
-					writer.writeMessage(new Message("endtransmission", new MessageParameter[0]));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				m_writers.add(writer);
+				writer.writeMessage(new Message("endtransmission", new MessageParameter[0]));
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-
-			for (MessageWriter writer : m_writerRemoveBuffer) {
-				m_writers.remove(writer);
-			}
-			m_writerAddBuffer.clear();
-			m_writerRemoveBuffer.clear();
-		} finally {
-			m_writerModifyLock.unlock();
+			m_writers.add(writer);
 		}
+
+		for (MessageWriter writer : m_writerBuffer.getRemoveBuffer()) {
+			m_writers.remove(writer);
+		}
+
+		m_writerBuffer.clear();
+		m_writerBuffer.unlock();
 	}
 
 	/**
 	 * Processes all the Messages in the message buffer, then clears it
 	 */
 	public void processMessages() {
-		try {
-			m_messageBufferLock.lock();
+		m_messageBuffer.lock();
+		Set<Entity> updatedEntities = new HashSet<Entity>();
 
-			Set<Entity> updatedEntities = new HashSet<Entity>();
+		for (Message message : m_messageBuffer.getBuffer()) {
+			if (message == null || message.getCommand() == null) {
+				System.err.println("Message " + message + " has null component or is null. (nsp.handleMessages) ");
+				continue;
+			}
 
-			for (Message message : m_messageBuffer) {
-				if (message == null) {
-					System.err.println("Message " + message + " equals null. (nsp.handleMessages) ");
+			if (message.getCommand().equals("update")) {
+				Entity receiver = m_idMapper.getBackward((message.getParameters()[0]).getIntValue());
+
+				if (receiver == null) {
+					System.err.println("Null receiver in NetworkSyncProcess.handleMessages(): " + message);
 					continue;
 				}
 
-				if (message.getCommand() == null) {
-					System.err.println("Message " + message + " command equals null. (nsp.handleMessages) ");
-					continue;
-				}
+				NetworkSyncLogic syncLogic = (NetworkSyncLogic) receiver.getComponent(TypeManager
+						.getType(NetworkSyncLogic.class));
+				syncLogic.processMessage(message);
 
-				if (message.getCommand().equals("update")) {
-					Entity receiver = m_idMapper.getBackward((message.getParameters()[0]).getIntValue());
-
-					if (receiver == null) {
-						System.err.println("Null receiver in NetworkSyncProcess.handleMessages(): " + message);
-						continue;
-					}
-
-					NetworkSyncLogic syncLogic = (NetworkSyncLogic) receiver.getComponent(TypeManager
-							.getType(NetworkSyncLogic.class));
-					syncLogic.processMessage(message);
-
-					updatedEntities.add(receiver);
-				} else if (message.getCommand().equals("addentity")) {
-					Entity entity = EntityDecoder.decode(message.getParameters()[0].getStringValue(), m_decoder);
-					this.getSystem().addEntity(entity);
-					this.getSystem().update();
-				} else if (message.getCommand().equals("removeentity")) {
-					Entity receiver = m_idMapper.getBackward((message.getParameters()[0]).getIntValue());
-					this.getSystem().removeEntity(receiver);
-					this.getSystem().update();
-				}
+				updatedEntities.add(receiver);
+			} else if (message.getCommand().equals("addentity")) {
+				Entity entity = EntityDecoder.decode(message.getParameters()[0].getStringValue(), m_decoder);
+				this.getSystem().addEntity(entity);
+				this.getSystem().update();
+			} else if (message.getCommand().equals("removeentity")) {
+				Entity receiver = m_idMapper.getBackward((message.getParameters()[0]).getIntValue());
+				this.getSystem().removeEntity(receiver);
+				this.getSystem().update();
 			}
-
-			for (Entity e : updatedEntities) {
-				for (TransmissionListener listener : m_transmissionListeners)
-					listener.transmissionReceived(e);
-			}
-
-			m_messageBuffer.clear();
-		} finally {
-			m_messageBufferLock.unlock();
 		}
+
+		for (Entity e : updatedEntities) {
+			for (TransmissionListener listener : m_transmissionListeners)
+				listener.transmissionReceived(e);
+		}
+
+		m_messageBuffer.clear();
+		m_messageBuffer.unlock();
 	}
 
 	/**
@@ -273,26 +222,13 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 			NetworkSyncLogic component = (NetworkSyncLogic) entity.getComponent(m_syncType);
 			ArrayList<Message> updateMessages = component.getUpdateMessages();
 			for (Message updateMessage : updateMessages) {
-				for (MessageWriter writer : m_writers) {
-					try {
-						writer.writeMessage(updateMessage);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
+				writeAll(updateMessage);
 				transmitted = true;
 			}
 		}
 
-		if (transmitted) {
-			for (MessageWriter writer : m_writers) {
-				try {
-					writer.writeMessage(new Message("endtransmission", new MessageParameter[0]));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		if (transmitted)
+			writeAll(new Message("endtransmission", new MessageParameter[0]));
 
 		return transmitted;
 	}
@@ -303,12 +239,7 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 	 * @param writer
 	 */
 	public void bufferAddWriter(MessageWriter writer) {
-		try {
-			m_writerModifyLock.lock();
-			m_writerAddBuffer.add(writer);
-		} finally {
-			m_writerModifyLock.unlock();
-		}
+		m_writerBuffer.bufferAdd(writer);
 	}
 
 	/**
@@ -317,12 +248,7 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 	 * @param writer
 	 */
 	public void bufferRemoveWriter(MessageWriter writer) {
-		try {
-			m_writerModifyLock.lock();
-			m_writerRemoveBuffer.add(writer);
-		} finally {
-			m_writerModifyLock.unlock();
-		}
+		m_writerBuffer.bufferRemove(writer);
 	}
 
 	/**
@@ -331,11 +257,21 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 	 * @param message
 	 */
 	public void bufferMessage(Message message) {
-		try {
-			m_messageBufferLock.lock();
-			m_messageBuffer.add(message);
-		} finally {
-			m_messageBufferLock.unlock();
+		m_messageBuffer.buffer(message);
+	}
+
+	/**
+	 * Writes a message to all the writers
+	 * 
+	 * @param message
+	 */
+	private void writeAll(Message message) {
+		for (MessageWriter writer : m_writers) {
+			try {
+				writer.writeMessage(message);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

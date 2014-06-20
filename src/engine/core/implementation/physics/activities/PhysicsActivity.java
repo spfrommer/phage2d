@@ -9,7 +9,7 @@ import org.dyn4j.dynamics.World;
 import org.dyn4j.dynamics.contact.ContactConstraint;
 import org.dyn4j.dynamics.joint.Joint;
 
-import utils.TwoWayHashMap;
+import utils.collections.TwoWayHashMap;
 import utils.physics.Vector;
 import engine.core.framework.Aspect;
 import engine.core.framework.AspectActivity;
