@@ -85,7 +85,7 @@ public class ArenaGame extends Game {
 	}
 
 	@Override
-	public void renderGui(Renderer renderer) {
+	public void onRender(Renderer renderer) {
 
 	}
 

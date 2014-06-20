@@ -30,7 +30,7 @@ public class SequencerComposite extends CompositeNode {
 	public Node copy() {
 		SequencerComposite sequencer = new SequencerComposite();
 		for (Node n : this.getChildren())
-			sequencer.addChild(n);
+			sequencer.addChild(n.copy());
 
 		return sequencer;
 	}

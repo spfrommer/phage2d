@@ -67,6 +67,8 @@ public abstract class Server {
 		});
 		t.start();
 
+		onClientConnect(m_clientCount);
+
 		onStart();
 
 		startGameLoop();
@@ -121,15 +123,7 @@ public abstract class Server {
 						e.printStackTrace();
 					}
 
-					// Make sure the client has processed its id before we begin syncing
-					// the world to it
-					/*try {
-						Thread.sleep(300);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}*/
-
-					onClientConnect(m_clientCount);
+					m_network.bufferAddWriter(writer);
 
 					Thread t = new Thread(new ClientHandler(reader, writer));
 					t.start();
@@ -152,10 +146,8 @@ public abstract class Server {
 			if (m_updatesPassed >= m_upf) {
 				m_network.processWriters();
 				m_network.processMessages();
-				boolean transmitted = m_network.transmitUpdates();
+				m_network.transmitUpdates();
 				m_updatesPassed = 1;
-				// if (transmitted)
-				// System.out.println("Transmitting");
 			} else {
 				m_updatesPassed++;
 			}
@@ -224,9 +216,6 @@ public abstract class Server {
 
 		@Override
 		public void run() {
-			// Syncs world to client
-			m_network.bufferAddWriter(m_writer);
-
 			while (true) {
 				Message message = null;
 				try {

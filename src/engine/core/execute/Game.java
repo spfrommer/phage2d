@@ -90,16 +90,13 @@ public abstract class Game {
 		return display;
 	}
 
-	private double fpsSum = 0;
-	private int fpsSumCounter = 0;
-
 	private void startGameLoop(Display display) {
 		AbsoluteTimer timer = new AbsoluteTimer();
 		int milliSkip = 1000 / m_desiredFPS;
 
 		long nextGameTick = System.currentTimeMillis();
 		while (!display.destroyRequested()) {
-			// timer.start();
+			timer.start();
 			m_system.update();
 			update(1);
 			render(display);
@@ -115,38 +112,8 @@ public abstract class Game {
 					e.printStackTrace();
 				}
 			}
-			// capFrameRate();
-			// timer.stop();
-
-			/*fpsSum += 1000000000 / (timer.getTimeNanos());
-			fpsSumCounter++;
-			if (fpsSumCounter == 1) {
-				double fps = fpsSum / fpsSumCounter;
-				// System.out.println("FPS: " + fps);
-				fpsSum = 0;
-				fpsSumCounter = 0;
-			}*/
+			timer.stop();
 		}
-	}
-
-	private double m_start = 0;
-	private double m_diff;
-	private double m_wait;
-
-	private void capFrameRate() {
-		m_wait = 1 / m_desiredFPS;
-		m_diff = System.currentTimeMillis() - m_start;
-		System.out.println(m_diff < m_wait);
-		if (m_diff < m_wait) {
-			System.out.println("Sleeping");
-			try {
-				System.out.println("Waiting");
-				Thread.sleep((long) (m_wait - m_diff));
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		m_start = System.currentTimeMillis();
 	}
 
 	private void render(Display display) {
@@ -157,7 +124,7 @@ public abstract class Game {
 
 		r.setTransform(new AffineTransform());
 
-		renderGui(r);
+		onRender(r);
 
 		display.getRenderer().setColor(Color.WHITE);
 		display.render();
@@ -180,5 +147,5 @@ public abstract class Game {
 
 	public abstract void update(int ticks);
 
-	public abstract void renderGui(Renderer renderer);
+	public abstract void onRender(Renderer renderer);
 }

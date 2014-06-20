@@ -352,7 +352,7 @@ public class FlipFlop extends Game {
 	}
 
 	@Override
-	public void renderGui(Renderer renderer) {
+	public void onRender(Renderer renderer) {
 		String string = m_string;
 		if (m_position != null && string != null) {
 			try {

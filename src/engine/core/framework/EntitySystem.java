@@ -38,20 +38,26 @@ public class EntitySystem {
 	 * Proccesses the add and remove queues and notifies listeners
 	 */
 	public void update() {
-		for (Entity entity : m_addQueue) {
-			m_entities.add(entity);
+		synchronized (m_addQueue) {
+			for (Entity entity : m_addQueue) {
+				m_entities.add(entity);
 
-			for (SystemListener esl : m_listeners)
-				esl.entityAdded(entity);
+				for (SystemListener esl : m_listeners)
+					esl.entityAdded(entity);
+			}
+			m_addQueue.clear();
 		}
-		for (Entity entity : m_removeQueue) {
-			m_entities.remove(entity);
+		synchronized (m_removeQueue) {
+			// System.out.println(m_entities.size());
+			for (Entity entity : m_removeQueue) {
+				m_entities.remove(entity);
 
-			for (SystemListener esl : m_listeners)
-				esl.entityRemoved(entity);
+				for (SystemListener esl : m_listeners)
+					esl.entityRemoved(entity);
+			}
+			// System.out.println(m_entities.size());
+			m_removeQueue.clear();
 		}
-		m_addQueue.clear();
-		m_removeQueue.clear();
 	}
 
 	/**
@@ -60,7 +66,9 @@ public class EntitySystem {
 	 * @param entity
 	 */
 	public void addEntity(Entity entity) {
-		m_addQueue.add(entity);
+		synchronized (m_addQueue) {
+			m_addQueue.add(entity);
+		}
 	}
 
 	/**
@@ -69,7 +77,10 @@ public class EntitySystem {
 	 * @param entity
 	 */
 	public void removeEntity(Entity entity) {
-		m_removeQueue.add(entity);
+		// Thread.dumpStack();
+		synchronized (m_removeQueue) {
+			m_removeQueue.add(entity);
+		}
 	}
 
 	/**
@@ -115,5 +126,4 @@ public class EntitySystem {
 	public SystemAspectManager getAspectManager() {
 		return m_manager;
 	}
-
 }
