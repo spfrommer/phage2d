@@ -67,8 +67,6 @@ public abstract class Server {
 		});
 		t.start();
 
-		onClientConnect(m_clientCount);
-
 		onStart();
 
 		startGameLoop();
@@ -124,6 +122,8 @@ public abstract class Server {
 					}
 
 					m_network.bufferAddWriter(writer);
+
+					onClientConnect(m_clientCount);
 
 					Thread t = new Thread(new ClientHandler(reader, writer));
 					t.start();

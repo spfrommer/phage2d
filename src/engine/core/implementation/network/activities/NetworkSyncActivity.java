@@ -186,7 +186,11 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 						}
 					}
 				}
-
+				try {
+					writer.writeMessage(new Message("endtransmission", new MessageParameter[0]));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				m_writers.add(writer);
 			}
 
