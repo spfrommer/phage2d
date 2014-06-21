@@ -1,4 +1,4 @@
-package examples.tankarena.entities.tank;
+package examples.tankarena.entities.tank.gun;
 
 import engine.core.framework.Entity;
 import engine.core.implementation.behavior.base.ExecutionState;

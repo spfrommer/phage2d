@@ -1,4 +1,4 @@
-package examples.tankarena.entities.tank;
+package examples.tankarena.entities.tank.gun;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +28,14 @@ import engine.core.implementation.rendering.data.AnimationData;
 import engine.core.implementation.rendering.logic.TextureRenderingLogic;
 import engine.inputs.InputManager;
 import examples.tankarena.entities.missile.bounce.BouncyMissile;
+import examples.tankarena.entities.tank.Tank;
+import examples.tankarena.entities.tank.TankComponent;
+import examples.tankarena.entities.tank.body.TankBody;
 
-public class TankGun extends Entity {
-	public TankGun(double width, double height, String[] textures, int layer, InputManager input, TankBody body,
+public class TankGun extends Entity implements TankComponent {
+	private Tank m_tank;
+
+	TankGun(double width, double height, String[] textures, double layer, InputManager input, TankBody body,
 			PhysicsActivity physicsActivity, EntitySystem system) {
 		super();
 
@@ -88,5 +93,104 @@ public class TankGun extends Entity {
 		tree.setRoot(concurrent);
 
 		this.addComponent(tree);
+	}
+
+	/**
+	 * Sets the Tank this component belongs to.
+	 * 
+	 * @param tank
+	 */
+	@Override
+	public void setTank(Tank tank) {
+		m_tank = tank;
+	}
+
+	/**
+	 * Gets the Tank this component belongs to.
+	 * 
+	 * @return
+	 */
+	@Override
+	public Tank getTank() {
+		return m_tank;
+	}
+
+	public static class GunBuilder {
+		private double width;
+		private double height;
+		private String[] textures;
+		private double layer;
+		private InputManager input;
+		private TankBody body;
+		private PhysicsActivity activity;
+		private EntitySystem system;
+
+		public TankGun build() {
+			return new TankGun(width, height, textures, layer, input, body, activity, system);
+		}
+
+		/**
+		 * @param width
+		 *            the width to set
+		 */
+		public void setWidth(double width) {
+			this.width = width;
+		}
+
+		/**
+		 * @param height
+		 *            the height to set
+		 */
+		public void setHeight(double height) {
+			this.height = height;
+		}
+
+		/**
+		 * @param textures
+		 *            the textures to set
+		 */
+		public void setTextures(String[] textures) {
+			this.textures = textures;
+		}
+
+		/**
+		 * @param layer
+		 *            the layer to set
+		 */
+		public void setLayer(double layer) {
+			this.layer = layer;
+		}
+
+		/**
+		 * @param input
+		 *            the input to set
+		 */
+		public void setInputManager(InputManager input) {
+			this.input = input;
+		}
+
+		/**
+		 * @param body
+		 *            the body to set
+		 */
+		public void setBody(TankBody body) {
+			this.body = body;
+		}
+
+		/**
+		 * @param activity
+		 *            the activity to set
+		 */
+		public void setPhysicsActivity(PhysicsActivity activity) {
+			this.activity = activity;
+		}
+
+		/**
+		 * @param system
+		 *            the system to set
+		 */
+		public void setEntitySystem(EntitySystem system) {
+			this.system = system;
+		}
 	}
 }

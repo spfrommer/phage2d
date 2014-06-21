@@ -14,7 +14,7 @@ import engine.graphics.Renderer;
 import engine.graphics.lwjgl.LWJGLKeyboard;
 import engine.inputs.InputManager;
 import engine.inputs.keyboard.KeyTrigger;
-import examples.tankarena.entities.tank.TankBody;
+import examples.tankarena.entities.tank.body.TankBody;
 
 public class ArenaGame extends Game {
 	private CameraActivity m_cam;
@@ -56,7 +56,7 @@ public class ArenaGame extends Game {
 		m_animation = new AnimationActivity(this.getEntitySystem());
 
 		InputManager input = makeInputManager();
-		m_tank = new TankBody(new Vector(0, 0), new Vector(0, 0), 50, 100, "chassis1.png", 1, 0, input);
+		// m_tank = new TankBody(new Vector(0, 0), new Vector(0, 0), 50, 100, "chassis1.png", 1, 0, input);
 		/*TankTread treads1 = new TankTread(new Vector(35, 0), 20, 100, new String[] { "treads1.png", "treads2.png",
 				"treads3.png", "treads4.png", "treads1.png" }, 1, input, m_tank, m_physics, 1);
 		TankTread treads2 = new TankTread(new Vector(-35, 0), 20, 100, new String[] { "treads1.png", "treads2.png",

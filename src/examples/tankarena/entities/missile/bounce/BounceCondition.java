@@ -6,14 +6,14 @@ import engine.core.framework.component.type.TypeManager;
 import engine.core.implementation.behavior.base.ExecutionState;
 import engine.core.implementation.behavior.base.Node;
 import engine.core.implementation.behavior.base.leaf.ConditionLeaf;
-import engine.core.implementation.extras.data.HealthData;
+import engine.core.implementation.extras.logic.DamageHandlerLogic;
 
 public class BounceCondition extends ConditionLeaf {
 	private BounceData m_bounce;
-	private ComponentType m_health;
+	private ComponentType m_damage;
 
 	{
-		m_health = TypeManager.getType(HealthData.class);
+		m_damage = TypeManager.getType(DamageHandlerLogic.class);
 	}
 
 	public BounceCondition() {
@@ -33,7 +33,7 @@ public class BounceCondition extends ConditionLeaf {
 
 	@Override
 	public ExecutionState update(int ticks) {
-		if (m_bounce.bouncedAgainst != null && m_bounce.bouncedAgainst.hasComponent(m_health)) {
+		if (m_bounce.bouncedAgainst != null && m_bounce.bouncedAgainst.hasComponent(m_damage)) {
 			return ExecutionState.SUCCESS;
 		}
 		if (m_bounce.bounceCount >= m_bounce.maxBounces) {

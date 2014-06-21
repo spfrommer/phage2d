@@ -23,15 +23,15 @@ import engine.core.network.NetworkInputTrigger;
 import engine.core.network.message.MessageDeclaration;
 import engine.core.network.message.command.CommandInterpreter;
 import engine.inputs.InputManager;
-import examples.tankarena.entities.tank.TankBody;
-import examples.tankarena.entities.tank.TankGun;
-import examples.tankarena.entities.tank.TankTread;
+import examples.tankarena.entities.tank.Tank;
+import examples.tankarena.entities.tank.body.TankBody;
+import examples.tankarena.entities.tank.gun.TankGun;
+import examples.tankarena.entities.tank.tread.TankTread;
 
 public class ArenaServer extends Server {
 	private PhysicsActivity m_physics;
 	private BehaviorActivity m_behavior;
 	private AnimationActivity m_animation;
-	private TankBody m_testBody;
 
 	public ArenaServer(CommandInterpreter interpreter, int port) {
 		super(interpreter, port, new DecoderMapper(), "images-all.txt");
@@ -71,25 +71,59 @@ public class ArenaServer extends Server {
 
 	@Override
 	public void update(int ticks) {
-		m_behavior.update(ticks);
 		m_physics.update(ticks);
+		m_behavior.update(ticks);
 		m_animation.update(ticks);
 	}
 
 	@Override
 	public void onClientConnect(int clientID) {
 		InputManager input = makeInputManager(this.getInputHub(), clientID);
-		m_testBody = new TankBody(new Vector(0, 0), new Vector(0, 0), 50, 100, "phage2dlogo.png", 1, clientID, input);
-		TankTread treads1 = new TankTread(new Vector(35, 0), 20, 100, new String[] { "treads1.png", "treads2.png",
-				"treads3.png", "treads4.png", "treads1.png" }, 1, input, m_testBody, m_physics, 1);
-		TankTread treads2 = new TankTread(new Vector(-35, 0), 20, 100, new String[] { "treads1.png", "treads2.png",
-				"treads3.png", "treads4.png", "treads1.png" }, 1, input, m_testBody, m_physics, -1);
-		TankGun gun = new TankGun(15, 50, new String[] { "gun3.png" }, 2, input, m_testBody, m_physics,
-				this.getEntitySystem());
-		this.getEntitySystem().addEntity(m_testBody);
-		this.getEntitySystem().addEntity(treads1);
-		this.getEntitySystem().addEntity(treads2);
+
+		TankBody.BodyBuilder bodyBuilder = new TankBody.BodyBuilder();
+		bodyBuilder.setPosition(new Vector(0, 0));
+		bodyBuilder.setCenter(new Vector(0, 0));
+		bodyBuilder.setWidth(50);
+		bodyBuilder.setHeight(100);
+		bodyBuilder.setTexture("phage2dlogo.png");
+		bodyBuilder.setLayer(1);
+		bodyBuilder.setFocusID(clientID);
+		TankBody body = bodyBuilder.build();
+		this.getEntitySystem().addEntity(body);
+
+		// make the treads
+		TankTread.TreadBuilder treadBuilder = new TankTread.TreadBuilder();
+		treadBuilder.setWidth(20);
+		treadBuilder.setHeight(100);
+		treadBuilder.setTextures(new String[] { "treads1.png", "treads2.png", "treads3.png", "treads4.png",
+				"treads1.png" });
+		treadBuilder.setInputManager(input);
+		treadBuilder.setBody(body);
+		treadBuilder.setPhysicsActivity(m_physics);
+		treadBuilder.setLayer(1);
+		treadBuilder.setDirection(-1);
+		treadBuilder.setPosition(new Vector(-35, 0));
+		TankTread tread1 = treadBuilder.build();
+		this.getEntitySystem().addEntity(tread1);
+		treadBuilder.setDirection(1);
+		treadBuilder.setPosition(new Vector(35, 0));
+		TankTread tread2 = treadBuilder.build();
+		this.getEntitySystem().addEntity(tread2);
+
+		// make the gun
+		TankGun.GunBuilder gunBuilder = new TankGun.GunBuilder();
+		gunBuilder.setWidth(15);
+		gunBuilder.setHeight(50);
+		gunBuilder.setTextures(new String[] { "gun3.png" });
+		gunBuilder.setInputManager(input);
+		gunBuilder.setLayer(1);
+		gunBuilder.setBody(body);
+		gunBuilder.setPhysicsActivity(m_physics);
+		gunBuilder.setEntitySystem(this.getEntitySystem());
+		TankGun gun = gunBuilder.build();
 		this.getEntitySystem().addEntity(gun);
+
+		Tank tank = new Tank(body, tread1, tread2, gun);
 	}
 
 	private InputManager makeInputManager(NetworkInputHub inputHub, int clientID) {

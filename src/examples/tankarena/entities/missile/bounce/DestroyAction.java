@@ -8,20 +8,20 @@ import engine.core.implementation.behavior.base.ExecutionState;
 import engine.core.implementation.behavior.base.Node;
 import engine.core.implementation.behavior.base.leaf.action.ActionLeaf;
 import engine.core.implementation.extras.data.DamageData;
-import engine.core.implementation.extras.data.HealthData;
+import engine.core.implementation.extras.logic.DamageHandlerLogic;
 
 public class DestroyAction extends ActionLeaf {
 	private DamageData m_damage;
 	private BounceData m_bounce;
 
-	private ComponentType m_healthType;
+	private ComponentType m_damageType;
 
 	private EntitySystem m_system;
 
 	private Entity m_entity;
 
 	{
-		m_healthType = TypeManager.getType(HealthData.class);
+		m_damageType = TypeManager.getType(DamageHandlerLogic.class);
 	}
 
 	public DestroyAction(EntitySystem system) {
@@ -50,12 +50,12 @@ public class DestroyAction extends ActionLeaf {
 	public ExecutionState update(int ticks) {
 		Entity collided = m_bounce.bouncedAgainst;
 		m_system.removeEntity(m_entity);
-		if (!collided.hasComponent(m_healthType)) {
+		if (!collided.hasComponent(m_damageType)) {
 			System.out.println("Did no damage");
 			return ExecutionState.FAILURE;
 		} else {
-			HealthData health = (HealthData) collided.getComponent(m_healthType);
-			health.health -= m_damage.damage;
+			DamageHandlerLogic damageHandler = (DamageHandlerLogic) collided.getComponent(m_damageType);
+			damageHandler.handleDamage(m_damage.damage);
 			System.out.println("Did damage: " + m_damage.damage);
 			return ExecutionState.SUCCESS;
 		}

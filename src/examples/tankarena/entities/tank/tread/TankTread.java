@@ -1,4 +1,4 @@
-package examples.tankarena.entities.tank;
+package examples.tankarena.entities.tank.tread;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +23,15 @@ import engine.core.implementation.rendering.base.Animator;
 import engine.core.implementation.rendering.data.AnimationData;
 import engine.core.implementation.rendering.logic.TextureRenderingLogic;
 import engine.inputs.InputManager;
+import examples.tankarena.entities.tank.ComponentDamageHandlerLogic;
+import examples.tankarena.entities.tank.Tank;
+import examples.tankarena.entities.tank.TankComponent;
+import examples.tankarena.entities.tank.body.TankBody;
 
-public class TankTread extends Entity {
-	public TankTread(Vector position, double width, double height, String[] textures, int layer, InputManager input,
+public class TankTread extends Entity implements TankComponent {
+	private Tank m_tank;
+
+	TankTread(Vector position, double width, double height, String[] textures, double layer, InputManager input,
 			TankBody body, PhysicsActivity physicsActivity, int direction) {
 		super();
 
@@ -69,17 +75,44 @@ public class TankTread extends Entity {
 
 		this.addComponent(new PlayerTreadLogic(input, direction));
 
+		ComponentDamageHandlerLogic damageHandler = new ComponentDamageHandlerLogic();
+		this.addComponent(damageHandler);
+
 		TreeLogic tree = new TreeLogic();
 		tree.setRoot(new ActionExecutorLeaf<PlayerTreadLogic>(PlayerTreadLogic.class));
 		this.addComponent(tree);
 	}
 
-	public class TreadBuilder {
+	/**
+	 * Sets the Tank this component belongs to.
+	 * 
+	 * @param tank
+	 */
+	@Override
+	public void setTank(Tank tank) {
+		m_tank = tank;
+
+		ComponentDamageHandlerLogic damageHandler = (ComponentDamageHandlerLogic) this.getComponent(TypeManager
+				.getType(ComponentDamageHandlerLogic.class));
+		damageHandler.setTank(m_tank);
+	}
+
+	/**
+	 * Gets the Tank this component belongs to.
+	 * 
+	 * @return
+	 */
+	@Override
+	public Tank getTank() {
+		return m_tank;
+	}
+
+	public static class TreadBuilder {
 		Vector position;
 		double width;
 		double height;
 		String[] textures;
-		int layer;
+		double layer;
 		InputManager input;
 		TankBody body;
 		PhysicsActivity activity;
@@ -125,7 +158,7 @@ public class TankTread extends Entity {
 		 * @param layer
 		 *            the layer to set
 		 */
-		public void setLayer(int layer) {
+		public void setLayer(double layer) {
 			this.layer = layer;
 		}
 
