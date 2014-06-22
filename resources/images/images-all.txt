@@ -48,3 +48,4 @@ treads1.png
 treads2.png
 treads3.png
 treads4.png
+tiledfloor.png

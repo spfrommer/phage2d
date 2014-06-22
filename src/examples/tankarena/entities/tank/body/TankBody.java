@@ -43,10 +43,9 @@ public class TankBody extends Entity implements TankComponent {
 		PhysicsData physics = ComponentFactory.addPhysicsData(this, position, 0, new Rectangle(width, height));
 		// Add large friction so that tank essentially stops when not moved
 		physics.setRotationalFriction(10);
-		physics.setMovementFriction(10);
+		physics.setMovementFriction(15);
 		physics.setCenter(center);
 		physics.setMass(100);
-		physics.setVelocity(new Vector(0, 100));
 		physics.setRotationalVelocity(1);
 
 		ComponentFactory.addTextureData(this, new Texture(ImageUtils.getID(texture), width, height));

@@ -17,6 +17,7 @@ import engine.core.implementation.network.logic.ServerLogic;
 import engine.core.implementation.physics.activities.PhysicsActivity;
 import engine.core.implementation.physics.data.PhysicsData;
 import engine.core.implementation.physics.wrappers.PhysicsTransformWrapper;
+import engine.core.implementation.physics.wrappers.ShellTransformWrapper;
 import engine.core.implementation.rendering.activities.AnimationActivity;
 import engine.core.network.NetworkInputHub;
 import engine.core.network.NetworkInputTrigger;
@@ -45,6 +46,7 @@ public class ArenaServer extends Server {
 
 	@Override
 	public void onStart() {
+		this.getEntitySystem().addEntity(makeBackground());
 		this.getEntitySystem().addEntity(makeWall(new Vector(1000, 0), 20, 2000));
 		this.getEntitySystem().addEntity(makeWall(new Vector(-1000, 0), 20, 2000));
 		this.getEntitySystem().addEntity(makeWall(new Vector(0, 1000), 2000, 20));
@@ -147,6 +149,21 @@ public class ArenaServer extends Server {
 		NetworkInputTrigger trigger = new NetworkInputTrigger(id, message);
 		inputManager.addBinding(binding, trigger);
 		inputHub.addNetworkReceiver(trigger);
+	}
+
+	private Entity makeBackground() {
+		Entity background = new Entity();
+
+		ComponentFactory.addShellData(background, new Vector(0, 0), 0);
+		ComponentFactory.addTextureData(background, new Texture(ImageUtils.getID("tiledfloor.png"), 2000, 2000));
+		ComponentFactory.addNetworkData(background);
+		ComponentFactory.addNameData(background, "background");
+		ComponentFactory.addLayerData(background, 0);
+
+		background.addComponent(new ShellTransformWrapper());
+		background.addComponent(ComponentFactory.createBasicEncoder(background));
+		background.addComponent(new ServerLogic());
+		return background;
 	}
 
 	private Entity makeWall(Vector position, double width, double height) {
