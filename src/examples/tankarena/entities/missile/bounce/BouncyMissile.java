@@ -26,7 +26,7 @@ public class BouncyMissile extends Missile {
 
 		TreeLogic behavior = new TreeLogic();
 		SequencerComposite sequencer = new SequencerComposite();
-		sequencer.addChild(new BounceCondition());
+		// sequencer.addChild(new BounceCondition());
 		sequencer.addChild(new DestroyAction(system));
 		behavior.setRoot(sequencer);
 		this.addComponent(behavior);

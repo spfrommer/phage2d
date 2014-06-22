@@ -21,9 +21,6 @@ public class BounceCollisionLogic extends CollisionHandlerLogic {
 	public boolean handleCollision(Entity entity) {
 		m_bounce.bouncedAgainst = entity;
 		m_bounce.bounceCount++;
-		if (m_bounce.bounceCount >= m_bounce.maxBounces) {
-			return false;
-		}
 		return true;
 	}
 

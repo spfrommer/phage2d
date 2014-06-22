@@ -48,6 +48,11 @@ public class DestroyAction extends ActionLeaf {
 
 	@Override
 	public ExecutionState update(int ticks) {
+		if (!(m_bounce.bouncedAgainst != null && m_bounce.bouncedAgainst.hasComponent(m_damageType))
+				&& !(m_bounce.bounceCount >= m_bounce.maxBounces)) {
+			return ExecutionState.FAILURE;
+		}
+
 		Entity collided = m_bounce.bouncedAgainst;
 		m_system.removeEntity(m_entity);
 		if (!collided.hasComponent(m_damageType)) {
