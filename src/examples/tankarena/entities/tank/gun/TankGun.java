@@ -79,7 +79,7 @@ public class TankGun extends Entity implements TankComponent {
 		this.addComponent(new PlayerGunAimerLogic(input));
 
 		this.addComponent(new ShootingLogic(system, new BouncyMissile(new Circle(10), layer, new Texture(ImageUtils
-				.getID("portal1.png"), 20, 20), system, 3, 10)));
+				.getID("bomb.png"), 20, 20), system, 3, 10)));
 
 		TreeLogic tree = new TreeLogic();
 

@@ -121,9 +121,8 @@ public abstract class Server {
 						e.printStackTrace();
 					}
 
-					m_network.bufferAddWriter(writer);
-
 					onClientConnect(m_clientCount);
+					m_network.bufferAddWriter(writer);
 
 					Thread t = new Thread(new ClientHandler(reader, writer));
 					t.start();

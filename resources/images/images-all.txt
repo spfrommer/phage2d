@@ -1,5 +1,6 @@
 bullet1.png
 bullet2.png
+bomb.png
 chassis1.png
 chassis2.png
 cloudblock.png

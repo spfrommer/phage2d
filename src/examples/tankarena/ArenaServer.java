@@ -40,7 +40,7 @@ public class ArenaServer extends Server {
 		m_physics = new PhysicsActivity(this.getEntitySystem());
 		m_behavior = new BehaviorActivity(this.getEntitySystem());
 		m_animation = new AnimationActivity(this.getEntitySystem());
-		this.setUPS(50);
+		this.setUPS(45);
 		this.setUPF(1);
 	}
 
@@ -125,7 +125,7 @@ public class ArenaServer extends Server {
 		TankGun gun = gunBuilder.build();
 		this.getEntitySystem().addEntity(gun);
 
-		Tank tank = new Tank(body, tread1, tread2, gun);
+		Tank tank = new Tank(this.getEntitySystem(), body, tread1, tread2, gun);
 	}
 
 	private InputManager makeInputManager(NetworkInputHub inputHub, int clientID) {

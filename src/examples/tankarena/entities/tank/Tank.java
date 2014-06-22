@@ -1,5 +1,9 @@
 package examples.tankarena.entities.tank;
 
+import utils.physics.Vector;
+import engine.core.framework.EntitySystem;
+import engine.core.framework.component.type.TypeManager;
+import engine.core.implementation.physics.data.PhysicsData;
 import examples.tankarena.entities.tank.body.TankBody;
 import examples.tankarena.entities.tank.gun.TankGun;
 import examples.tankarena.entities.tank.tread.TankTread;
@@ -10,9 +14,17 @@ public class Tank {
 	private TankTread m_rightTread;
 	private TankGun m_gun;
 
-	private double m_health = 100;
+	private double m_health;
 
-	public Tank(TankBody body, TankTread leftTread, TankTread rightTread, TankGun gun) {
+	private EntitySystem m_system;
+	private Vector m_spawnPosition;
+
+	{
+		m_health = 100;
+		m_spawnPosition = new Vector(0, 0);
+	}
+
+	public Tank(EntitySystem system, TankBody body, TankTread leftTread, TankTread rightTread, TankGun gun) {
 		m_body = body;
 		m_leftTread = leftTread;
 		m_rightTread = rightTread;
@@ -22,9 +34,11 @@ public class Tank {
 		m_leftTread.setTank(this);
 		m_rightTread.setTank(this);
 		m_gun.setTank(this);
+
+		m_system = system;
 	}
 
-	public Tank(TankBody.BodyBuilder bodyBuilder, TankTread.TreadBuilder leftTreadBuilder,
+	public Tank(EntitySystem system, TankBody.BodyBuilder bodyBuilder, TankTread.TreadBuilder leftTreadBuilder,
 			TankTread.TreadBuilder rightTreadBuilder, TankGun.GunBuilder gunBuilder) {
 		m_body = bodyBuilder.build();
 		m_leftTread = leftTreadBuilder.build();
@@ -35,6 +49,17 @@ public class Tank {
 		m_leftTread.setTank(this);
 		m_rightTread.setTank(this);
 		m_gun.setTank(this);
+
+		m_system = system;
+	}
+
+	/**
+	 * Sets the position that the Tank should spawn at when it dies.
+	 * 
+	 * @param position
+	 */
+	public void setSpawnPosition(Vector position) {
+		m_spawnPosition = position;
 	}
 
 	/**
@@ -44,6 +69,10 @@ public class Tank {
 	 */
 	public void damage(double damage) {
 		m_health -= damage;
-		System.out.println(m_health);
+		if (m_health <= 0) {
+			PhysicsData physics = (PhysicsData) m_body.getComponent(TypeManager.getType(PhysicsData.class));
+			physics.setPosition(m_spawnPosition.clone());
+			m_health = 100;
+		}
 	}
 }

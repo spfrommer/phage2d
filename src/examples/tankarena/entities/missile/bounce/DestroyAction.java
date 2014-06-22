@@ -87,6 +87,6 @@ public class DestroyAction extends ActionLeaf {
 		ArrayList<Texture> textures = new ArrayList<Texture>();
 		textures.add(explosion);
 		Animator animator = new Animator(textures, 1);
-		return new AnimatedFX(position, 1, explosion, animator);
+		return new AnimatedFX(m_system, position, 1, explosion, animator);
 	}
 }
