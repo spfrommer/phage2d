@@ -40,8 +40,8 @@ public class ArenaServer extends Server {
 		m_physics = new PhysicsActivity(this.getEntitySystem());
 		m_behavior = new BehaviorActivity(this.getEntitySystem());
 		m_animation = new AnimationActivity(this.getEntitySystem());
-		this.setUPS(45);
-		this.setUPF(1);
+		this.setUPS(60);
+		this.setUPF(2);
 	}
 
 	@Override
@@ -82,6 +82,7 @@ public class ArenaServer extends Server {
 	public void onClientConnect(int clientID) {
 		InputManager input = makeInputManager(this.getInputHub(), clientID);
 
+		// make the body
 		TankBody.BodyBuilder bodyBuilder = new TankBody.BodyBuilder();
 		bodyBuilder.setPosition(new Vector(0, 0));
 		bodyBuilder.setCenter(new Vector(0, 0));
@@ -118,7 +119,7 @@ public class ArenaServer extends Server {
 		gunBuilder.setHeight(50);
 		gunBuilder.setTextures(new String[] { "gun3.png" });
 		gunBuilder.setInputManager(input);
-		gunBuilder.setLayer(1);
+		gunBuilder.setLayer(2);
 		gunBuilder.setBody(body);
 		gunBuilder.setPhysicsActivity(m_physics);
 		gunBuilder.setEntitySystem(this.getEntitySystem());

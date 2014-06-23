@@ -185,6 +185,7 @@ public class ComponentFactory {
 		encoder.addDataEncoder(TypeManager.getType(TextureData.class), new TextureEncoder());
 		encoder.addDataEncoder(TypeManager.getType(LayerData.class), new BasicDataEncoder());
 		encoder.addDataEncoder(TypeManager.getType(NetworkData.class), new NetworkEncoder(false));
+		encoder.addDataEncoder(TypeManager.getType(NameData.class), new BasicDataEncoder());
 		encoder.addBlankEncoder(new BasicBlankEncoder(InterpolationData.class));
 		encoder.addBlankEncoder(new BasicBlankEncoder(ShellTransformWrapper.class));
 		encoder.addBlankEncoder(new BasicBlankEncoder(ClientLogic.class));
