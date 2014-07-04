@@ -346,7 +346,7 @@ public class LWJGLRenderer implements Renderer {
 			if (c == '\n' || c == '\t')
 				continue;
 			Glyph g = font.getGlyph(c);
-			g.renderAndTranslate(this);
+			if (g != null) g.renderAndTranslate(this);
 		}
 
 		popTransform();

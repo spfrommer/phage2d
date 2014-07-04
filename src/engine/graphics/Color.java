@@ -42,6 +42,9 @@ public class Color {
 	public Vector4f toVector4f() {
 		return new Vector4f(m_red, m_green, m_blue, m_alpha);
 	}
+	public java.awt.Color toJava() {
+		return new java.awt.Color(m_red, m_green, m_blue);
+	}
 
 	public Color copy() { return new Color(m_red, m_green, m_blue, m_alpha); }
 }

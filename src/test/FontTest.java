@@ -18,6 +18,7 @@ import engine.graphics.Renderable;
 import engine.graphics.Renderer;
 import engine.graphics.font.BMFont;
 import engine.graphics.font.BMFontXMLLoader;
+import engine.graphics.font.JavaFontConverter;
 import engine.graphics.lwjgl.LWJGLDisplay;
 
 public class FontTest implements Renderable {
@@ -26,33 +27,28 @@ public class FontTest implements Renderable {
 	private BMFont m_font;
 	
 	public void init() {
-		try {
+		/*try {
 			File fontFile = new File(FontTest.class.getResource("/themes/basic/ptsans.fnt").toURI());
 			List<BMFont> fonts = BMFontXMLLoader.loadFonts(fontFile);
 			m_font = fonts.get(0);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
+		}*/
+		m_font = JavaFontConverter.s_convert(new java.awt.Font("Serif", java.awt.Font.PLAIN, 26));
 	}
 	
 	
 	public void render(Renderer r) {
-		String text = "jjjjjj";
-		r.setColor(new Color(0f, 1f, 1f, 1f));
+		String text = "The Quick Brown Fox jumped over the fence!???.";
+		//r.setColor(new Color(0f, 1f, 1f, 1f));
 		r.setFont(m_font);
 		r.drawString(text, 10, m_font.getAscending() + 10);
 		
 		Rectangle bounds = m_font.getSize(text);
 		
-		r.drawRect(10, 10 + (int) bounds.getY(), (int) bounds.getWidth(), (int) bounds.getHeight());
+		//r.drawRect(10, 10 + (int) bounds.getY(), (int) bounds.getWidth(), (int) bounds.getHeight());
 		
-		logger.debug("Bounds width: " + bounds.getWidth() + " bounds height: " + bounds.getHeight());
+		//logger.debug("Bounds width: " + bounds.getWidth() + " bounds height: " + bounds.getHeight());
 	}
 	
 	public static void main(String[] args) {

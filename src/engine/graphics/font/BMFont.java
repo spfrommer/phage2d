@@ -62,23 +62,26 @@ public class BMFont implements Font {
 		//First, find the lowest yoffset
 		for (char c : chars) {
 			Glyph g = getGlyph(c);
-			y = Math.min(g.getYOff(), y);
+			if (g != null) y = Math.min(g.getYOff(), y);
 		}
 		for (char c : chars) {
 			Glyph g = getGlyph(c);
-			height = Math.max(g.getHeight() + (g.getYOff() - y), height);
-			width += g.getXAdvance();
+			if (g != null) {
+				height = Math.max(g.getHeight() + (g.getYOff() - y), height);
+				width += g.getXAdvance();
+			}
 		}
 		return new Rectangle(0, y, width, height);
 	}
-	
+	/**
+	 * A glyph represents a character in white, as well
+	 * and holds important info about that character
+	 */
 	public static class BMGlyph implements Renderable, Glyph {
 		private final char m_char;
 		private final BufferedImage m_glyph;
 		
-		//Describes the y offset from the top line of the font
-		//+ is below, - is above so the y is 
-		//- getAscending() (to move the cursor to the top of the line) + yoffset
+
 		private final int m_xoffset;
 		private final int m_yoffset;
 		private final int m_xadvance;
@@ -104,6 +107,9 @@ public class BMFont implements Font {
 		public int getWidth() { return m_glyph.getWidth(); }
 		public int getHeight() { return m_glyph.getHeight(); }
 		
+		//Describes the y offset from the top line of the font
+		//+ is below, - is above so the y is 
+		//- getAscending() (to move the cursor to the top of the line) + yoffset
 		public void render(Renderer r) {
 			//Translate across the xoffset and down by the yoffset
 			r.drawImage(m_glyph, m_xoffset, m_yoffset - getFont().getAscending());
