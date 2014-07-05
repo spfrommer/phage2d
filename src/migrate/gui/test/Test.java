@@ -1,5 +1,8 @@
 package migrate.gui.test;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import migrate.LWJGLDisplay;
 import migrate.gui.GUI;
 import migrate.gui.widgets.Button;
@@ -38,6 +41,12 @@ public class Test {
 		
 		mouse.addListener(gui);
 		keyboard.addListener(gui);
+		
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				logger.info("Button pressed!");
+			}
+		});
 		
 		logger.debug("Initialization finished!");
 		
