@@ -64,17 +64,17 @@ public class LWJGLDisplay implements Display {
 
 	@Override
 	public Renderer getRenderer() {
-		return LWJGLRenderer.instance();
+		return LWJGLRenderer.getInstance();
 	}
 
 	@Override
 	public void update() {
-		LWJGLRenderer.instance().update();
+		LWJGLRenderer.getInstance().update();
 	}
 
 	@Override
 	public void update(int fps) {
-		LWJGLRenderer.instance().update();
+		LWJGLRenderer.getInstance().update();
 		org.lwjgl.opengl.Display.sync(fps);
 	}
 
