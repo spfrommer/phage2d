@@ -13,7 +13,7 @@ public class InputManagerTest {
 		InputManager manager = new InputManager();
 
 		while (!org.lwjgl.opengl.Display.isCloseRequested()) {
-			LWJGLRenderer.instance().update();
+			LWJGLRenderer.getInstance().update();
 		}
 	}
 }

@@ -62,7 +62,7 @@ public class Program {
 	
 	public void use() {
 		GL20.glUseProgram(getID());
-		LWJGLRenderer.instance().setCurrentProgram(this);
+		LWJGLRenderer.getInstance().setCurrentProgram(this);
 	}
 	public void clear() {
 		GL20.glUseProgram(0);

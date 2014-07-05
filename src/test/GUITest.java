@@ -129,16 +129,12 @@ public class GUITest {
 
 		logger.debug("Done setting up gui!");
 
-		AbsoluteTimer totalLoopTimer = new AbsoluteTimer();
-		AbsoluteTimer actionTimer = new AbsoluteTimer();
-		long lastTimeNanos = 100;
-		long lastActionTimeNanos = 0;
 
 		logger.debug("Going into render loop");
 
 		while (!org.lwjgl.opengl.Display.isCloseRequested()) {
-			manager.run(LWJGLRenderer.instance());
-			LWJGLRenderer.instance().update();
+			manager.run(LWJGLRenderer.getInstance());
+			LWJGLRenderer.getInstance().update();
 		}
 	}
 

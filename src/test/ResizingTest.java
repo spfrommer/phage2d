@@ -19,9 +19,9 @@ import engine.inputs.mouse.Mouse;
 
 public class ResizingTest {
 	public static void main(String[] args) {
-		LWJGLRenderer.instance().initDisplayWithoutCanvas(1024, 1024, true);
+		LWJGLRenderer.getInstance().initDisplayWithoutCanvas(1024, 1024, true);
 		// Graphics2D graphics = LWJGLGraphics2D.instance();
-		Renderer renderer = LWJGLRenderer.instance();
+		Renderer renderer = LWJGLRenderer.getInstance();
 		ViewPort fakePort = new ViewPort(null);
 		fakePort.resized(1024, 1024);
 		Mouse mouse = new LWJGLMouse(fakePort.getViewShape());
@@ -40,7 +40,7 @@ public class ResizingTest {
 
 		while (!Display.isCloseRequested()) {
 			r.render(renderer, new AnimationState(), 10, 10);
-			LWJGLRenderer.instance().update();
+			LWJGLRenderer.getInstance().update();
 		}
 	}
 }

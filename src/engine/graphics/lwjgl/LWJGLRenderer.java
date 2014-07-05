@@ -450,7 +450,7 @@ public class LWJGLRenderer implements Renderer {
 		doFrameSetup();
 	}
 
-	public static LWJGLRenderer instance() {
+	public static LWJGLRenderer getInstance() {
 		if (s_instance == null) {
 			s_instance = new LWJGLRenderer();
 		}
@@ -462,7 +462,7 @@ public class LWJGLRenderer implements Renderer {
 		s_defaultProgram.use();
 		LWJGLTexture.s_default.bind();
 		// Reset the color uniform
-		instance().setColor(instance().getColor());
+		getInstance().setColor(getInstance().getColor());
 	}
 
 	/*
