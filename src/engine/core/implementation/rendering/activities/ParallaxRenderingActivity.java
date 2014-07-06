@@ -29,12 +29,12 @@ public class ParallaxRenderingActivity extends AspectActivity implements Renderi
 
 	{
 		m_entities = new ArrayList<Entity>();
-		m_renderingType = TypeManager.getType(RenderingLogic.class);
-		m_layerType = TypeManager.getType(LayerData.class);
+		m_renderingType = TypeManager.typeOf(RenderingLogic.class);
+		m_layerType = TypeManager.typeOf(LayerData.class);
 	}
 
 	public ParallaxRenderingActivity(EntitySystem system, Camera camera) {
-		super(system, new Aspect(TypeManager.getType(RenderingLogic.class), TypeManager.getType(LayerData.class)));
+		super(system, new Aspect(TypeManager.typeOf(RenderingLogic.class), TypeManager.typeOf(LayerData.class)));
 
 		m_camera = camera;
 	}

@@ -103,7 +103,7 @@ public class DynamicLevel implements Level {
 		for (Entity portal : m_portals) {
 			ListenerCollisionHandlerLogic handler = (ListenerCollisionHandlerLogic) portal
 					.getComponent(TypeManager
-							.getType(ListenerCollisionHandlerLogic.class));
+							.typeOf(ListenerCollisionHandlerLogic.class));
 			handler.addListener(manager);
 		}
 		return m_portals;

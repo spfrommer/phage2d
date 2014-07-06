@@ -46,6 +46,12 @@ import examples.flipflop.level.Level;
 import examples.flipflop.level.LevelReader;
 import examples.flipflop.level.LevelWriter;
 import examples.flipflop.level.MirrorLevel;
+import examples.flipflop.world.World1Factory;
+import examples.flipflop.world.World2Factory;
+import examples.flipflop.world.World3Factory;
+import examples.flipflop.world.World4Factory;
+import examples.flipflop.world.World5Factory;
+import examples.flipflop.world.WorldFactory;
 
 public class FlipFlop extends Game {
 	private PhysicsActivity m_physics;
@@ -82,6 +88,8 @@ public class FlipFlop extends Game {
 	private static final double DEFAULT_CAM_ZOOM = 0.15;
 	private static final boolean EDITOR_ENABLED = false;
 
+	private List<WorldFactory> m_worlds;
+
 	{
 		m_entityAdd = new ArrayList<Entity>();
 		m_entityRemove = new ArrayList<Entity>();
@@ -93,6 +101,13 @@ public class FlipFlop extends Game {
 		m_nextLevel = 0;
 
 		m_editor = new Editor(this);
+
+		m_worlds = new ArrayList<WorldFactory>();
+		m_worlds.add(new World1Factory());
+		m_worlds.add(new World2Factory());
+		m_worlds.add(new World3Factory());
+		m_worlds.add(new World4Factory());
+		m_worlds.add(new World5Factory());
 	}
 
 	private interface WorldListener {
@@ -198,29 +213,27 @@ public class FlipFlop extends Game {
 				}
 			});
 		}
+
+		m_worlds.get(number).setWorld(this.getEntitySystem());
+
 		if (number == 0) {
-			WorldFactory.setWorld0(getEntitySystem());
 			if (number != m_lastWorld) {
 				m_worldSound = loopAudio(m_rain);
 			}
 		}
 		if (number == 1) {
-			WorldFactory.setWorld1(getEntitySystem());
 			if (number != m_lastWorld)
 				m_worldSound = loopAudio(m_wind);
 		}
 		if (number == 2) {
-			WorldFactory.setWorld2(getEntitySystem());
 			if (number != m_lastWorld)
 				m_worldSound = loopAudio(m_wind);
 		}
 		if (number == 3) {
-			WorldFactory.setWorld3(getEntitySystem());
 			if (number != m_lastWorld)
 				m_worldSound = loopAudio(m_city);
 		}
 		if (number == 4) {
-			WorldFactory.setWorld4(getEntitySystem());
 			if (number != m_lastWorld)
 				m_worldSound = loopAudio(m_violin);
 		}
@@ -389,9 +402,9 @@ public class FlipFlop extends Game {
 
 	private boolean velocitiesZero() {
 		SystemAspectManager manager = this.getEntitySystem().getAspectManager();
-		manager.loadAspect(new Aspect(TypeManager.getType(PhysicsData.class)));
-		for (Entity e : manager.getEntities(new Aspect(TypeManager.getType(PhysicsData.class)))) {
-			PhysicsData data = (PhysicsData) e.getComponent(TypeManager.getType(PhysicsData.class));
+		manager.loadAspect(new Aspect(TypeManager.typeOf(PhysicsData.class)));
+		for (Entity e : manager.getEntities(new Aspect(TypeManager.typeOf(PhysicsData.class)))) {
+			PhysicsData data = (PhysicsData) e.getComponent(TypeManager.typeOf(PhysicsData.class));
 			if (data.getVelocity().length() > 150)
 				return false;
 		}

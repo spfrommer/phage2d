@@ -39,7 +39,7 @@ public class TankGun extends Entity implements TankComponent {
 			PhysicsActivity physicsActivity, EntitySystem system) {
 		super();
 
-		PhysicsData tankPhysics = (PhysicsData) body.getComponent(TypeManager.getType(PhysicsData.class));
+		PhysicsData tankPhysics = (PhysicsData) body.getComponent(TypeManager.typeOf(PhysicsData.class));
 
 		PhysicsData physics = ComponentFactory.addPhysicsData(this, tankPhysics.getPosition(), 0, new Rectangle(width,
 				height));

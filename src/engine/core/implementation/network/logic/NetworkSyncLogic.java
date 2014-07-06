@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import engine.core.framework.Aspect;
 import engine.core.framework.component.LogicComponent;
 import engine.core.framework.component.type.TypeManager;
+import engine.core.implementation.network.base.communication.message.Message;
 import engine.core.implementation.network.data.NetworkData;
-import engine.core.network.message.Message;
 
 /**
  * An abstract component to sync an entity over a network
@@ -15,7 +15,7 @@ public abstract class NetworkSyncLogic extends LogicComponent {
 	private NetworkData m_idComponent;
 
 	public NetworkSyncLogic(Aspect dependencies) {
-		super(dependencies.addType(TypeManager.getType(NetworkData.class)));
+		super(dependencies.addType(TypeManager.typeOf(NetworkData.class)));
 	}
 
 	/**
@@ -57,6 +57,6 @@ public abstract class NetworkSyncLogic extends LogicComponent {
 
 	@Override
 	public void loadDependencies() {
-		m_idComponent = (NetworkData) this.loadDependency(TypeManager.getType(NetworkData.class));
+		m_idComponent = (NetworkData) this.loadDependency(TypeManager.typeOf(NetworkData.class));
 	}
 }

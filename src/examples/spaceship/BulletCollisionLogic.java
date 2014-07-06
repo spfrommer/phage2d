@@ -26,7 +26,7 @@ public class BulletCollisionLogic extends CollisionHandlerLogic {
 	private TransformWrapper m_transform;
 
 	public BulletCollisionLogic(EntitySystem system) {
-		super(new Aspect(TypeManager.getType(DamageData.class), TypeManager.getType(TransformWrapper.class)));
+		super(new Aspect(TypeManager.typeOf(DamageData.class), TypeManager.typeOf(TransformWrapper.class)));
 		m_system = system;
 	}
 
@@ -48,8 +48,8 @@ public class BulletCollisionLogic extends CollisionHandlerLogic {
 	@Override
 	public boolean handleCollision(Entity entity) {
 		m_system.removeEntity(this.getEntity());
-		if (entity.hasComponent(TypeManager.getType(HealthData.class))) {
-			HealthData health = (HealthData) entity.getComponent(TypeManager.getType(HealthData.class));
+		if (entity.hasComponent(TypeManager.typeOf(HealthData.class))) {
+			HealthData health = (HealthData) entity.getComponent(TypeManager.typeOf(HealthData.class));
 			health.health -= m_damage.damage;
 		}
 		m_system.addEntity(makeExplosion());
@@ -58,8 +58,8 @@ public class BulletCollisionLogic extends CollisionHandlerLogic {
 
 	@Override
 	public void loadDependencies() {
-		m_damage = (DamageData) this.loadDependency(TypeManager.getType(DamageData.class));
-		m_transform = (TransformWrapper) this.loadDependency(TypeManager.getType(TransformWrapper.class));
+		m_damage = (DamageData) this.loadDependency(TypeManager.typeOf(DamageData.class));
+		m_transform = (TransformWrapper) this.loadDependency(TypeManager.typeOf(TransformWrapper.class));
 	}
 
 	protected EntitySystem getSystem() {

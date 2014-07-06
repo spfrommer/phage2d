@@ -15,7 +15,7 @@ public class BouncyMissile extends Missile {
 			double damage) {
 		super(collisionShape, layer, texture, damage);
 
-		PhysicsData missilePhysics = (PhysicsData) this.getComponent(TypeManager.getType(PhysicsData.class));
+		PhysicsData missilePhysics = (PhysicsData) this.getComponent(TypeManager.typeOf(PhysicsData.class));
 		missilePhysics.setRestitution(1);
 
 		BounceData bounce = new BounceData();

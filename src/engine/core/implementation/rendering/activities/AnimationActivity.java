@@ -20,11 +20,11 @@ public class AnimationActivity extends AspectActivity {
 	private ComponentType m_animationType;
 
 	{
-		m_animationType = TypeManager.getType(AnimationData.class);
+		m_animationType = TypeManager.typeOf(AnimationData.class);
 	}
 
 	public AnimationActivity(EntitySystem system) {
-		super(system, new Aspect(TypeManager.getType(AnimationData.class)));
+		super(system, new Aspect(TypeManager.typeOf(AnimationData.class)));
 	}
 
 	public void update(int ticks) {

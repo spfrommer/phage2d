@@ -34,7 +34,7 @@ public class TypeManager {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static ComponentType getType(Class<? extends Component> compClass) {
+	public static ComponentType typeOf(Class<? extends Component> compClass) {
 		while (!((compClass.getSuperclass().equals(DataComponent.class)
 				|| compClass.getSuperclass().equals(LogicComponent.class) || compClass.getSuperclass().equals(
 				WrapperComponent.class)))) {

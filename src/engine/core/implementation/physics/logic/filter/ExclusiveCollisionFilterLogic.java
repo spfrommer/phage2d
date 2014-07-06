@@ -18,12 +18,12 @@ public class ExclusiveCollisionFilterLogic extends CollisionFilterLogic {
 
 	public ExclusiveCollisionFilterLogic(Entity other) {
 		super();
-		m_physics = (PhysicsData) other.getComponent(TypeManager.getType(PhysicsData.class));
+		m_physics = (PhysicsData) other.getComponent(TypeManager.typeOf(PhysicsData.class));
 	}
 
 	@Override
 	public boolean allowCollision(Entity entity) {
-		PhysicsData other = (PhysicsData) entity.getComponent(TypeManager.getType(PhysicsData.class));
+		PhysicsData other = (PhysicsData) entity.getComponent(TypeManager.typeOf(PhysicsData.class));
 		return (other != m_physics);
 	}
 

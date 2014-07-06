@@ -35,7 +35,7 @@ public class DestroyAction extends ActionLeaf {
 	private Entity m_entity;
 
 	{
-		m_damageType = TypeManager.getType(DamageHandlerLogic.class);
+		m_damageType = TypeManager.typeOf(DamageHandlerLogic.class);
 	}
 
 	public DestroyAction(EntitySystem system) {
@@ -47,9 +47,9 @@ public class DestroyAction extends ActionLeaf {
 	public boolean load(Entity entity) {
 		m_entity = entity;
 		try {
-			m_damage = (DamageData) entity.getComponent(TypeManager.getType(DamageData.class));
-			m_bounce = (BounceData) entity.getComponent(TypeManager.getType(BounceData.class));
-			m_transform = (TransformWrapper) entity.getComponent(TypeManager.getType(TransformWrapper.class));
+			m_damage = (DamageData) entity.getComponent(TypeManager.typeOf(DamageData.class));
+			m_bounce = (BounceData) entity.getComponent(TypeManager.typeOf(BounceData.class));
+			m_transform = (TransformWrapper) entity.getComponent(TypeManager.typeOf(TransformWrapper.class));
 		} catch (Exception ex) {
 			return false;
 		}

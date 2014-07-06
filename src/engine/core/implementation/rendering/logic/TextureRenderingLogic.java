@@ -17,7 +17,7 @@ public class TextureRenderingLogic extends RenderingLogic {
 	private TransformWrapper m_transform;
 
 	public TextureRenderingLogic() {
-		super(new Aspect(TypeManager.getType(TextureData.class), TypeManager.getType(TransformWrapper.class)));
+		super(new Aspect(TypeManager.typeOf(TextureData.class), TypeManager.typeOf(TransformWrapper.class)));
 	}
 
 	@Override
@@ -39,8 +39,8 @@ public class TextureRenderingLogic extends RenderingLogic {
 
 	@Override
 	public void loadDependencies() {
-		m_textureData = (TextureData) this.loadDependency(TypeManager.getType(TextureData.class));
-		m_transform = (TransformWrapper) this.loadDependency(TypeManager.getType(TransformWrapper.class));
+		m_textureData = (TextureData) this.loadDependency(TypeManager.typeOf(TextureData.class));
+		m_transform = (TransformWrapper) this.loadDependency(TypeManager.typeOf(TransformWrapper.class));
 	}
 
 	@Override

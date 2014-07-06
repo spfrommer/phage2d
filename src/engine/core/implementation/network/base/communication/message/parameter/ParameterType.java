@@ -1,4 +1,4 @@
-package engine.core.network.message.parameter;
+package engine.core.implementation.network.base.communication.message.parameter;
 
 public enum ParameterType {
 	INT(0), DOUBLE(1), STRING(2), NULL(3) /*End of Transmision*/;

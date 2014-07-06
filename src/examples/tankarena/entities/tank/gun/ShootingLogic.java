@@ -32,7 +32,7 @@ public class ShootingLogic extends LogicComponent implements ActionExecutable {
 	 * @param projectile
 	 */
 	public ShootingLogic(EntitySystem system, Entity projectile) {
-		super(new Aspect(TypeManager.getType(TransformWrapper.class)));
+		super(new Aspect(TypeManager.typeOf(TransformWrapper.class)));
 		m_system = system;
 		m_projectile = projectile;
 	}
@@ -49,7 +49,7 @@ public class ShootingLogic extends LogicComponent implements ActionExecutable {
 
 	@Override
 	public void loadDependencies() {
-		m_transform = (TransformWrapper) this.loadDependency(TypeManager.getType(TransformWrapper.class));
+		m_transform = (TransformWrapper) this.loadDependency(TypeManager.typeOf(TransformWrapper.class));
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class ShootingLogic extends LogicComponent implements ActionExecutable {
 		}
 
 		Entity projectile = m_projectile.copy();
-		PhysicsData physics = (PhysicsData) projectile.getComponent(TypeManager.getType(PhysicsData.class));
+		PhysicsData physics = (PhysicsData) projectile.getComponent(TypeManager.typeOf(PhysicsData.class));
 		Vector directionNormal = Vector.dyn4jNormalVector(m_transform.getRotation());
 		physics.setPosition(m_transform.getPosition().add(directionNormal.scalarMultiply(80)));
 		physics.setRotation(m_transform.getRotation());

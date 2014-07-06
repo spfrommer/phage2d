@@ -4,8 +4,6 @@ import java.awt.geom.AffineTransform;
 import java.io.IOException;
 import java.net.Socket;
 
-import org.lwjgl.LWJGLException;
-
 import utils.image.ImageUtils;
 import engine.core.framework.EntitySystem;
 import engine.core.implementation.camera.base.Camera;
@@ -13,18 +11,18 @@ import engine.core.implementation.camera.base.Display;
 import engine.core.implementation.camera.base.SingleViewPortLayout;
 import engine.core.implementation.camera.base.ViewPort;
 import engine.core.implementation.network.activities.NetworkSyncActivity;
+import engine.core.implementation.network.base.communication.MessageBuffer;
+import engine.core.implementation.network.base.communication.lowlevel.ByteReader;
+import engine.core.implementation.network.base.communication.lowlevel.ByteReaderInterpreter;
+import engine.core.implementation.network.base.communication.lowlevel.ByteWriter;
+import engine.core.implementation.network.base.communication.lowlevel.ByteWriterInterpreter;
+import engine.core.implementation.network.base.communication.lowlevel.MessageReader;
+import engine.core.implementation.network.base.communication.lowlevel.MessageWriter;
+import engine.core.implementation.network.base.communication.message.Message;
+import engine.core.implementation.network.base.communication.message.command.CommandInterpreter;
 import engine.core.implementation.network.base.decoding.DecoderMapper;
 import engine.core.implementation.rendering.activities.BasicRenderingActivity;
 import engine.core.implementation.rendering.activities.RenderingActivity;
-import engine.core.network.MessageBuffer;
-import engine.core.network.lowlevel.ByteReader;
-import engine.core.network.lowlevel.ByteReaderInterpreter;
-import engine.core.network.lowlevel.ByteWriter;
-import engine.core.network.lowlevel.ByteWriterInterpreter;
-import engine.core.network.lowlevel.MessageReader;
-import engine.core.network.lowlevel.MessageWriter;
-import engine.core.network.message.Message;
-import engine.core.network.message.command.CommandInterpreter;
 import engine.graphics.Color;
 import engine.graphics.Renderer;
 import engine.graphics.lwjgl.LWJGLDisplay;
@@ -55,8 +53,11 @@ public abstract class Client {
 	private boolean m_dumpMessages = false;
 	private double m_lastTimeStamp = System.currentTimeMillis();
 
-	private static final int DEFAULT_UPS = 60;
-	private int m_ups = DEFAULT_UPS;
+	private static final int DEFAULT_FPS = 60;
+	private int m_fps = DEFAULT_FPS;
+
+	// whether the messages in the NetworkSyncActivity should be processed at next update
+	private boolean m_processMessages = false;
 
 	{
 		m_system = new EntitySystem();
@@ -85,12 +86,8 @@ public abstract class Client {
 	public void start() {
 		connect(m_host, m_port);
 
-		Thread t = new Thread(new NativeHandler());
-		t.start();
-
-		// listen();
-		// startRenderingLoop(m_display);
-		startServerHandlerLoop(m_display);
+		listen();
+		startRenderingLoop(m_display);
 	}
 
 	/**
@@ -112,12 +109,12 @@ public abstract class Client {
 	}
 
 	/**
-	 * Sets the frequency at which update() is called and the MessageBuffer is flushed.
+	 * Sets the rendering FPS.
 	 * 
-	 * @param ups
+	 * @param fps
 	 */
-	public void setUPS(int ups) {
-		m_ups = ups;
+	public void setFPS(int fps) {
+		m_fps = fps;
 	}
 
 	/**
@@ -140,23 +137,23 @@ public abstract class Client {
 			Message idMessage = m_serverReader.readMessage();
 			m_id = idMessage.getParameters()[0].getIntValue();
 
-			m_network.processWriters();
-
 			onServerConnect();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * Listens for server messages
+	 */
+	private void listen() {
+		Thread t = new Thread(new ServerReader());
+		t.start();
+	}
+
 	private Display setupDisplay() {
 		LWJGLDisplay display = new LWJGLDisplay(1024, 1024, false);
 		display.init();
-
-		try {
-			org.lwjgl.opengl.Display.releaseContext();
-		} catch (LWJGLException e) {
-			e.printStackTrace();
-		}
 
 		SingleViewPortLayout layout = new SingleViewPortLayout(display);
 
@@ -172,49 +169,51 @@ public abstract class Client {
 		return display;
 	}
 
-	private void startServerHandlerLoop(Display display) {
+	private void startRenderingLoop(Display display) {
+		long nextGameTick = System.currentTimeMillis();
+		int milliSkip = 1000 / m_fps;
 		while (!display.destroyRequested()) {
-			Message message = null;
-			try {
-				message = m_serverReader.readMessage();
-			} catch (IOException e) {
-				System.err.println("Socket connection closed.");
-				System.exit(0);
-			}
+			m_messageBuffer.flush();
 
-			if (m_dumpMessages) {
-				double timeStamp = System.currentTimeMillis();
-				// if (timeStamp - m_lastTimeStamp > 1)
-				System.out.println((timeStamp - m_lastTimeStamp) + "---" + message);
-				m_lastTimeStamp = timeStamp;
-			}
-
-			if (message.getCommand().equals("endtransmission")) {
+			m_network.processWriters();
+			if (m_processMessages) {
+				System.out.println("Processing");
 				m_network.processMessages();
+				m_processMessages = false;
+			}
+
+			update(1);
+			System.out.println("Rendering");
+			// this call is actually blocking 16 milliseconds
+			render(display);
+
+			/*nextGameTick += milliSkip;
+			long sleepTime = nextGameTick - System.currentTimeMillis();
+			if (sleepTime > 0) {
 				try {
-					synchronized (m_display) {
-						org.lwjgl.opengl.Display.makeCurrent();
-						render(display);
-						org.lwjgl.opengl.Display.releaseContext();
-					}
-				} catch (LWJGLException e) {
+					Thread.sleep(sleepTime);
+				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-			} else {
-				m_network.bufferMessage(message);
-			}
+			}*/
 		}
+		try {
+			m_socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.exit(0);
 	}
 
 	private void render(Display display) {
 		Renderer r = display.getRenderer();
 
-		onRender(r);
-
 		m_viewport.lookThrough(r);
 		m_rendering.render(r);
 
 		r.setTransform(new AffineTransform());
+		onRender(r);
+
 		display.getRenderer().setColor(Color.WHITE);
 		display.render();
 		display.update();
@@ -263,45 +262,40 @@ public abstract class Client {
 	public abstract void update(int ticks);
 
 	/**
-	 * Called after the Client receives a transmission and renders it. This can be used for rendering a gui.
+	 * Called so that every subclass can render its specific gui
 	 * 
 	 * @param renderer
 	 */
 	public abstract void onRender(Renderer renderer);
 
-	private class NativeHandler implements Runnable {
+	private class ServerReader implements Runnable {
+
+		public ServerReader() {
+		}
+
 		@Override
 		public void run() {
-			try {
-				Thread.sleep(300);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
-			long nextGameTick = System.currentTimeMillis();
-			int milliSkip = 1000 / m_ups;
 			while (true) {
-				// System.out.println("Flushing buffer");
+				Message message = null;
 				try {
-					synchronized (m_display) {
-						org.lwjgl.opengl.Display.makeCurrent();
-						org.lwjgl.opengl.Display.processMessages();
-						org.lwjgl.opengl.Display.releaseContext();
-					}
-				} catch (LWJGLException e) {
-					e.printStackTrace();
+					message = m_serverReader.readMessage();
+				} catch (IOException e) {
+					System.err.println("Socket connection closed.");
+					System.exit(0);
 				}
-				m_messageBuffer.flush();
-				update(1);
-				m_system.update();
 
-				nextGameTick += milliSkip;
-				long sleepTime = nextGameTick - System.currentTimeMillis();
-				if (sleepTime > 0) {
-					try {
-						Thread.sleep(sleepTime);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+				if (m_dumpMessages) {
+					double timeStamp = System.currentTimeMillis();
+					if (timeStamp - m_lastTimeStamp > 1)
+						System.out.println((timeStamp - m_lastTimeStamp) + "---" + message);
+					m_lastTimeStamp = timeStamp;
+				}
+
+				if (message.getCommand().equals("endtransmission")) {
+					System.out.println("Setting to process");
+					m_processMessages = true;
+				} else {
+					m_network.bufferMessage(message);
 				}
 			}
 		}

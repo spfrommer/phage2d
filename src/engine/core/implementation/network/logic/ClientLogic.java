@@ -6,9 +6,9 @@ import utils.physics.Vector;
 import engine.core.framework.Aspect;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.type.TypeManager;
+import engine.core.implementation.network.base.communication.message.Message;
 import engine.core.implementation.physics.data.PhysicsShellData;
 import engine.core.implementation.rendering.data.TextureData;
-import engine.core.network.message.Message;
 
 /**
  * Basic client logic that's used to receive updates from a server.
@@ -20,7 +20,7 @@ public class ClientLogic extends NetworkSyncLogic {
 	private TextureData m_textureComponent;
 
 	public ClientLogic() {
-		super(new Aspect(TypeManager.getType(PhysicsShellData.class), TypeManager.getType(TextureData.class)));
+		super(new Aspect(TypeManager.typeOf(PhysicsShellData.class), TypeManager.typeOf(TextureData.class)));
 	}
 
 	@Override
@@ -58,8 +58,8 @@ public class ClientLogic extends NetworkSyncLogic {
 	@Override
 	public void loadDependencies() {
 		super.loadDependencies();
-		m_shellComponent = (PhysicsShellData) this.loadDependency(TypeManager.getType(PhysicsShellData.class));
-		m_textureComponent = (TextureData) this.loadDependency(TypeManager.getType(TextureData.class));
+		m_shellComponent = (PhysicsShellData) this.loadDependency(TypeManager.typeOf(PhysicsShellData.class));
+		m_textureComponent = (TextureData) this.loadDependency(TypeManager.typeOf(TextureData.class));
 	}
 
 	@Override

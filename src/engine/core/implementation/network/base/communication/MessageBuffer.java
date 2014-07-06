@@ -1,4 +1,4 @@
-package engine.core.network;
+package engine.core.implementation.network.base.communication;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import engine.core.network.lowlevel.MessageWriter;
-import engine.core.network.message.Message;
+import engine.core.implementation.network.base.communication.lowlevel.MessageWriter;
+import engine.core.implementation.network.base.communication.message.Message;
 
 /**
  * Buffers Messages, then flushes them to all its MessageWriters and clears the buffer. Uses a Lock to be thread safe.

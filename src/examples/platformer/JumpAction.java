@@ -36,7 +36,7 @@ public class JumpAction extends ActionLeaf {
 
 	@Override
 	public boolean load(Entity entity) {
-		m_physics = (PhysicsData) entity.getComponent(TypeManager.getType(PhysicsData.class));
+		m_physics = (PhysicsData) entity.getComponent(TypeManager.typeOf(PhysicsData.class));
 		return true;
 	}
 

@@ -80,7 +80,7 @@ public class ArenaGame extends Game {
 		m_physics.update(ticks);
 		m_animation.update(ticks);
 
-		PhysicsData data = (PhysicsData) m_tank.getComponent(TypeManager.getType(PhysicsData.class));
+		PhysicsData data = (PhysicsData) m_tank.getComponent(TypeManager.typeOf(PhysicsData.class));
 		data.setPosition(data.getPosition().add(new Vector(0, 1)));
 	}
 

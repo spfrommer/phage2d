@@ -26,7 +26,7 @@ public class ActionExecutorLeaf<T extends LogicComponent & ActionExecutable> ext
 	@Override
 	public boolean load(Entity entity) {
 		try {
-			m_logic = (T) entity.getComponent(TypeManager.getType(m_type));
+			m_logic = (T) entity.getComponent(TypeManager.typeOf(m_type));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			return false;

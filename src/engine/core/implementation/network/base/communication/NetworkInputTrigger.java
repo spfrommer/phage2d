@@ -1,6 +1,6 @@
-package engine.core.network;
+package engine.core.implementation.network.base.communication;
 
-import engine.core.network.message.Message;
+import engine.core.implementation.network.base.communication.message.Message;
 import engine.inputs.InputTrigger;
 
 public class NetworkInputTrigger extends InputTrigger implements NetworkReceiver {

@@ -1,4 +1,4 @@
-package engine.core.network.message.parameter;
+package engine.core.implementation.network.base.communication.message.parameter;
 
 public class MessageParameter {
 	private ParameterType m_type;

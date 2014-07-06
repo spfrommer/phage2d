@@ -5,11 +5,10 @@ import java.lang.reflect.Field;
 import engine.core.framework.component.DataComponent;
 
 /**
- * A Decoder that can only handle DataComponents that contain public primitive
- * fields and Strings - works using Reflection.
+ * A Decoder that can only handle DataComponents that contain public primitive fields and Strings - works using
+ * Reflection.
  */
 public class BasicDataDecoder implements DataDecoder {
-
 	@Override
 	public void decode(DataComponent component, String[] data) {
 		Class<? extends DataComponent> compClass = component.getClass();
@@ -19,8 +18,7 @@ public class BasicDataDecoder implements DataDecoder {
 		for (int i = 0; i < fields.length; i++) {
 			Field field = fields[i];
 			Class<?> fieldType = field.getType();
-			String typeName = fieldType.getName().toUpperCase()
-					.replace(".", "");
+			String typeName = fieldType.getName().toUpperCase().replace(".", "");
 			FieldType type = FieldType.valueOf(typeName);
 			try {
 				switch (type) {

@@ -22,7 +22,7 @@ public class TankCompartment extends Entity implements TankComponent {
 	private PhysicsActivity m_physics;
 
 	public TankCompartment(Vector position, TankBody body, PhysicsActivity physicsActivity) {
-		PhysicsData tankPhysics = (PhysicsData) body.getComponent(TypeManager.getType(PhysicsData.class));
+		PhysicsData tankPhysics = (PhysicsData) body.getComponent(TypeManager.typeOf(PhysicsData.class));
 
 		PhysicsData physics = ComponentFactory.addPhysicsData(this, tankPhysics.getPosition().add(position), 0,
 				new Rectangle(0, 0));

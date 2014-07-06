@@ -19,11 +19,11 @@ public class SpawningActivity extends AspectActivity {
 	private ComponentType m_spawningType;
 
 	{
-		m_spawningType = TypeManager.getType(SpawningLogic.class);
+		m_spawningType = TypeManager.typeOf(SpawningLogic.class);
 	}
 
 	public SpawningActivity(EntitySystem system) {
-		super(system, new Aspect(TypeManager.getType(SpawningLogic.class)));
+		super(system, new Aspect(TypeManager.typeOf(SpawningLogic.class)));
 	}
 
 	@Override

@@ -22,7 +22,7 @@ public class AnimationAction extends ActionLeaf {
 	public boolean load(Entity entity) {
 		m_entity = entity;
 		try {
-			m_animation = (AnimationData) entity.getComponent(TypeManager.getType(AnimationData.class));
+			m_animation = (AnimationData) entity.getComponent(TypeManager.typeOf(AnimationData.class));
 		} catch (Exception ex) {
 			return false;
 		}

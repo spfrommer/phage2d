@@ -1,9 +1,9 @@
-package engine.core.network.message.command;
+package engine.core.implementation.network.base.communication.message.command;
 
 import java.util.ArrayList;
 
 import utils.collections.TwoWayHashMap;
-import engine.core.network.message.MessageDeclaration;
+import engine.core.implementation.network.base.communication.message.MessageDeclaration;
 
 public class CommandInterpreter {
 	private TwoWayHashMap<String, Integer> commandIDs;

@@ -1,8 +1,8 @@
-package engine.core.network;
+package engine.core.implementation.network.base.communication;
 
 import java.util.ArrayList;
 
-import engine.core.network.message.Message;
+import engine.core.implementation.network.base.communication.message.Message;
 
 /**
  * Makes a way for NetworkReceivers (network input triggers for user events) to receive messages

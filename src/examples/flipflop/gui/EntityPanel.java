@@ -34,7 +34,7 @@ public class EntityPanel extends JPanel {
 		GridLayout grid = new GridLayout(1, 3);
 		this.setLayout(grid);
 
-		m_name = (NameData) entity.getComponent(TypeManager.getType(NameData.class));
+		m_name = (NameData) entity.getComponent(TypeManager.typeOf(NameData.class));
 
 		JLabel nameLabel = new JLabel(m_name.name);
 		this.add(nameLabel);
@@ -49,7 +49,7 @@ public class EntityPanel extends JPanel {
 		});
 		this.add(delete);
 
-		m_physics = (PhysicsData) entity.getComponent(TypeManager.getType(PhysicsData.class));
+		m_physics = (PhysicsData) entity.getComponent(TypeManager.typeOf(PhysicsData.class));
 
 		if (m_physics != null) {
 			m_xfield = new JTextField("" + (int) m_physics.getPosition().getX());

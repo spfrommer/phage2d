@@ -1,4 +1,4 @@
-package engine.core.network.message;
+package engine.core.implementation.network.base.communication.message;
 
 public class MessageDeclaration {
 	private String m_command;

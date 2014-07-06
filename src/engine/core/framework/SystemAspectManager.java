@@ -65,6 +65,15 @@ public class SystemAspectManager {
 	}
 
 	/**
+	 * Removes a listener for a certain Aspect
+	 * 
+	 * @param listener
+	 */
+	public void removeAspectListener(AspectSystemListener listener) {
+		m_listeners.remove(listener);
+	}
+
+	/**
 	 * Gets all the Entities listed as encapsulating an Aspect
 	 * 
 	 * @param aspect

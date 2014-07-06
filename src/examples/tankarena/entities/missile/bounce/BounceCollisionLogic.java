@@ -26,7 +26,7 @@ public class BounceCollisionLogic extends CollisionHandlerLogic {
 
 	@Override
 	public void loadDependencies() {
-		m_bounce = (BounceData) this.loadDependency(TypeManager.getType(BounceData.class));
+		m_bounce = (BounceData) this.loadDependency(TypeManager.typeOf(BounceData.class));
 	}
 
 	@Override

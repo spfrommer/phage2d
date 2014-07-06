@@ -28,7 +28,7 @@ public class MirrorLevel implements Level {
 
 		for (Entity entity : world.getEntities()) {
 			NameData name = (NameData) entity.getComponent(TypeManager
-					.getType(NameData.class));
+					.typeOf(NameData.class));
 			if (name.name.equals("ball")) {
 				m_balls.add(entity);
 			} else if (name.name.equals("platform")) {

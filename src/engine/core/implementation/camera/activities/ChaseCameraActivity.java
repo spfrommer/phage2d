@@ -30,8 +30,8 @@ public class ChaseCameraActivity extends CameraActivity {
 	private static final double UPDATE_THRESHOLD = 1;
 
 	{
-		m_focusType = TypeManager.getType(CameraFocusData.class);
-		m_transformType = TypeManager.getType(TransformWrapper.class);
+		m_focusType = TypeManager.typeOf(CameraFocusData.class);
+		m_transformType = TypeManager.typeOf(TransformWrapper.class);
 	}
 
 	/**
@@ -42,8 +42,8 @@ public class ChaseCameraActivity extends CameraActivity {
 	 * @param focusID
 	 */
 	public ChaseCameraActivity(EntitySystem system, int focusID) {
-		super(system, new Aspect(TypeManager.getType(CameraFocusData.class),
-				TypeManager.getType(TransformWrapper.class)));
+		super(system, new Aspect(TypeManager.typeOf(CameraFocusData.class),
+				TypeManager.typeOf(TransformWrapper.class)));
 		m_focusID = focusID;
 	}
 

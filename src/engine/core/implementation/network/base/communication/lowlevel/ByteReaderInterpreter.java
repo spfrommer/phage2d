@@ -1,10 +1,10 @@
-package engine.core.network.lowlevel;
+package engine.core.implementation.network.base.communication.lowlevel;
 
 import java.io.IOException;
 
-import engine.core.network.message.command.CommandInterpreter;
-import engine.core.network.message.parameter.MessageParameter;
-import engine.core.network.message.parameter.ParameterType;
+import engine.core.implementation.network.base.communication.message.command.CommandInterpreter;
+import engine.core.implementation.network.base.communication.message.parameter.MessageParameter;
+import engine.core.implementation.network.base.communication.message.parameter.ParameterType;
 
 public class ByteReaderInterpreter {
 	private ByteReader m_reader;

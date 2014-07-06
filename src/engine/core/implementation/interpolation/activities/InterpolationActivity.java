@@ -26,13 +26,13 @@ public class InterpolationActivity extends AspectActivity {
 	private double m_lastTime = System.currentTimeMillis();
 
 	{
-		m_transformType = TypeManager.getType(TransformWrapper.class);
-		m_interpolationType = TypeManager.getType(InterpolationData.class);
+		m_transformType = TypeManager.typeOf(TransformWrapper.class);
+		m_interpolationType = TypeManager.typeOf(InterpolationData.class);
 	}
 
 	public InterpolationActivity(EntitySystem system, TransmissionReceiver receiver) {
-		super(system, new Aspect(TypeManager.getType(TransformWrapper.class),
-				TypeManager.getType(InterpolationData.class)));
+		super(system, new Aspect(TypeManager.typeOf(TransformWrapper.class),
+				TypeManager.typeOf(InterpolationData.class)));
 
 		receiver.addTransmissionListener(new UpdateListener());
 	}

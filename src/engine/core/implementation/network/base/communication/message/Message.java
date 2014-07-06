@@ -1,6 +1,6 @@
-package engine.core.network.message;
+package engine.core.implementation.network.base.communication.message;
 
-import engine.core.network.message.parameter.MessageParameter;
+import engine.core.implementation.network.base.communication.message.parameter.MessageParameter;
 
 public class Message {
 	private String m_command;

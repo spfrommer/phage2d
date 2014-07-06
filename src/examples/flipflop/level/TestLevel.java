@@ -144,7 +144,7 @@ public class TestLevel implements Level {
 	private static void addPositionAttributes(Entity entity, Element element,
 			Document doc) {
 		PhysicsData physics = (PhysicsData) entity.getComponent(TypeManager
-				.getType(PhysicsData.class));
+				.typeOf(PhysicsData.class));
 
 		Attr xattr = doc.createAttribute("x");
 		xattr.setValue("" + physics.getPosition().getX());
@@ -158,7 +158,7 @@ public class TestLevel implements Level {
 	private static void addDimensionAttributes(Entity entity, Element element,
 			Document doc) {
 		PhysicsData physics = (PhysicsData) entity.getComponent(TypeManager
-				.getType(PhysicsData.class));
+				.typeOf(PhysicsData.class));
 
 		Attr xattr = doc.createAttribute("width");
 		xattr.setValue("" + ((Rectangle) physics.getConvex()).getWidth());

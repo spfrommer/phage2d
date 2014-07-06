@@ -86,7 +86,7 @@ public class Editor extends JFrame {
 		this.setLayout(layout);
 		for (int i = 0; i < entities.size(); i++) {
 			Entity e = entities.get(i);
-			NameData name = (NameData) e.getComponent(TypeManager.getType(NameData.class));
+			NameData name = (NameData) e.getComponent(TypeManager.typeOf(NameData.class));
 			if (name.name.equals("portal") || name.name.equals("platform") || name.name.equals("ball")) {
 				EntityPanel panel = new EntityPanel(e, m_source, this);
 				m_panels.add(panel);

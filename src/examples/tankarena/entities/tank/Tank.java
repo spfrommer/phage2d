@@ -70,18 +70,18 @@ public class Tank {
 	public void damage(double damage) {
 		m_health -= damage;
 		if (m_health <= 0) {
-			PhysicsData bodyPhysics = (PhysicsData) m_body.getComponent(TypeManager.getType(PhysicsData.class));
+			PhysicsData bodyPhysics = (PhysicsData) m_body.getComponent(TypeManager.typeOf(PhysicsData.class));
 			bodyPhysics.setPosition(m_spawnPosition.clone());
 
 			PhysicsData leftTreadPhysics = (PhysicsData) m_leftTread.getComponent(TypeManager
-					.getType(PhysicsData.class));
+					.typeOf(PhysicsData.class));
 			leftTreadPhysics.setPosition(m_spawnPosition.clone());
 
 			PhysicsData rightTreadPhysics = (PhysicsData) m_rightTread.getComponent(TypeManager
-					.getType(PhysicsData.class));
+					.typeOf(PhysicsData.class));
 			rightTreadPhysics.setPosition(m_spawnPosition.clone());
 
-			PhysicsData gunPhysics = (PhysicsData) m_gun.getComponent(TypeManager.getType(PhysicsData.class));
+			PhysicsData gunPhysics = (PhysicsData) m_gun.getComponent(TypeManager.typeOf(PhysicsData.class));
 			gunPhysics.setPosition(m_spawnPosition.clone());
 
 			m_health = 100;

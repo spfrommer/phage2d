@@ -1,4 +1,4 @@
-package engine.core.network.lowlevel;
+package engine.core.implementation.network.base.communication.lowlevel;
 
 import java.io.DataInputStream;
 import java.io.IOException;

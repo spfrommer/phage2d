@@ -12,6 +12,10 @@ import engine.core.execute.Server;
 import engine.core.factory.ComponentFactory;
 import engine.core.framework.Entity;
 import engine.core.implementation.behavior.activity.BehaviorActivity;
+import engine.core.implementation.network.base.communication.NetworkInputHub;
+import engine.core.implementation.network.base.communication.NetworkInputTrigger;
+import engine.core.implementation.network.base.communication.message.MessageDeclaration;
+import engine.core.implementation.network.base.communication.message.command.CommandInterpreter;
 import engine.core.implementation.network.base.decoding.DecoderMapper;
 import engine.core.implementation.network.logic.ServerLogic;
 import engine.core.implementation.physics.activities.PhysicsActivity;
@@ -19,10 +23,6 @@ import engine.core.implementation.physics.data.PhysicsData;
 import engine.core.implementation.physics.wrappers.PhysicsTransformWrapper;
 import engine.core.implementation.physics.wrappers.ShellTransformWrapper;
 import engine.core.implementation.rendering.activities.AnimationActivity;
-import engine.core.network.NetworkInputHub;
-import engine.core.network.NetworkInputTrigger;
-import engine.core.network.message.MessageDeclaration;
-import engine.core.network.message.command.CommandInterpreter;
 import engine.inputs.InputManager;
 import examples.tankarena.entities.tank.Tank;
 import examples.tankarena.entities.tank.body.TankBody;
@@ -41,7 +41,7 @@ public class ArenaServer extends Server {
 		m_behavior = new BehaviorActivity(this.getEntitySystem());
 		m_animation = new AnimationActivity(this.getEntitySystem());
 		this.setUPS(60);
-		this.setUPF(2);
+		this.setUPT(1);
 	}
 
 	@Override

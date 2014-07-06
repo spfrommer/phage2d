@@ -31,12 +31,12 @@ public class BasicRenderingActivity extends AspectActivity implements RenderingA
 
 	{
 		m_entities = new ArrayList<Entity>();
-		m_renderingType = TypeManager.getType(RenderingLogic.class);
-		m_layerType = TypeManager.getType(LayerData.class);
+		m_renderingType = TypeManager.typeOf(RenderingLogic.class);
+		m_layerType = TypeManager.typeOf(LayerData.class);
 	}
 
 	public BasicRenderingActivity(EntitySystem system) {
-		super(system, new Aspect(TypeManager.getType(RenderingLogic.class), TypeManager.getType(LayerData.class)));
+		super(system, new Aspect(TypeManager.typeOf(RenderingLogic.class), TypeManager.typeOf(LayerData.class)));
 	}
 
 	@Override
