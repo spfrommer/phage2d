@@ -1,4 +1,4 @@
-package sound;
+package engine.sound;
 
 import java.io.IOException;
 

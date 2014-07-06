@@ -4,9 +4,9 @@ import java.io.IOException;
 
 import javax.sound.sampled.LineUnavailableException;
 
-import sound.SoundResource;
-import sound.SoundSystem;
-import sound.decode.GenericDecoder;
+import engine.sound.SoundResource;
+import engine.sound.SoundSystem;
+import engine.sound.decode.GenericDecoder;
 
 public class SoundTest {
 	public static void main(String[] args) throws IOException {

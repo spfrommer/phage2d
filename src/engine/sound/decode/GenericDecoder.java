@@ -1,4 +1,4 @@
-package sound.decode;
+package engine.sound.decode;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,7 +8,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-import sound.SoundResource.SoundDecoder;
+import engine.sound.SoundResource.SoundDecoder;
 
 public class GenericDecoder implements SoundDecoder {
 	@Override

@@ -11,11 +11,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
-import sound.PlaylistPlayer;
-import sound.PlaylistPlayer.PlaylistPlayerListener;
-import sound.SoundResource;
-import sound.SoundSystem;
-import sound.decode.GenericDecoder;
 import test.SoundTest;
 import utils.physics.Vector;
 import engine.core.execute.Game;
@@ -40,6 +35,11 @@ import engine.graphics.lwjgl.LWJGLKeyboard;
 import engine.inputs.BindingListener;
 import engine.inputs.InputManager;
 import engine.inputs.keyboard.KeyTrigger;
+import engine.sound.PlaylistPlayer;
+import engine.sound.SoundResource;
+import engine.sound.SoundSystem;
+import engine.sound.PlaylistPlayer.PlaylistPlayerListener;
+import engine.sound.decode.GenericDecoder;
 import examples.flipflop.gui.Editor;
 import examples.flipflop.level.DynamicLevel;
 import examples.flipflop.level.Level;

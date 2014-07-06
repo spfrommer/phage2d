@@ -1,4 +1,4 @@
-package sound;
+package engine.sound;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,7 +6,7 @@ import java.net.URL;
 
 import javax.sound.sampled.AudioInputStream;
 
-import sound.decode.GenericDecoder;
+import engine.sound.decode.GenericDecoder;
 
 public class SoundResource implements Sound {
 	private URL m_resource;
