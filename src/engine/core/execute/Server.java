@@ -141,7 +141,6 @@ public abstract class Server {
 		int milliSkip = 1000 / m_ups;
 		while (true) {
 			m_system.update();
-			System.out.println("Updated");
 			update(1);
 			if (m_updatesPassed >= m_upf) {
 				m_network.processWriters();
