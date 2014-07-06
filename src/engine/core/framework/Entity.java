@@ -25,6 +25,8 @@ public class Entity {
 	 */
 	private Map<ComponentType, Component> m_components;
 
+	private EntityContext m_context;
+
 	{
 		m_aspect = new Aspect();
 		m_components = new HashMap<ComponentType, Component>();
@@ -51,6 +53,24 @@ public class Entity {
 
 		entity.forceLoadDependencies();
 		return entity;
+	}
+
+	/**
+	 * Sets the context of this Entity.
+	 * 
+	 * @param context
+	 */
+	public void setContext(EntityContext context) {
+		m_context = context;
+	}
+
+	/**
+	 * Gets the context of this Entity.
+	 * 
+	 * @return
+	 */
+	public EntityContext getContext() {
+		return m_context;
 	}
 
 	/**

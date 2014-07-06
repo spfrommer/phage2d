@@ -6,7 +6,7 @@ import engine.core.implementation.behavior.base.Node;
 /**
  * A Node with one child and affects the running state of that child - puts on a max run time, etc.
  */
-public abstract class DecoratorNode implements Node {
+public abstract class DecoratorNode extends Node {
 	private Node m_child;
 
 	public DecoratorNode() {

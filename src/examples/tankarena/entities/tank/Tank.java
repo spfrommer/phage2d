@@ -16,7 +16,6 @@ public class Tank {
 
 	private double m_health;
 
-	private EntitySystem m_system;
 	private Vector m_spawnPosition;
 
 	{
@@ -24,7 +23,7 @@ public class Tank {
 		m_spawnPosition = new Vector(0, 0);
 	}
 
-	public Tank(EntitySystem system, TankBody body, TankTread leftTread, TankTread rightTread, TankGun gun) {
+	public Tank(TankBody body, TankTread leftTread, TankTread rightTread, TankGun gun) {
 		m_body = body;
 		m_leftTread = leftTread;
 		m_rightTread = rightTread;
@@ -34,8 +33,6 @@ public class Tank {
 		m_leftTread.setTank(this);
 		m_rightTread.setTank(this);
 		m_gun.setTank(this);
-
-		m_system = system;
 	}
 
 	public Tank(EntitySystem system, TankBody.BodyBuilder bodyBuilder, TankTread.TreadBuilder leftTreadBuilder,
@@ -49,8 +46,6 @@ public class Tank {
 		m_leftTread.setTank(this);
 		m_rightTread.setTank(this);
 		m_gun.setTank(this);
-
-		m_system = system;
 	}
 
 	/**
@@ -73,8 +68,8 @@ public class Tank {
 			PhysicsData bodyPhysics = (PhysicsData) m_body.getComponent(TypeManager.typeOf(PhysicsData.class));
 			bodyPhysics.setPosition(m_spawnPosition.clone());
 
-			PhysicsData leftTreadPhysics = (PhysicsData) m_leftTread.getComponent(TypeManager
-					.typeOf(PhysicsData.class));
+			PhysicsData leftTreadPhysics = (PhysicsData) m_leftTread
+					.getComponent(TypeManager.typeOf(PhysicsData.class));
 			leftTreadPhysics.setPosition(m_spawnPosition.clone());
 
 			PhysicsData rightTreadPhysics = (PhysicsData) m_rightTread.getComponent(TypeManager

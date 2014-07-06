@@ -146,8 +146,8 @@ public abstract class Server {
 				m_network.processWriters();
 				m_network.processMessages();
 				boolean transmitted = m_network.transmitUpdates();
-				if (transmitted)
-					System.out.println("Transmitted");
+				// if (transmitted)
+				// System.out.println("Transmitted");
 				m_updatesPassed = 1;
 			} else {
 				m_updatesPassed++;

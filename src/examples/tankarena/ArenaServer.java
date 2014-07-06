@@ -122,11 +122,10 @@ public class ArenaServer extends Server {
 		gunBuilder.setLayer(2);
 		gunBuilder.setBody(body);
 		gunBuilder.setPhysicsActivity(m_physics);
-		gunBuilder.setEntitySystem(this.getEntitySystem());
 		TankGun gun = gunBuilder.build();
 		this.getEntitySystem().addEntity(gun);
 
-		Tank tank = new Tank(this.getEntitySystem(), body, tread1, tread2, gun);
+		Tank tank = new Tank(body, tread1, tread2, gun);
 	}
 
 	private InputManager makeInputManager(NetworkInputHub inputHub, int clientID) {

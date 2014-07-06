@@ -30,17 +30,14 @@ public class DestroyAction extends ActionLeaf {
 
 	private ComponentType m_damageType;
 
-	private EntitySystem m_system;
-
 	private Entity m_entity;
 
 	{
 		m_damageType = TypeManager.typeOf(DamageHandlerLogic.class);
 	}
 
-	public DestroyAction(EntitySystem system) {
+	public DestroyAction() {
 		super();
-		m_system = system;
 	}
 
 	@Override
@@ -58,7 +55,7 @@ public class DestroyAction extends ActionLeaf {
 
 	@Override
 	public Node copy() {
-		return new DestroyAction(m_system);
+		return new DestroyAction();
 	}
 
 	@Override
@@ -68,9 +65,11 @@ public class DestroyAction extends ActionLeaf {
 			return ExecutionState.FAILURE;
 		}
 
+		System.out.println(this.getContext().getEntityContext());
+		EntitySystem system = this.getContext().getEntityContext().getSystem();
 		Entity collided = m_bounce.bouncedAgainst;
-		m_system.removeEntity(m_entity);
-		m_system.addEntity(makeExplosion(m_transform.getPosition(), 30));
+		system.removeEntity(m_entity);
+		system.addEntity(makeExplosion(m_transform.getPosition(), 30));
 		if (!collided.hasComponent(m_damageType)) {
 			System.out.println("Did no damage");
 			return ExecutionState.FAILURE;
@@ -87,6 +86,6 @@ public class DestroyAction extends ActionLeaf {
 		ArrayList<Texture> textures = new ArrayList<Texture>();
 		textures.add(explosion);
 		Animator animator = new Animator(textures, 1);
-		return new AnimatedFX(m_system, position, 1, explosion, animator);
+		return new AnimatedFX(position, 1, explosion, animator);
 	}
 }

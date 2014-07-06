@@ -12,7 +12,6 @@ import utils.image.Texture;
 import utils.physics.JointType;
 import engine.core.factory.ComponentFactory;
 import engine.core.framework.Entity;
-import engine.core.framework.EntitySystem;
 import engine.core.framework.component.type.TypeManager;
 import engine.core.implementation.behavior.base.composite.ParallelComposite;
 import engine.core.implementation.behavior.base.composite.SequencerComposite;
@@ -36,7 +35,7 @@ public class TankGun extends Entity implements TankComponent {
 	private Tank m_tank;
 
 	TankGun(double width, double height, String[] textures, double layer, InputManager input, TankBody body,
-			PhysicsActivity physicsActivity, EntitySystem system) {
+			PhysicsActivity physicsActivity) {
 		super();
 
 		PhysicsData tankPhysics = (PhysicsData) body.getComponent(TypeManager.typeOf(PhysicsData.class));
@@ -78,8 +77,8 @@ public class TankGun extends Entity implements TankComponent {
 
 		this.addComponent(new PlayerGunAimerLogic(input));
 
-		this.addComponent(new ShootingLogic(system, new BouncyMissile(new Circle(10), layer, new Texture(ImageUtils
-				.getID("bomb.png"), 20, 20), system, 3, 10)));
+		this.addComponent(new ShootingLogic(new BouncyMissile(new Circle(10), layer, new Texture(ImageUtils
+				.getID("bomb.png"), 20, 20), 3, 10)));
 
 		TreeLogic tree = new TreeLogic();
 
@@ -123,10 +122,9 @@ public class TankGun extends Entity implements TankComponent {
 		private InputManager input;
 		private TankBody body;
 		private PhysicsActivity activity;
-		private EntitySystem system;
 
 		public TankGun build() {
-			return new TankGun(width, height, textures, layer, input, body, activity, system);
+			return new TankGun(width, height, textures, layer, input, body, activity);
 		}
 
 		/**
@@ -183,14 +181,6 @@ public class TankGun extends Entity implements TankComponent {
 		 */
 		public void setPhysicsActivity(PhysicsActivity activity) {
 			this.activity = activity;
-		}
-
-		/**
-		 * @param system
-		 *            the system to set
-		 */
-		public void setEntitySystem(EntitySystem system) {
-			this.system = system;
 		}
 	}
 }
