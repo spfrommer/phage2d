@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import migrate.LWJGLDisplay;
 import migrate.gui.GUI;
 import migrate.gui.widgets.Button;
+import migrate.gui.widgets.Window;
 import migrate.input.Keyboard;
 import migrate.input.LWJGLKeyboard;
 import migrate.input.LWJGLMouse;
@@ -25,19 +26,33 @@ public class Test {
 	
 	public void run() {
 		m_display = new LWJGLDisplay(1024, 1024, true);
-		//m_display.init();
-		LWJGLRenderer.initDisplayWithoutCanvas(1024, 1024, true);
+		m_display.init();
+		LWJGLRenderer.initDisplay(m_display.getWidth(), m_display.getHeight());
+		//LWJGLRenderer.initDisplayWithoutCanvas(1024, 1024, true);
 		
 		Mouse mouse = LWJGLMouse.getInstance();
 		Keyboard keyboard = LWJGLKeyboard.getInstance();
 		
 		GUI gui = new GUI();
+		
+		Window window = new SimpleWindow();
+		window.setX(100);
+		window.setY(100);
+		window.setWidth(500);
+		window.setHeight(500);
 		Button button = new SimpleButton();
-		button.setX(100);
-		button.setY(100);
 		button.setWidth(100);
 		button.setHeight(100);
-		gui.add(button);
+		Button button2 = new SimpleButton();
+		button2.setX(0);
+		button2.setY(150);
+		button2.setWidth(50);
+		button2.setHeight(50);
+		
+		window.getContentPane().add(button);
+		window.getContentPane().add(button2);
+		
+		gui.add(window);
 		
 		mouse.addListener(gui);
 		keyboard.addListener(gui);
@@ -58,7 +73,7 @@ public class Test {
 			Display.sync(60);
 			//m_display.update(60);
 		}
-		System.exit(0);
+		m_display.destroy();
 	}
 	
 	public static void main(String[] args) {

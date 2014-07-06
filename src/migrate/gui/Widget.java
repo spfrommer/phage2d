@@ -16,6 +16,8 @@ public abstract class Widget implements Renderable {
 	private Dimension m_minSize = null;
 	private Dimension m_preferredSize = null;
 	
+	private boolean m_mousedOver = false;
+	
 	public int getX() { return m_x; }
 	public int getY() { return m_y; }
 	public int getWidth() { return m_width; }
@@ -24,6 +26,8 @@ public abstract class Widget implements Renderable {
 	public Dimension getMinSize() { return m_minSize; }
 	public Dimension getPreferrredSize() { return m_preferredSize; }
 	
+	public boolean isMousedOver() { return m_mousedOver; }
+	
 	public void setX(int x) { m_x = x; }
 	public void setY(int y) { m_y = y; }
 	public void setWidth(int width) { m_width = width; }
@@ -31,6 +35,8 @@ public abstract class Widget implements Renderable {
 	public void setMaxSize(Dimension maxSize) { m_maxSize = maxSize; }
 	public void setMinSize(Dimension minSize) { m_minSize = minSize; }
 	public void setPreferredSize(Dimension preferredSize) { m_preferredSize = preferredSize; }
+	
+	public void setMousedOver(boolean moused) { m_mousedOver = moused; }
 	
 	/** Tests if the widget contains the given point
 	 * 
@@ -63,4 +69,6 @@ public abstract class Widget implements Renderable {
 	public void mouseDelta(Mouse m, int localX, int localY, int deltaX, int deltaY) {}
 	public void mouseButtonPressed(Mouse m, int localX, int localY, MouseButton button) {}
 	public void mouseButtonReleased(Mouse m, int localX, int localY, MouseButton button) {}
+	public void mouseEntered(Mouse m, int localX, int localY) {}
+	public void mouseExited(Mouse m, int localX, int localY) {}
 }

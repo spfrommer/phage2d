@@ -14,7 +14,7 @@ public class SimpleButton extends Button {
 			r.setColor(BACKGROUND_NORMAL);
 			r.fillRect(0, 0, getWidth(), getHeight());
 			r.setColor(Color.WHITE);
-			r.drawRect(0, 0, getWidth(), getHeight());
+			r.drawRect(1, 1, getWidth() - 1, getHeight() - 1);
 		}
 	}
 }

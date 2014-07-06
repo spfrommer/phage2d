@@ -141,6 +141,7 @@ public class LWJGLRenderer implements Renderer {
 		m_clip = clip;
 		if (clip == null) {
 			GL11.glDisable(GL11.GL_STENCIL_TEST);
+			GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
 			return;
 		} else {
 			GL11.glEnable(GL11.GL_STENCIL_TEST);
@@ -160,11 +161,11 @@ public class LWJGLRenderer implements Renderer {
 		GL11.glDepthMask(true);
 		GL11.glStencilMask(0x00);
 		// draw where stencil's value is 0
-		 GL11.glStencilFunc(GL11.GL_EQUAL, 0, 0xFF);
+		 //GL11.glStencilFunc(GL11.GL_EQUAL, 0, 0xFF);
 		 
 		///* (nothing to draw) */
 		// draw only where stencil's value is 1
-		//GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
+		GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
 	}
 
 	@Override
@@ -246,7 +247,6 @@ public class LWJGLRenderer implements Renderer {
 		if (shape == null) return;
 		ArrayList<Vector2f> points = ShapeUtils.getVectors(shape, true);
 		ArrayList<Triangle> tris = Triangulator.s_triangulate(points);
-		System.out.println("Filling: " + points.size());
 		GL11.glBegin(GL11.GL_TRIANGLES);
 		for (Triangle tri : tris) {
 			GL11.glVertex2f(tri.get(0).getX(), tri.get(0).getY());

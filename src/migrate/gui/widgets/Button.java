@@ -7,11 +7,11 @@ import java.util.HashSet;
 import migrate.gui.Widget;
 import migrate.input.Mouse;
 import migrate.input.Mouse.MouseButton;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import migrate.vector.Vector2f;
 
 public abstract class Button extends Widget {
+	//private static final Logger logger = LoggerFactory.getLogger(Button.class);
+	
 	private HashSet<ActionListener> m_listeners = new HashSet<ActionListener>();
 	
 	private boolean m_down = false; 
@@ -20,6 +20,19 @@ public abstract class Button extends Widget {
 	
 	public void addActionListener(ActionListener l) { m_listeners.add(l); }
 	public void removeActionListener(ActionListener l) { m_listeners.remove(l); }
+	
+	@Override
+	public void mouseMoved(Mouse m, int localX, int localY, Vector2f delta) {
+		//logger.debug("Mouse Moved in Button: " + localX + " " + localY);
+	}
+	@Override
+	public void mouseEntered(Mouse m, int localX, int localY) {
+		//logger.debug("Mouse Entered (" + localX + ", " + localY + ")");
+	}
+	@Override
+	public void mouseExited(Mouse m, int localX, int localY) {
+		//logger.debug("Mouse Exited (" + localX + ", " + localY + ")");
+	}
 	
 	@Override
 	public void mouseButtonPressed(Mouse m, int localX, int localY, MouseButton button) {
