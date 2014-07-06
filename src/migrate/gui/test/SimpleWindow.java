@@ -13,6 +13,7 @@ public class SimpleWindow extends Window {
 
 	public static final int DRAG_BORDER_WIDTH = 10;
 	public static final int TOP_BAR_DRAG_BORDER_WIDTH = 2;
+	public static final int TOP_BAR_DRAG_CORNER_LENGTH = 5;
 	
 	@Override
 	public void renderFrame(Renderer r) {
@@ -58,6 +59,11 @@ public class SimpleWindow extends Window {
 		mapping.add(new Rectangle(getWidth() - DRAG_BORDER_WIDTH, WINDOW_BAR_HEIGHT,
 								  DRAG_BORDER_WIDTH, getHeight() - WINDOW_BAR_HEIGHT - DRAG_BORDER_WIDTH),
 						new Vector2f(1f, 0f));
+		/*Topleft corner
+		mapping.add(new Rectangle(0, 0, TOP_BAR_DRAG_CORNER_LENGTH, TOP_BAR_DRAG_BORDER_WIDTH),
+				new Vector2f(-1f, -1f));
+		mapping.add(new Rectangle(0, 0, TOP_BAR_DRAG_BORDER_WIDTH, TOP_BAR_DRAG_CORNER_LENGTH),
+				new Vector2f(-1f, -1f));*/
 		return mapping;
 	}
 
