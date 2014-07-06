@@ -24,7 +24,7 @@ public abstract class Widget implements Renderable {
 	public int getHeight() { return m_height; }
 	public Dimension getMaxSize() { return m_maxSize; }
 	public Dimension getMinSize() { return m_minSize; }
-	public Dimension getPreferrredSize() { return m_preferredSize; }
+	public Dimension getPreferredSize() { return m_preferredSize; }
 	
 	public boolean isMousedOver() { return m_mousedOver; }
 	
@@ -70,14 +70,21 @@ public abstract class Widget implements Renderable {
 		return (x > m_x) && (y > m_y) && (x < m_x + m_width) && (y < m_y + m_height);
 	}
 	
+	/**
+	 * This method tells the widget to lay out its children(if it has any)
+	 * its implementation is not required for non-container widgets and therefore
+	 * is not abstract
+	 */
+	public void validate() {}
+	
 	public void render(Renderer r) {
 		r.pushTransform();
 		r.translate(m_x, m_y);
 		renderWidget(r);
 		r.popTransform();
 	}
-	public abstract void renderWidget(Renderer r);
 	
+	public abstract void renderWidget(Renderer r);
 	
 	//-----Input methods-------
 	/*

@@ -6,18 +6,25 @@ import migrate.input.Mouse;
 import migrate.input.Mouse.MouseButton;
 import migrate.vector.Vector2f;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public abstract class ContainerWidget extends Widget {
 	//private static final Logger logger = LoggerFactory.getLogger(ContainerWidget.class);
 	
 	private ArrayList<Widget> m_children = new ArrayList<Widget>();
 	
-	public void add(Widget w) { m_children.add(w); }
+	public void add(Widget w) {
+		if (m_children.contains(w)) return;
+		m_children.add(w);
+	}
 	public void remove(Widget w) { m_children.add(w); }
 
 	public ArrayList<Widget> getChildren() { return m_children; }
+	
+	@Override
+	public void validate() {
+		for(Widget w : m_children) {
+			w.validate();
+		}
+	}
 	
 	//----Input Methods------
 	/*

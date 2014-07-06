@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import test.GUITest;
 import engine.graphics.lwjgl.LWJGLRenderer;
+import engine.gui.layout.BorderLayout;
 
 public class Test {
 	private static Logger logger = LoggerFactory.getLogger(GUITest.class);
@@ -49,8 +50,10 @@ public class Test {
 		button2.setWidth(50);
 		button2.setHeight(50);
 		
-		window.getContentPane().add(button);
-		window.getContentPane().add(button2);
+		//window.getContentPane().setLayout(null);
+		window.getContentPane().add(button, BorderLayout.CENTER);
+		window.getContentPane().add(button2, BorderLayout.NORTH);
+		window.validate();
 		
 		gui.add(window);
 		

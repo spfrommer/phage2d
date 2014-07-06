@@ -7,9 +7,12 @@ import migrate.vector.Vector2f;
 import engine.graphics.Renderer;
 
 public class SimpleWindow extends Window {
+	public static final int CONTENT_PANE_PADDING = 10;
+	
 	public static final int WINDOW_BAR_HEIGHT = 20;
-	public static final int CONTENT_PANE_PADDING = 2;
-	public static final int DRAG_CORNER_SIDE_LENGTH = 10;
+
+	public static final int DRAG_BORDER_WIDTH = 10;
+	public static final int TOP_BAR_DRAG_BORDER_WIDTH = 2;
 	
 	@Override
 	public void renderFrame(Renderer r) {
@@ -35,8 +38,26 @@ public class SimpleWindow extends Window {
 	@Override
 	protected ResizeAreaMapping getResizeAreaMapping() {
 		ResizeAreaMapping mapping = new ResizeAreaMapping();
-		mapping.add(new Rectangle(getWidth() - DRAG_CORNER_SIDE_LENGTH, getHeight() - DRAG_CORNER_SIDE_LENGTH, 
-									DRAG_CORNER_SIDE_LENGTH, DRAG_CORNER_SIDE_LENGTH), new Vector2f(1f, 1f));
+		//Left Bar
+		mapping.add(new Rectangle(0, WINDOW_BAR_HEIGHT, 
+								  DRAG_BORDER_WIDTH, getHeight() - WINDOW_BAR_HEIGHT - DRAG_BORDER_WIDTH),
+						new Vector2f(-1f, 0f));
+		//BottomLeft
+		mapping.add(new Rectangle(0, getHeight() - DRAG_BORDER_WIDTH,
+								  DRAG_BORDER_WIDTH, DRAG_BORDER_WIDTH), 
+						new Vector2f(-1f, 1f));
+		//Button Bar
+		mapping.add(new Rectangle(DRAG_BORDER_WIDTH, getHeight() - DRAG_BORDER_WIDTH,
+								  getWidth() - 2 * DRAG_BORDER_WIDTH, DRAG_BORDER_WIDTH),
+					    new Vector2f(0f, 1f));
+		//BottomRight
+		mapping.add(new Rectangle(getWidth() - DRAG_BORDER_WIDTH, getHeight() - DRAG_BORDER_WIDTH, 
+				  				  DRAG_BORDER_WIDTH, DRAG_BORDER_WIDTH),
+				        new Vector2f(1f, 1f));
+		//Right Bar
+		mapping.add(new Rectangle(getWidth() - DRAG_BORDER_WIDTH, WINDOW_BAR_HEIGHT,
+								  DRAG_BORDER_WIDTH, getHeight() - WINDOW_BAR_HEIGHT - DRAG_BORDER_WIDTH),
+						new Vector2f(1f, 0f));
 		return mapping;
 	}
 

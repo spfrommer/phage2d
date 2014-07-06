@@ -7,6 +7,7 @@ import java.util.Set;
 
 import migrate.gui.Dimension;
 import migrate.gui.Widget;
+import migrate.gui.layout.BorderLayout;
 import migrate.input.Mouse;
 import migrate.input.Mouse.MouseButton;
 import migrate.input.MouseListener;
@@ -18,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import engine.graphics.Renderer;
 
 public abstract class Window extends Widget {
-	private static final Logger logger = LoggerFactory.getLogger(Window.class);
+	//private static final Logger logger = LoggerFactory.getLogger(Window.class);
 	
 	private boolean m_moving = false;
 	private boolean m_resizeEnabled = true;
@@ -27,34 +28,38 @@ public abstract class Window extends Widget {
 	private Panel m_contentPane = new Panel();
 	
 	public Window() {
-		
+		m_contentPane.setLayout(new BorderLayout());
 	}
 	
 	public void setResizable(boolean resizable) { m_resizeEnabled = resizable; }
 	
-	public Panel getContentPane() { return m_contentPane; }
+	@Override
+	public void setWidth(int width) {
+		//If size changes, send the validate call again
+		//We need to revalidate after the width has changed
+		//but we only know whether it has changed
+		//before we set it
+		boolean revalidate = width != getWidth(); 
+		super.setWidth(width);
+		if (revalidate) validate();
+	}
+	@Override
+	public void setHeight(int height) {
+		boolean revalidate = height != getHeight();
+		super.setHeight(height);
+		if (revalidate) validate();
+	}
 	
+
 	public boolean isMoving() { return m_moving; }
 	public boolean isResizable() { return m_resizeEnabled; }
+	
+	public Panel getContentPane() { return m_contentPane; }
 	
 	protected abstract Rectangle getContentPaneBounds();
 	protected abstract Rectangle getWindowBarBounds();
 	protected abstract ResizeAreaMapping getResizeAreaMapping();
 	
-	public void renderWidget(Renderer r) {
-		renderFrame(r);
-		
-		//Update the content pane incase the bounds have changed
-		Rectangle contentBounds = getContentPaneBounds();
-		m_contentPane.setX((int) contentBounds.getX());
-		m_contentPane.setY((int) contentBounds.getY());
-		m_contentPane.setWidth((int) contentBounds.getWidth());
-		m_contentPane.setHeight((int) contentBounds.getHeight());
-		
-		m_contentPane.render(r);
-	}
-	public abstract void renderFrame(Renderer r);
-
 	/**
 	 * If the minsize has not been set(is null),
 	 * then the minimum size will be calculated
@@ -68,6 +73,25 @@ public abstract class Window extends Widget {
 		return new Dimension(getWidth() - (int) contentBounds.getWidth(), 
 							getHeight() - (int) contentBounds.getHeight());
 	}
+	
+	@Override
+	public void validate() {
+		//Update the content pane bounds
+		Rectangle contentBounds = getContentPaneBounds();
+		m_contentPane.setX((int) contentBounds.getX());
+		m_contentPane.setY((int) contentBounds.getY());
+		m_contentPane.setWidth((int) contentBounds.getWidth());
+		m_contentPane.setHeight((int) contentBounds.getHeight());
+		//Now pass the validate call to the contentPane
+		m_contentPane.validate();
+	}
+	
+	public void renderWidget(Renderer r) {
+		renderFrame(r);
+		m_contentPane.render(r);
+	}
+	public abstract void renderFrame(Renderer r);
+
 	
 	//----Input Methods------
 	/*
@@ -127,22 +151,36 @@ public abstract class Window extends Widget {
 			ResizeAreaMapping mapping = getResizeAreaMapping();
 			for (Entry<Rectangle, Vector2f> entry : mapping.getMapping()) {
 				if (entry.getKey().contains(localX, localY)) {
-					m_resizeContext = new ResizeContext(entry.getValue());
+					m_resizeContext = new ResizeContext(entry.getValue(), getWidth(), getHeight(),
+															m.getX(), m.getY());
 					//Add a listener so we will be notified if the mouse moves, even
 					//if it moves out of the window
 					m.addListener(new MouseListener() {
 						public void mouseMoved(Mouse m, int x, int y, Vector2f delta) {
 							if (m_resizeContext == null) return;
+							Vector2f startingMouse = new Vector2f(m_resizeContext.getStartingMouseX(),
+																m_resizeContext.getStartingMouseY());
 							Vector2f dragDir = m_resizeContext.getDragDirection();
-							Vector2f resizeAmount = delta.scale(dragDir, null);
+							Dimension startingDim = m_resizeContext.getStartingSize();
+
+							Vector2f totalDelta = Vector2f.sub(new Vector2f(x, y), startingMouse, null);
+							
+							Vector2f resizeAmount = totalDelta.scale(dragDir, null);
 							//logger.debug("DragDir:" + dragDir);
 							//logger.debug("Delta:" + delta);
 							//logger.debug("Resize Amount: " + resizeAmount);
-							if (dragDir.getX() < 0) {
-								setX(getX() + (int) resizeAmount.getX());
+							int finalWidth = startingDim.getWidth() + (int) resizeAmount.getX();
+							int finalHeight = startingDim.getHeight() + (int) resizeAmount.getY();
+							/*if (dragDir.getX() < 0) {
+							  setX(getX() - (int) resizeAmount.getX());
+							}
+							if (dragDir.getY() < 0) {
+								setY(getY() - (int) resizeAmount.getY());
 							}
 							setWidth(getWidth() + (int) resizeAmount.getX());
-							setHeight(getHeight() + (int) resizeAmount.getY());
+							setHeight(getHeight() + (int) resizeAmount.getY());*/
+							setWidth(finalWidth);
+							setHeight(finalHeight);
 						}
 						public void mouseWheelMoved(Mouse m, int dm) {}
 						public void mouseDelta(Mouse m, int dx, int dy) {}
@@ -174,9 +212,36 @@ public abstract class Window extends Widget {
 	}
 	public static class ResizeContext {
 		private Vector2f m_dragDirection;
-		public ResizeContext(Vector2f direction) {
+		private Dimension m_startingSize;
+		//Mouse starting positions are in display coordinates, not local
+		private int m_startingMouseX;
+		private int m_startingMouseY;
+		public ResizeContext(Vector2f direction, int sWidth, int sHeight, int mx, int my) {
 			m_dragDirection = direction;
+			m_startingSize = new Dimension(sWidth, sHeight);
+			m_startingMouseX = mx;
+			m_startingMouseY = my;
 		}
 		public Vector2f getDragDirection() { return m_dragDirection; }
+		public Dimension getStartingSize() { return m_startingSize; }
+		public int getStartingMouseX() { return m_startingMouseX; }
+		public int getStartingMouseY() { return m_startingMouseY; }
+	}
+	public static class DragContext {
+		private int m_startingX;
+		private int m_startingY;
+		//Mouse starting positions are in display coordinates, not local
+		private int m_startingMouseX;
+		private int m_startingMouseY;
+		public DragContext(int wX, int wY, int mx, int my) {
+			m_startingX = wX;
+			m_startingY = wY;
+			m_startingMouseX = mx;
+			m_startingMouseY = my;
+		}
+		public int getStartingX() { return m_startingX; }
+		public int getStartingY() { return m_startingY; }
+		public int getStartingMouseX() { return m_startingMouseX; }
+		public int getStartingMouseY() { return m_startingMouseY; }
 	}
 }

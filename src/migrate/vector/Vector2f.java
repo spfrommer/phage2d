@@ -127,6 +127,11 @@ public class Vector2f extends Vector {
 		else if (dls > 1f) dls = 1f;
 		return (float) Math.acos(dls);
 	}
+	public static Vector2f abs(Vector2f vec, Vector2f dest) {
+		if (dest == null) dest = new Vector2f();
+		dest.set(Math.abs(vec.getX()), Math.abs(vec.getY()));
+		return dest;
+	}
 	/**
 	 * Finds a perpendicular vector either by turnign the current one clockwise or cc
 	 * @param vec  the vector to find a vector parallel to
