@@ -27,15 +27,25 @@ public class Vector2f extends Vector {
 		setX(vector.getX());
 		setY(vector.getY());
 	}
-
-	public Vector2f translate(float x, float y) {
+	public Vector2f add(float x, float y) {
 		set(getX() + x, getY() + y);
 		return this;
 	}
-
 	public Vector2f scale(float factor) {
-		set(getX() * factor, getY() * factor);
-		return this;
+		return scale(factor, this);
+	}
+	public Vector2f scale(float factor, Vector2f dest) {
+		if (dest == null) dest = new Vector2f();
+		dest.set(getX() * factor, getY() * factor);
+		return dest;
+	}
+	public Vector2f scale(Vector2f vec) {
+		return scale(vec, this);
+	}
+	public Vector2f scale(Vector2f vec, Vector2f dest) {
+		if (dest == null) dest = new Vector2f();
+		dest.set(getX() * vec.getX(), getY() * vec.getY());
+		return dest;
 	}
 	public Vector2f perpendicular(boolean clockwise) {
 		return perpendicular(clockwise, this);

@@ -1,6 +1,9 @@
-package migrate.gui;
+package migrate.gui.widgets;
 
 import java.awt.Rectangle;
+
+import migrate.gui.ContainerWidget;
+import migrate.gui.Widget;
 
 import engine.graphics.Renderer;
 

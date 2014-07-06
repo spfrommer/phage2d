@@ -24,7 +24,14 @@ public abstract class Mouse {
 		m_buttonStates.put(b, false);
 	}
 	public void addListener(MouseListener l) {
-		m_listeners.add(l);
+		synchronized(m_listeners) {
+			m_listeners.add(l);
+		}
+	}
+	public void removeListener(MouseListener l) {
+		synchronized(m_listeners) {
+			m_listeners.remove(l);
+		}
 	}
 	public MouseButton getMouseButton(String name) {
 		return m_buttonNames.get(name);
@@ -38,7 +45,8 @@ public abstract class Mouse {
 	
 	protected void updateButtonState(MouseButton button, boolean state) {
 		m_buttonStates.put(button, state);
-		for(MouseListener l : m_listeners) {
+		for(int i = 0; i < m_listeners.size(); i++) {
+			MouseListener l = m_listeners.get(i);
 			if (state) l.mouseButtonPressed(this, button);
 			else l.mouseButtonReleased(this, button);
 		}
@@ -48,7 +56,8 @@ public abstract class Mouse {
 			Vector2f delta = new Vector2f(x - m_x, y - m_y);
 			m_x = x;
 			m_y = y;
-			for (MouseListener l : m_listeners) {
+			for(int i = 0; i < m_listeners.size(); i++) {
+				MouseListener l = m_listeners.get(i);
 				l.mouseMoved(this, x, y, delta);
 			}
 		}
@@ -56,18 +65,22 @@ public abstract class Mouse {
 	//Note: Delta might not be the same as x - prex, y - prey if the mouse is at the edge of the screen
 	protected void updateDelta(int x, int y) {
 		if (x != 0 || y != 0) {
-			for (MouseListener l : m_listeners) {
+			for(int i = 0; i < m_listeners.size(); i++) {
+				MouseListener l = m_listeners.get(i);
 				l.mouseDelta(this, x, y);
 			}
 		}
 	}
 	protected void mouseWheelMoved(int dm) {
-		for (MouseListener l : m_listeners) {
-			l.mouseWheelMoved(this, dm);
+		synchronized(m_listeners) {
+			for(int i = 0; i < m_listeners.size(); i++) {
+				MouseListener l = m_listeners.get(i);
+				l.mouseWheelMoved(this, dm);
+			}
 		}
 	}
 	//-----Abstract functions------
-	
+
 	public abstract void poll();
 	
 	public static class MouseButton {

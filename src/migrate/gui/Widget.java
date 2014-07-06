@@ -30,13 +30,35 @@ public abstract class Widget implements Renderable {
 	
 	public void setX(int x) { m_x = x; }
 	public void setY(int y) { m_y = y; }
-	public void setWidth(int width) { m_width = width; }
-	public void setHeight(int height) { m_height = height; }
 	public void setMaxSize(Dimension maxSize) { m_maxSize = maxSize; }
 	public void setMinSize(Dimension minSize) { m_minSize = minSize; }
 	public void setPreferredSize(Dimension preferredSize) { m_preferredSize = preferredSize; }
 	
 	public void setMousedOver(boolean moused) { m_mousedOver = moused; }
+	
+	public void setWidth(int width) {
+		//m_width = Math.max(Math.min(width, m_minSize.getWidth()), m_maxSize.getWidth());
+		m_width = width;
+		Dimension minSize = getMinSize();
+		Dimension maxSize = getMaxSize();
+		if (minSize != null) m_width = Math.max(m_width, minSize.getWidth());
+		if (maxSize != null) m_width = Math.min(m_width, maxSize.getWidth());
+	}
+	public void setHeight(int height) {
+		//m_height = Math.max(Math.min(height, m_minSize.getHeight()), m_maxSize.getHeight());
+		m_height = height;
+		Dimension minSize = getMinSize();
+		Dimension maxSize = getMaxSize();
+		if (minSize != null) m_height = Math.max(m_height, minSize.getHeight());
+		if (maxSize != null) m_height = Math.min(m_height, maxSize.getHeight());
+	}
+
+	public void setLocation(int x, int y, int width, int height) {
+		setX(x);
+		setY(y);
+		setWidth(width);
+		setHeight(height);
+	}
 	
 	/** Tests if the widget contains the given point
 	 * 

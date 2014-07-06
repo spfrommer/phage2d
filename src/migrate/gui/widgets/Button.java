@@ -7,6 +7,7 @@ import java.util.HashSet;
 import migrate.gui.Widget;
 import migrate.input.Mouse;
 import migrate.input.Mouse.MouseButton;
+import migrate.input.MouseListener;
 import migrate.vector.Vector2f;
 
 public abstract class Button extends Widget {
@@ -38,14 +39,23 @@ public abstract class Button extends Widget {
 	public void mouseButtonPressed(Mouse m, int localX, int localY, MouseButton button) {
 		if (!button.getName().equals(MouseButton.LEFT_BUTTON_NAME)) return;
 		m_down = true;
+		//Add a listener to the mouse to listen for any releases, even outside of the widget
+		m.addListener(new MouseListener() {
+			public void mouseMoved(Mouse m, int x, int y, Vector2f delta) {}
+			public void mouseWheelMoved(Mouse m, int dm) {}
+			public void mouseDelta(Mouse m, int dx, int dy) {}
+			public void mouseButtonPressed(Mouse m, MouseButton button) {}
+			public void mouseButtonReleased(Mouse m, MouseButton button) {
+				if (!button.getName().equals(MouseButton.LEFT_BUTTON_NAME)) return;
+				if (!m_down) return;
+				m_down = false;
+				for (ActionListener l : m_listeners) {
+					l.actionPerformed(new ActionEvent(this, button.getId(), ""));
+				}
+				m.removeListener(this);
+			}
+		});
 	}
 	@Override
-	public void mouseButtonReleased(Mouse m, int localX, int localY, MouseButton button) {
-		if (!button.getName().equals(MouseButton.LEFT_BUTTON_NAME)) return;
-		if (!m_down) return;
-		m_down = false;
-		for (ActionListener l : m_listeners) {
-			l.actionPerformed(new ActionEvent(this, button.getId(), ""));
-		}
-	}
+	public void mouseButtonReleased(Mouse m, int localX, int localY, MouseButton button) {}
 }
