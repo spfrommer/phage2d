@@ -3,7 +3,6 @@ package engine.graphics.font;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +20,6 @@ import org.xml.sax.SAXException;
 
 import utils.Pair;
 import engine.graphics.font.BMFont.BMGlyph;
-import engine.graphics.font.Font.Glyph;
 
 public class BMFontXMLLoader {
 	//TODO: Implement
@@ -62,8 +60,8 @@ public class BMFontXMLLoader {
 		font.setItalic(Integer.parseInt(info.getAttribute("italic")) == 0);
 		
 		Element common = (Element) e.getElementsByTagName("common").item(0);
-		font.setAscending(Integer.parseInt(common.getAttribute("base")));
-		font.setLineHeight(Integer.parseInt(common.getAttribute("lineHeight")));
+		font.setAscent(Integer.parseInt(common.getAttribute("base")));
+		font.setDescent(Integer.parseInt(common.getAttribute("lineHeight")) - font.getAscent());
 		//Parse the pages
 		Element pgs = (Element) e.getElementsByTagName("pages").item(0);
 		
@@ -145,12 +143,5 @@ public class BMFontXMLLoader {
 		
 		public int getID() { return m_id; }
 		public BufferedImage getImage() { return m_image; }
-	}
-	
-	public static void main(String[] args) throws SAXException, IOException, ParserConfigurationException, URISyntaxException {
-		File fontFile = new File(BMFontXMLLoader.class.getResource("/themes/basic/ptsans.fnt").toURI());
-		List<BMFont> fonts = loadFonts(fontFile);
-		
-		BMFont font = fonts.get(0);
 	}
 }

@@ -17,7 +17,9 @@ import engine.graphics.Renderer;
 public abstract class Window extends Widget {
 	//private static final Logger logger = LoggerFactory.getLogger(Window.class);
 	
+	private String m_title = null;
 	private boolean m_resizeEnabled = true;
+	private boolean m_movable = true;
 	
 	private ResizeContext m_resizeContext = null;
 	private DragContext m_dragContext = null;
@@ -28,8 +30,10 @@ public abstract class Window extends Widget {
 		m_contentPane.setLayout(new BorderLayout());
 	}
 	
-	public void setResizable(boolean resizable) { m_resizeEnabled = resizable; }
 	
+	public void setResizable(boolean resizable) { m_resizeEnabled = resizable; }
+	public void setMovable(boolean movable) { m_movable = movable; }
+	public void setTitle(String title) { m_title = title; }
 	@Override
 	public void setWidth(int width) {
 		//If size changes, send the validate call again
@@ -51,8 +55,10 @@ public abstract class Window extends Widget {
 	public boolean isMoving() { return m_dragContext != null; }
 	public boolean isBeingResized() { return m_resizeContext != null; }
 	
+	public boolean isMovable() { return m_movable; }
 	public boolean isResizable() { return m_resizeEnabled; }
 	
+	public String getTitle() { return m_title; }
 	public Panel getContentPane() { return m_contentPane; }
 	
 	protected abstract Rectangle getContentPaneBounds();
@@ -77,10 +83,7 @@ public abstract class Window extends Widget {
 	public void validate() {
 		//Update the content pane bounds
 		Rectangle contentBounds = getContentPaneBounds();
-		m_contentPane.setX((int) contentBounds.getX());
-		m_contentPane.setY((int) contentBounds.getY());
-		m_contentPane.setWidth((int) contentBounds.getWidth());
-		m_contentPane.setHeight((int) contentBounds.getHeight());
+		m_contentPane.setBounds(contentBounds);
 		//Now pass the validate call to the contentPane
 		m_contentPane.validate();
 	}
@@ -169,12 +172,13 @@ public abstract class Window extends Widget {
 		if (m_contentPane.contains(localX, localY)) 
 			m_contentPane.mouseButtonPressed(m, localX - m_contentPane.getX(), localY - m_contentPane.getY(), button);
 		//Now check inside the window bar for dragging
-		else if (getWindowBarBounds() != null && getWindowBarBounds().contains(localX, localY)) {
+		else if (isMovable() && getWindowBarBounds() != null && getWindowBarBounds().contains(localX, localY)) {
 			doDrag(m);
 		}
 		//Now check for resizing
-		if (m_resizeEnabled) {
+		if (isResizable()) {
 			ResizeAreaMapping mapping = getResizeAreaMapping();
+			if (mapping == null) return;
 			for (Entry<Rectangle, Vector2f> entry : mapping.getMapping()) {
 				if (entry.getKey().contains(localX, localY)) {
 					doResize(m, entry.getValue());

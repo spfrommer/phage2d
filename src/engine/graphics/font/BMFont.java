@@ -8,8 +8,8 @@ import engine.graphics.Renderable;
 import engine.graphics.Renderer;
 
 public class BMFont implements Font {
-	private int m_lineHeight;
-	private int m_baseLineOffset;
+	private int m_descent;
+	private int m_ascent;
 	private HashMap<Character, Glyph> m_glyphs = new HashMap<Character, Glyph>();
 	
 	private String m_name;
@@ -18,11 +18,11 @@ public class BMFont implements Font {
 	private boolean m_bold;
 	
 	@Override
-	public int getAscending() { return m_baseLineOffset; }
+	public int getAscent() { return m_ascent; }
 	@Override
-	public int getDescending() { return m_lineHeight - m_baseLineOffset; }
+	public int getDescent() { return m_descent; }
 	@Override
-	public int getLineHeight() { return m_lineHeight; }
+	public int getHeight() { return m_ascent + m_descent; }
 	
 	@Override
 	public String getName() { return m_name; }
@@ -34,8 +34,8 @@ public class BMFont implements Font {
 	@Override
 	public boolean isBold() { return m_bold; }
 	
-	public void setAscending(int ascending) { m_baseLineOffset = ascending; }
-	public void setLineHeight(int height) { m_lineHeight = height; }
+	public void setAscent(int ascending) { m_ascent = ascending; }
+	public void setDescent(int descending) { m_descent = descending; }
 	public void setName(String name) { m_name = name; }
 	public void setSize(int size) { m_size = size; }
 	public void setItalic(boolean i) { m_italic = i; }
@@ -52,7 +52,7 @@ public class BMFont implements Font {
 	 * Retrieves the minimum size of a string of text
 	 */
 	@Override
-	public Rectangle getSize(String text) {
+	public Rectangle getBounds(String text) {
 		int height = 0;
 		int width = 0;
 		//Initialize y to the maximum int
@@ -112,7 +112,7 @@ public class BMFont implements Font {
 		//- getAscending() (to move the cursor to the top of the line) + yoffset
 		public void render(Renderer r) {
 			//Translate across the xoffset and down by the yoffset
-			r.drawImage(m_glyph, m_xoffset, m_yoffset - getFont().getAscending());
+			r.drawImage(m_glyph, m_xoffset, m_yoffset - getFont().getAscent());
 		}
 		public void renderAndTranslate(Renderer r) {
 			render(r);

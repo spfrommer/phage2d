@@ -42,9 +42,9 @@ public class FontTest implements Renderable {
 		String text = "The Quick Brown Fox jumped over the fence!???.";
 		//r.setColor(new Color(0f, 1f, 1f, 1f));
 		r.setFont(m_font);
-		r.drawString(text, 10, m_font.getAscending() + 10);
+		r.drawString(text, 10, m_font.getAscent() + 10);
 		
-		Rectangle bounds = m_font.getSize(text);
+		Rectangle bounds = m_font.getBounds(text);
 		
 		//r.drawRect(10, 10 + (int) bounds.getY(), (int) bounds.getWidth(), (int) bounds.getHeight());
 		

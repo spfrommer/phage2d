@@ -48,6 +48,7 @@ public class Panel extends ContainerWidget {
 	@Override
 	public void validate() {
 		if (m_manager != null) m_manager.layout(this);
+		for (Widget w : getChildren()) w.validate();
 	}
 	
 	@Override

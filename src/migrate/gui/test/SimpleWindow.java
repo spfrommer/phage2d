@@ -8,6 +8,7 @@ import engine.graphics.Renderer;
 
 public class SimpleWindow extends Window {
 	public static final int CONTENT_PANE_PADDING = 10;
+	public static final int WINDOW_BAR_INTERIOR_PADDING = 3;
 	
 	public static final int WINDOW_BAR_HEIGHT = 20;
 
@@ -15,6 +16,7 @@ public class SimpleWindow extends Window {
 	public static final int TOP_BAR_DRAG_BORDER_WIDTH = 2;
 	public static final int TOP_BAR_DRAG_CORNER_LENGTH = 5;
 	
+	//TODO: Implement title rendering
 	@Override
 	public void renderFrame(Renderer r) {
 		r.setColor(SimpleThemeConstants.COLOR_SOLID);
@@ -22,6 +24,16 @@ public class SimpleWindow extends Window {
 		r.drawRect(0, 0, getWidth(), getHeight());
 		//Draw top window bar
 		r.drawRect(0, 0, getWidth(), WINDOW_BAR_HEIGHT);
+		//Draw title
+		if (getTitle() != null && !getTitle().equals("")) {
+			r.setClip(new Rectangle(0, 0, getWidth(), WINDOW_BAR_HEIGHT));
+			r.setFont(SimpleThemeConstants.FRAME_TITLE_FONT);
+
+			Rectangle bounds = SimpleThemeConstants.FRAME_TITLE_FONT.getBounds(getTitle());
+			int centerX = (int) (0.5 * getWidth() -  0.5 * bounds.getWidth());
+			r.drawString(getTitle(), centerX, SimpleThemeConstants.FRAME_TITLE_FONT.getAscent());
+			r.setClip(null);
+		}
 		
 		r.setColor(SimpleThemeConstants.COLOR_TRANSLUCENT);
 		r.fillRect(0, 0, getWidth(), getHeight());

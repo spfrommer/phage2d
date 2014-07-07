@@ -35,6 +35,8 @@ public class JavaFontConverter {
 		FontMetrics metrics = new Canvas().getFontMetrics(font);
 		java.awt.Color jcolor = color.toJava();
 		
+		bmfont.setAscent(metrics.getAscent());
+		bmfont.setDescent(metrics.getDescent());
 		for(char c : chars) {
 			int width = s_getCharWidth(c, metrics);
 			int height = s_getCharHeight(c, metrics);

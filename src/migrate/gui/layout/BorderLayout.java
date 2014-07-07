@@ -89,33 +89,33 @@ public class BorderLayout implements LayoutManager {
 			w = m_widgets.get(NORTH);
 			Dimension d = w.getPreferredSize();
 			if (d == null) d = new Dimension();
-			w.setLocation(left, top, width - left, d.getHeight());
+			w.setBounds(left, top, width - left, d.getHeight());
 			top += d.getHeight();
 		}
 		if (m_widgets.containsKey(SOUTH)) {
 			w = m_widgets.get(SOUTH);
 			Dimension d = w.getPreferredSize();
 			if (d == null) d = new Dimension();
-			w.setLocation(left, height - d.getHeight(), width - left, d.getHeight());
+			w.setBounds(left, height - d.getHeight(), width - left, d.getHeight());
 			height -= d.getHeight();
 		}
 		if (m_widgets.containsKey(EAST)) {
 			w = m_widgets.get(EAST);
 			Dimension d = w.getPreferredSize();
 			if (d == null) d = new Dimension();
-			w.setLocation(width - d.getWidth(), top, d.getWidth(), height - top);
+			w.setBounds(width - d.getWidth(), top, d.getWidth(), height - top);
 			width -= d.getWidth();
 		}
 		if (m_widgets.containsKey(WEST)) {
 			w = m_widgets.get(WEST);
 			Dimension d = w.getPreferredSize();
 			if (d == null) d = new Dimension();
-			w.setLocation(left, top, d.getWidth(), height - top);
+			w.setBounds(left, top, d.getWidth(), height - top);
 			left += d.getWidth();
 		}
 		if (m_widgets.containsKey(CENTER)) {
 			w = m_widgets.get(CENTER);
-			w.setLocation(left, top, width - left, height - top);
+			w.setBounds(left, top, width - left, height - top);
 		}
 	}
 

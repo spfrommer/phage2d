@@ -337,6 +337,7 @@ public class LWJGLRenderer implements Renderer {
 	@Override
 	public void drawString(String str, float x, float y) {
 		Font font = getFont();
+		if (font == null) throw new RuntimeException("No font set before drawString()!");
 
 		pushTransform();
 		translate(x, y);

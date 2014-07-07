@@ -1,5 +1,7 @@
 package migrate.gui;
 
+import java.awt.Rectangle;
+
 import migrate.input.Mouse;
 import migrate.input.Mouse.MouseButton;
 import migrate.vector.Vector2f;
@@ -24,7 +26,11 @@ public abstract class Widget implements Renderable {
 	public int getHeight() { return m_height; }
 	public Dimension getMaxSize() { return m_maxSize; }
 	public Dimension getMinSize() { return m_minSize; }
-	public Dimension getPreferredSize() { return m_preferredSize; }
+	public Dimension getPreferredSize() {
+		//If not defined, fall back to minsize
+		if (m_preferredSize == null) return getMinSize();
+		return m_preferredSize;
+	}
 	
 	public boolean isMousedOver() { return m_mousedOver; }
 	
@@ -52,14 +58,15 @@ public abstract class Widget implements Renderable {
 		if (minSize != null) m_height = Math.max(m_height, minSize.getHeight());
 		if (maxSize != null) m_height = Math.min(m_height, maxSize.getHeight());
 	}
-
-	public void setLocation(int x, int y, int width, int height) {
+	public void setBounds(int x, int y, int width, int height) {
 		setX(x);
 		setY(y);
 		setWidth(width);
 		setHeight(height);
 	}
-	
+	public void setBounds(Rectangle r) {
+		setBounds((int) r.getX(), (int) r.getY(), (int) r.getWidth(), (int) r.getHeight());
+	}
 	/** Tests if the widget contains the given point
 	 * 
 	 * @param x the x coordinate, local to the Widget's parent

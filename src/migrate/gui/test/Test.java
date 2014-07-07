@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import migrate.LWJGLDisplay;
 import migrate.gui.GUI;
 import migrate.gui.widgets.Button;
+import migrate.gui.widgets.Label;
 import migrate.gui.widgets.Window;
 import migrate.input.Keyboard;
 import migrate.input.LWJGLKeyboard;
@@ -44,15 +45,18 @@ public class Test {
 		Button button = new SimpleButton();
 		button.setWidth(100);
 		button.setHeight(100);
-		Button button2 = new SimpleButton();
-		button2.setX(0);
-		button2.setY(150);
-		button2.setWidth(50);
-		button2.setHeight(50);
-		
+		//Button button2 = new SimpleButton();
+		//button2.setX(0);
+		//button2.setY(150);
+		//button2.setWidth(50);
+		//button2.setHeight(50);
+		Label label = new SimpleLabel();
+		label.setText("Foo + bar = Foobar");
+		button.setContent(label);
 		//window.getContentPane().setLayout(null);
+		//window.getContentPane().add(label, BorderLayout.NORTH);
 		window.getContentPane().add(button, BorderLayout.CENTER);
-		window.getContentPane().add(button2, BorderLayout.NORTH);
+		window.setTitle("Really Long Test Title");
 		window.validate();
 		
 		gui.add(window);
@@ -62,7 +66,7 @@ public class Test {
 		
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				logger.info("Button pressed!");
+				logger.info("Button pressed");
 			}
 		});
 		

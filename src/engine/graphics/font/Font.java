@@ -6,9 +6,9 @@ import engine.graphics.Renderer;
 
 public interface Font {
 	
-	public int getAscending();
-	public int getDescending();
-	public int getLineHeight();
+	public int getAscent();
+	public int getDescent();
+	public int getHeight();
 	
 	public String getName();
 	public int getSize();
@@ -18,7 +18,7 @@ public interface Font {
 	
 	public Glyph getGlyph(char c);
 	
-	public Rectangle getSize(String text);
+	public Rectangle getBounds(String text);
 	
 	public interface Glyph {
 		public char getChar();
