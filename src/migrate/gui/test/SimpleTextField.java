@@ -40,7 +40,6 @@ public class SimpleTextField extends TextField {
 	}
 	private int getTextPos(int mouseX) {
 		int clickX = mouseX - TOTAL_TEXT_PADDING;
-		System.out.println("Mouse Text X Pos: " + clickX);
 		char[] characters = getTextBuilder().toString().toCharArray();
 		int xPosCounter = 0;
 		for (int index = 0; index < characters.length; index++) {
@@ -48,7 +47,7 @@ public class SimpleTextField extends TextField {
 			xPosCounter += g.getWidth(); 
 			if (xPosCounter > clickX)  return index;
 		}
-		return Math.max(characters.length - 1, 0);
+		return characters.length;
 	}
 	@Override
 	public void renderWidget(Renderer r) {
@@ -86,7 +85,6 @@ public class SimpleTextField extends TextField {
 	public void mouseButtonPressed(Mouse m, int localX, int localY, MouseButton button) {
 		super.mouseButtonPressed(m, localX, localY, button);
 		int index = getTextPos(localX);
-		System.out.println("Setting to index: " + index);
 		setCursorPosition(index);
 	}
 }
