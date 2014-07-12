@@ -29,11 +29,24 @@ public class GUI implements Renderable, MouseListener, KeyListener {
 		}
 	}
 
-	//TODO: Implement key message sending
 	@Override
-	public void keyPressed(Keyboard k, Key key) {}
+	public void keyPressed(Keyboard keyboard, Key key) {
+		for (Widget w : m_widgets) {
+			if (w.hasFocusedChild()) {
+				w.keyPressed(keyboard, key);
+				return;
+			}
+		}
+	}
 	@Override
-	public void keyReleased(Keyboard k, Key key) {}
+	public void keyReleased(Keyboard keyboard, Key key) {
+		for (Widget w : m_widgets) {
+			if (w.hasFocusedChild()) {
+				w.keyReleased(keyboard, key);
+				return;
+			}
+		}
+	}
 	
 	@Override
 	public void mouseMoved(Mouse m, int x, int y, Vector2f delta) {
@@ -42,11 +55,9 @@ public class GUI implements Renderable, MouseListener, KeyListener {
 			if (w.contains(x, y)) {
 				w.mouseMoved(m, x - w.getX(), y - w.getY(), delta);
 				if (!w.isMousedOver()) {
-					w.setMousedOver(true);
 					w.mouseEntered(m, x - w.getX(), y - w.getY());
 				}
 			} else if (w.isMousedOver()) {
-				w.setMousedOver(false);
 				w.mouseExited(m, x - w.getX(), y - w.getY());
 			}
 		}

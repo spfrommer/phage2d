@@ -1,22 +1,17 @@
 package migrate.input;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 public class XMLKeyConfigLoader {
-	public static Set<Key> s_parseKeys(InputStream inputStream) throws SAXException, IOException, ParserConfigurationException {
+	public static void s_parseConfig(InputStream inputStream, Keyboard keyboard) throws Exception {
 		//Get the DOM Builder Factory
 		DocumentBuilderFactory factory = 
 				DocumentBuilderFactory.newInstance();
@@ -29,21 +24,16 @@ public class XMLKeyConfigLoader {
 		Document document = 
 				builder.parse(inputStream);
 
-		Set<Key> keys = new HashSet<Key>();
-		
 		NodeList nodes = document.getDocumentElement().getElementsByTagName("keys");
 		
 		for (int i = 0; i < nodes.getLength(); i++) {
 			Node node = nodes.item(i);
 			if (node instanceof Element) {
-				keys.addAll(s_parseKeys((Element) node));
+				s_parseKeyConfig((Element) node, keyboard);
 			}
 		}
-		
-		return keys;
 	}
-	public static Set<Key> s_parseKeys(Element e) {
-		Set<Key> keys = new HashSet<Key>();
+	public static void s_parseKeyConfig(Element e, Keyboard k) {
 
 		//Iterating through the nodes and extracting the data.
 		NodeList nodeList = e.getChildNodes();
@@ -54,14 +44,12 @@ public class XMLKeyConfigLoader {
 			if (node instanceof Element) {
 				Element element = (Element) node;
 				if (element.getTagName().equals("key")) {
-					Key key = s_parseKey(element);
-					keys.add(key);
+					s_parseKey(element, k);
 				}
 			}
 		}
-		return keys;
 	}
-	public static Key s_parseKey(Element element) {
+	public static void s_parseKey(Element element, Keyboard k) {
 		int id = Integer.parseInt(element.getAttribute("id"));
 		String charString = element.getAttribute("char");
 		char c = '\0';
@@ -70,14 +58,12 @@ public class XMLKeyConfigLoader {
 		String name = element.getAttribute("name");
 		if (name.equals("")) name = Character.toString(c);
 
-		return new Key(c, name, id);
-	}
-	
-	public static void main(String[] args) throws Exception {
-		InputStream stream = XMLKeyConfigLoader.class.getResourceAsStream("/input/keys_lwjgl.xml");
-		Set<Key> keys = s_parseKeys(stream);
-		for (Key key : keys) {
-			System.out.println(key);
-		}
+		boolean shiftKey = Boolean.parseBoolean(element.getAttribute("isShift"));
+		boolean modKey = Boolean.parseBoolean(element.getAttribute("isMod"));
+		
+		Key key = new Key(c, name, id);
+		k.addKey(key);
+		if (shiftKey) k.addShiftKey(key);
+		if (modKey) k.addModKey(key);
 	}
 }

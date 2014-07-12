@@ -39,7 +39,8 @@ public class Key {
 	
 	@Override
 	public String toString() {
-		return getID() + ":" + getName() + ":" + getChar(); 
+		if (getChar() != '\0') return getID() + ":" + getName() + ":" + getChar();
+		else return getID() + ":" + getName(); 
 	}
 	
 	@Override

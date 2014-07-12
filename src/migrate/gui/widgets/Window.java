@@ -8,6 +8,8 @@ import java.util.Set;
 import migrate.gui.Dimension;
 import migrate.gui.Widget;
 import migrate.gui.layout.BorderLayout;
+import migrate.input.Key;
+import migrate.input.Keyboard;
 import migrate.input.Mouse;
 import migrate.input.Mouse.MouseButton;
 import migrate.input.MouseListener;
@@ -34,6 +36,7 @@ public abstract class Window extends Widget {
 	public void setResizable(boolean resizable) { m_resizeEnabled = resizable; }
 	public void setMovable(boolean movable) { m_movable = movable; }
 	public void setTitle(String title) { m_title = title; }
+	
 	@Override
 	public void setWidth(int width) {
 		//If size changes, send the validate call again
@@ -57,6 +60,11 @@ public abstract class Window extends Widget {
 	
 	public boolean isMovable() { return m_movable; }
 	public boolean isResizable() { return m_resizeEnabled; }
+	
+	@Override
+	public boolean hasFocusedChild() { 
+		return super.hasFocusedChild() || m_contentPane.hasFocusedChild();
+	}
 	
 	public String getTitle() { return m_title; }
 	public Panel getContentPane() { return m_contentPane; }
@@ -87,6 +95,15 @@ public abstract class Window extends Widget {
 		//Now pass the validate call to the contentPane
 		m_contentPane.validate();
 	}
+	
+	public void renderWidget(Renderer r) {
+		renderFrame(r);
+		m_contentPane.render(r);
+	}
+	public abstract void renderFrame(Renderer r);
+	
+	//Resize and drag functions
+	
 	public void doDrag(Mouse m) {
 		m_dragContext = new DragContext(getX(), getY(), m.getX(), m.getY());
 		//Add a listener that will listen for releases and movements not just inside the gui
@@ -155,20 +172,24 @@ public abstract class Window extends Widget {
 			}
 		});
 	}
-
-	public void renderWidget(Renderer r) {
-		renderFrame(r);
-		m_contentPane.render(r);
-	}
-	public abstract void renderFrame(Renderer r);
-
 	
 	//----Input Methods------
 	/*
 	 * A window will only redistribute a input call to its contentPane
 	 */
 	@Override
+	public void keyPressed(Keyboard keyboard, Key key) {
+		super.keyPressed(keyboard, key);
+		if (m_contentPane.hasFocusedChild()) m_contentPane.keyPressed(keyboard, key);
+	}
+	@Override
+	public void keyReleased(Keyboard keyboard, Key key) {
+		super.keyReleased(keyboard, key);
+		if (m_contentPane.hasFocusedChild()) m_contentPane.keyReleased(keyboard, key);
+	}
+	@Override
 	public void mouseButtonPressed(Mouse m, int localX, int localY, MouseButton button) {
+		super.mouseButtonPressed(m, localX, localY, button);
 		if (m_contentPane.contains(localX, localY)) 
 			m_contentPane.mouseButtonPressed(m, localX - m_contentPane.getX(), localY - m_contentPane.getY(), button);
 		//Now check inside the window bar for dragging
@@ -188,29 +209,31 @@ public abstract class Window extends Widget {
 	}
 	@Override
 	public void mouseButtonReleased(Mouse m, int localX, int localY, MouseButton button) {
+		super.mouseButtonReleased(m, localX, localY, button);
 		if (m_contentPane.contains(localX, localY)) m_contentPane.mouseButtonReleased(m, 
 				localX - m_contentPane.getX(), localY - m_contentPane.getY(), button);
 	}
 	@Override
 	public void mouseMoved(Mouse m, int localX, int localY, Vector2f delta) {
+		super.mouseMoved(m, localX, localY, delta);
 		if (m_contentPane.contains(localX, localY)) {
 			m_contentPane.mouseMoved(m, localX - m_contentPane.getX(), localY - m_contentPane.getY(), delta);
 			if (!m_contentPane.isMousedOver()) {
-				m_contentPane.setMousedOver(true);
 				m_contentPane.mouseEntered(m, localX - m_contentPane.getX(), localY - m_contentPane.getY());
 			}
 		} else if (m_contentPane.isMousedOver()) {
-			m_contentPane.setMousedOver(false);
 			m_contentPane.mouseExited(m, localX - m_contentPane.getX(), localY - m_contentPane.getY());
 		}
 	}
 	@Override
 	public void mouseWheelMoved(Mouse m, int localX, int localY, int dm) {
+		super.mouseWheelMoved(m, localX, localY, dm);
 		if (m_contentPane.contains(localX, localY)) m_contentPane.mouseWheelMoved(m, 
 				localX - m_contentPane.getX(), localY - m_contentPane.getY(), dm);
 	}
 	@Override
 	public void mouseDelta(Mouse m, int localX, int localY, int deltaX, int deltaY) {
+		super.mouseDelta(m, localX, localY, deltaX, deltaY);
 		if (m_contentPane.contains(localX, localY)) 
 			m_contentPane.mouseDelta(m, 
 					localX - m_contentPane.getX(), localY - m_contentPane.getY(), deltaX, deltaY);

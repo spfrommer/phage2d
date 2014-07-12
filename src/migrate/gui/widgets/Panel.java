@@ -3,12 +3,21 @@ package migrate.gui.widgets;
 import java.awt.Rectangle;
 
 import migrate.gui.ContainerWidget;
+import migrate.gui.FocusPolicy.ClickFocusPolicy;
 import migrate.gui.Widget;
 import migrate.gui.layout.LayoutManager;
+import migrate.input.Key;
+import migrate.input.Keyboard;
 import engine.graphics.Renderer;
 
 public class Panel extends ContainerWidget {
+	//private static final Logger logger = LoggerFactory.getLogger(Panel.class);
+
 	private LayoutManager m_manager = null;
+	
+	public Panel() {
+		setFocusPolicy(new ClickFocusPolicy());
+	}
 	
 	@Override
 	public void add(Widget w) {
@@ -59,5 +68,9 @@ public class Panel extends ContainerWidget {
 			w.render(r);
 		}
 		r.setClip(null);
+	}
+	@Override
+	public void keyPressed(Keyboard keyboard, Key key) {
+		super.keyPressed(keyboard, key);
 	}
 }

@@ -5,7 +5,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashSet;
 
+import migrate.gui.FocusPolicy.ClickFocusPolicy;
 import migrate.gui.Widget;
+import migrate.input.Key;
+import migrate.input.Keyboard;
 import migrate.input.Mouse;
 import migrate.input.Mouse.MouseButton;
 import migrate.input.MouseListener;
@@ -34,6 +37,10 @@ public abstract class Button extends Widget {
 	public void addActionListener(ActionListener l) { m_listeners.add(l); }
 	public void removeActionListener(ActionListener l) { m_listeners.remove(l); }
 	
+	public Button() {
+		setFocusPolicy(new ClickFocusPolicy());
+	}
+	
 	@Override
 	public void validate() {
 		if (m_content == null) return;
@@ -54,6 +61,7 @@ public abstract class Button extends Widget {
 	//------- Input methods-------
 	@Override
 	public void mouseButtonPressed(Mouse m, int localX, int localY, MouseButton button) {
+		super.mouseButtonPressed(m, localX, localY, button);
 		//First pass click to child
 		if (m_content != null && m_content.contains(localX, localY)) 
 			m_content.mouseButtonPressed(m, localX - m_content.getX(), localY - m_content.getY(), button);
@@ -78,19 +86,25 @@ public abstract class Button extends Widget {
 			}
 		});
 	}
-	
+	@Override
+	public void keyPressed(Keyboard k, Key key) {
+		logger.debug("Key pressed: " + key);
+	}
 	@Override
 	public void mouseMoved(Mouse m, int localX, int localY, Vector2f delta) {
+		super.mouseMoved(m, localX, localY, delta);
 		if (m_content != null && m_content.contains(localX, localY)) 
 			m_content.mouseMoved(m, localX - m_content.getX(), localY - m_content.getY(), delta);
 	}
 	@Override
 	public void mouseEntered(Mouse m, int localX, int localY) {
+		super.mouseEntered(m, localX, localY);
 		if (m_content != null && m_content.contains(localX, localY)) 
 			m_content.mouseEntered(m, localX - m_content.getX(), localY - m_content.getY());
 	}
 	@Override
 	public void mouseExited(Mouse m, int localX, int localY) {
+		super.mouseExited(m, localX, localY);
 		if (m_content != null && m_content.contains(localX, localY)) 
 			m_content.mouseExited(m, localX - m_content.getX(), localY - m_content.getY());
 	}
@@ -98,6 +112,7 @@ public abstract class Button extends Widget {
 
 	@Override
 	public void mouseButtonReleased(Mouse m, int localX, int localY, MouseButton button) {
+		super.mouseButtonReleased(m, localX, localY, button);
 		if (m_content != null && m_content.contains(localX, localY)) 
 			m_content.mouseButtonReleased(m, localX - m_content.getX(), localY - m_content.getY(), button);
 	}

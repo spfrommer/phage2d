@@ -11,7 +11,7 @@ import engine.inputs.keyboard.Key.MultiKey;
 //TODO: Keyboard combinations
 public class TypeModel {
 	private ArrayList<TypeListener> m_listeners = new ArrayList<TypeListener>();
-	
+
 	/**
 	 * Pressed keys differs from combination keys in that combination keys
 	 * has all the keys that were pressed without pressedKeys.length() going to zero
@@ -25,9 +25,9 @@ public class TypeModel {
 	public TypeModel(Keyboard keyboard) {
 		m_keyboard = keyboard;
 	}
-	
+
 	public void setKeyboard(Keyboard keyboard) { m_keyboard = keyboard; }
-	
+
 	public void process(KeyEvent event) {
 		if (event instanceof KeyPressedEvent) {
 			Key key = event.getKey();
@@ -49,9 +49,9 @@ public class TypeModel {
 			}
 			//Check to make sure we don't already have this key
 			if (m_combinationKeys.contains(key)) return;
-			
+
 			m_pressedKeys.add(key);
-			
+
 			m_combinationKeys.add(key);
 			if (key.getCharacter() == '\0') {
 				//Special character
@@ -100,17 +100,17 @@ public class TypeModel {
 		}
 		return eval;
 	}
-	
+
 	public void addListener(TypeListener l) {
 		m_listeners.add(l);
 	}
 	public void removeListener(TypeListener l) {
 		m_listeners.remove(l);
 	}
-	
+
 	public interface TypeListener {
 		//For keys with no char
 		public void specialKey(Key key);
 		public void typed(char c);
 	}
-	}
+}

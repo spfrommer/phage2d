@@ -1,23 +1,26 @@
 package migrate.input;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
+import java.util.HashSet;
 
 public abstract class Keyboard {
+	public static final String KEY_BACKSPACE = "BACKSPACE";
+	public static final String KEY_ESCAPE = "ESCAPE";
+
+	private HashSet<Key> m_shiftKeys = new HashSet<Key>();
+	private HashSet<Key> m_modKeys = new HashSet<Key>();
+
 	private HashMap<Integer, Key> m_keyIds = new HashMap<Integer, Key>();
 	private HashMap<String, Key> m_keyNames = new HashMap<String, Key>();
 	private HashMap<Key, Boolean> m_state = new HashMap<Key, Boolean>();
 	
 	private ArrayList<KeyListener> m_listeners = new ArrayList<KeyListener>();
 	
-
+	public void addModKey(Key key) { m_modKeys.add(key); }
+	public void addShiftKey(Key key) { m_shiftKeys.add(key); }
 	
 	public void addKey(Key key) {
 		m_keyIds.put(key.getID(), key);
@@ -35,9 +38,12 @@ public abstract class Keyboard {
 		m_listeners.add(l);
 	}
 	
-	public void readXMLKeyConfig(InputStream stream) throws SAXException, IOException, ParserConfigurationException {
-		addAll(XMLKeyConfigLoader.s_parseKeys(stream));
+	public void readXMLKeyConfig(InputStream stream) throws Exception {
+		XMLKeyConfigLoader.s_parseConfig(stream, this);
 	}
+	
+	public HashSet<Key> getModKeys() { return m_modKeys; }
+	public HashSet<Key> getShiftKeys() { return m_shiftKeys; }
 	
 	public Key getKey(String name) {
 		return m_keyNames.get(name);
@@ -53,6 +59,12 @@ public abstract class Keyboard {
 	
 	public boolean isKeyPressed(Key k) {
 		return m_state.get(k);
+	}
+	public boolean isModKey(Key k) {
+		return m_modKeys.contains(k);
+	}
+	public boolean isShiftKey(Key k) {
+		return m_shiftKeys.contains(k);
 	}
 	
 	protected void updateState(Key k, boolean state) {
