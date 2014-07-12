@@ -10,6 +10,9 @@ import engine.graphics.Color;
 import engine.graphics.font.BMFont.BMGlyph;
 
 public class JavaFontConverter {
+	private static final float SPACE_WIDTH_PERCENTAGE = 0.25f;
+	private static final float TAB_WIDTH_PERCENTAGE = 1f;
+
 	private static final String ALL_CHARS_STRING = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ -1234567890+=!@#$%^&*()_|'\"/?><[]{},.`~:;\t\\";
 	private static final char[] ALL_CHARS = ALL_CHARS_STRING.toCharArray();
 	
@@ -59,8 +62,8 @@ public class JavaFontConverter {
 	}
 	private static int s_getCharWidth(char c, FontMetrics metrics) {
 		int width = metrics.charWidth(c);
-		if (c == ' ') width = (int) (0.5 * metrics.getHeight());
-		if (c == '\t') width = (int) 2 * metrics.getHeight();
+		if (c == ' ') width = (int) (SPACE_WIDTH_PERCENTAGE * metrics.getHeight());
+		if (c == '\t') width = (int) TAB_WIDTH_PERCENTAGE * metrics.getHeight();
 		return width;
 	}
 	private static int s_getCharHeight(char c, FontMetrics metrics) {

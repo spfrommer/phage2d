@@ -24,6 +24,8 @@ public abstract class TextField extends Widget implements TypeListener {
 		setFocusPolicy(new ClickFocusPolicy());
 		m_model.addTypeListener(this);
 	}
+	public void setCursorPosition(int position) { m_cursorPosition = position; }
+	
 	public int getCursorPosition() { return m_cursorPosition; }
 	public String getText() { return m_text.toString(); }
 	public StringBuilder getTextBuilder() { return m_text; }
