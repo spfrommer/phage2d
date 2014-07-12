@@ -53,7 +53,7 @@ public class Test {
 		window.getContentPane().add(button, BorderLayout.CENTER);*/
 		Panel panel = new Panel();
 		TextField textField = new SimpleTextField();
-		textField.setBounds(0, 0, 100, 100);
+		textField.setBounds(0, 0, 200, 0);
 		panel.add(textField);
 		window.getContentPane().add(panel, BorderLayout.CENTER);
 		window.setTitle("Really Long Test Title");

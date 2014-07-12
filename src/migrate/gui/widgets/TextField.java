@@ -38,6 +38,12 @@ public abstract class TextField extends Widget implements TypeListener {
 			m_cursorPosition--;
 		}		
 	}
+	private void deletePressed() {
+		int afterCursor = m_cursorPosition;
+		if (afterCursor < m_text.length()) {
+			m_text.deleteCharAt(afterCursor);
+		}
+	}
 
 	@Override
 	public void keyPressed(Keyboard keyboard, Key key) {
@@ -56,6 +62,8 @@ public abstract class TextField extends Widget implements TypeListener {
 	public void keyTyped(Key k) {
 		if (k.getName().equals(Keyboard.KEY_BACKSPACE)) {
 			backspace();
+		} else if (k.getName().equals(Keyboard.KEY_DELETE)) {
+			deletePressed();
 		} else if (k.getName().equals(Keyboard.KEY_LEFT)) {
 			if (m_cursorPosition > 0) m_cursorPosition--;
 		} else if (k.getName().equals(Keyboard.KEY_RIGHT)) {

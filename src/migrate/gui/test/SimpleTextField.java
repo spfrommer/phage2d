@@ -18,6 +18,8 @@ public class SimpleTextField extends TextField {
 	
 	//A small inset to prevent the border from going out of the widget
 	private static final int BORDER_INSET = 2;
+	
+	private static final int CURSOR_ROUGH_SIZE = 3;
 	//The amount of padding to put between the top and side of the text and the border
 	private static final int TEXT_PADDING = 5;
 	private static final int TEXT_CLIP_PADDING = 3;
@@ -59,15 +61,15 @@ public class SimpleTextField extends TextField {
 		Rectangle bounds = FONT.getBounds(beforeCursor);
 		//cursor Position in pixels
 		int cursorPos = (int) bounds.getWidth();
-		int textMaxWidth = getWidth() - (2 * BORDER_INSET + 2 * TEXT_PADDING);
 		
 		//Set the clip
 		r.setClip(TOTAL_TEXT_CLIP_PADDING, TOTAL_TEXT_CLIP_PADDING,
-				  textMaxWidth, FIXED_HEIGHT - TOTAL_TEXT_CLIP_PADDING);
+				  getWidth() - 2 * TOTAL_TEXT_CLIP_PADDING, FIXED_HEIGHT - TOTAL_TEXT_CLIP_PADDING);
 
 		//Check if we need to scroll
-		if (cursorPos > textMaxWidth) {
-			int scrollAmount = textMaxWidth - cursorPos;
+		int textMaxWidth = getWidth() - (2 * TOTAL_TEXT_CLIP_PADDING);
+		if (cursorPos > textMaxWidth)  {
+			int scrollAmount = textMaxWidth - (cursorPos + CURSOR_ROUGH_SIZE);
 			r.translate(scrollAmount, 0);
 		}		
 		r.drawString(getText(), TOTAL_TEXT_PADDING, FONT.getAscent() + BORDER_INSET + TEXT_PADDING);
