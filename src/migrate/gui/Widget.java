@@ -91,8 +91,6 @@ public abstract class Widget implements Renderable {
 	
 	/**
 	 * This method tells the widget to lay out its children(if it has any)
-	 * its implementation is not required for non-container widgets and therefore
-	 * is not abstract
 	 */
 	public void validate() {}
 	

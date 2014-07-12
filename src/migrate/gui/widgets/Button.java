@@ -43,6 +43,7 @@ public abstract class Button extends Widget {
 	
 	@Override
 	public void validate() {
+		super.validate();
 		if (m_content == null) return;
 		Rectangle childBounds = getChildWidgetBounds();
 		m_content.setBounds(childBounds);

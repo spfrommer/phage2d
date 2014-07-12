@@ -89,6 +89,7 @@ public abstract class Window extends Widget {
 	
 	@Override
 	public void validate() {
+		super.validate();
 		//Update the content pane bounds
 		Rectangle contentBounds = getContentPaneBounds();
 		m_contentPane.setBounds(contentBounds);

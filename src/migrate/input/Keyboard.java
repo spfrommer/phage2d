@@ -9,6 +9,10 @@ import java.util.HashSet;
 public abstract class Keyboard {
 	public static final String KEY_BACKSPACE = "BACKSPACE";
 	public static final String KEY_ESCAPE = "ESCAPE";
+	public static final String KEY_LEFT = "LEFT";
+	public static final String KEY_RIGHT = "RIGHT";
+	public static final String KEY_UP = "UP";
+	public static final String KEY_DOWN = "DOWN";
 
 	private HashSet<Key> m_shiftKeys = new HashSet<Key>();
 	private HashSet<Key> m_modKeys = new HashSet<Key>();

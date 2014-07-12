@@ -14,7 +14,7 @@
     <key id="11" char="0"/>
     <key id="12" name="MINUS" char="-"/>
     <key id="13" name="EQUALS" char="="/>
-    <key id="14" name="BACK"/>
+    <key id="14" name="BACKSPACE"/>
     <key id="15" name="TAB"/>
     <key id="17" char="W"/>
     <key id="16" char="Q"/>

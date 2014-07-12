@@ -57,15 +57,15 @@ public class TypeModel implements KeyListener {
 		if (m_pressedKeys.size() == 0 && m_currentCombination.size() != 0) {
 			if (m_currentCombination.size() == 1) {
 				Key k = m_currentCombination.get(0);
-				if (!m_usedKeys.contains(k))
+				if (!m_usedKeys.contains(k) && (isModKey(keyboard, key) || isShiftKey(keyboard, key)))
 					for (TypeListener l : m_listeners) l.keyTyped(k);
 			} else {
 				finishCombination(keyboard);
 			}
 			m_currentCombination.clear();
 			m_usedKeys.clear();
-		//If it is a mod key or a shift key, we need to remove the key from the combo
-		} else if (isModKey(keyboard, key) || isShiftKey(keyboard, key)) {
+		//If it is a non-character key, we need to remove it
+		} else if (key.getChar() !='\0') {
 			m_currentCombination.remove(key);
 		}
 	}

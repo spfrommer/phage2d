@@ -4,6 +4,7 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URISyntaxException;
@@ -136,6 +137,35 @@ public class LWJGLRenderer implements Renderer {
 	/*
 	 * Clip functions
 	 */
+	private void readyClipSet() {
+		GL11.glColorMask(false, false, false, false);
+		GL11.glDepthMask(false);
+		GL11.glStencilFunc(GL11.GL_NEVER, 1, 0xFF);
+		GL11.glStencilOp(GL11.GL_REPLACE, GL11.GL_KEEP, GL11.GL_KEEP);
+
+		GL11.glStencilMask(0xFF);
+		GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
+	}
+	private void finishClipSet() {
+		// Back to normal rendering mode
+		GL11.glColorMask(true, true, true, true);
+		GL11.glDepthMask(true);
+		GL11.glStencilMask(0x00);
+		// draw where stencil's value is 0
+		//GL11.glStencilFunc(GL11.GL_EQUAL, 0, 0xFF);
+
+		///* (nothing to draw) */
+		// draw only where stencil's value is 1
+		GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
+	}
+	@Override
+	public void setClip(float x, float y, float width, float height) {
+		m_clip = new Rectangle2D.Float(x, y, width, height);
+		GL11.glEnable(GL11.GL_STENCIL_TEST);
+		readyClipSet();
+		fillRect(x, y, width, height);
+		finishClipSet();
+	}
 	@Override
 	public void setClip(Shape clip) {
 		m_clip = clip;
@@ -146,26 +176,11 @@ public class LWJGLRenderer implements Renderer {
 		} else {
 			GL11.glEnable(GL11.GL_STENCIL_TEST);
 		}
-		GL11.glColorMask(false, false, false, false);
-		GL11.glDepthMask(false);
-		GL11.glStencilFunc(GL11.GL_NEVER, 1, 0xFF);
-		GL11.glStencilOp(GL11.GL_REPLACE, GL11.GL_KEEP, GL11.GL_KEEP);
+		readyClipSet();
 
-		GL11.glStencilMask(0xFF);
-		GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
-		// Draw clip here
 		fill(clip);
 
-		// Back to normal rendering mode
-		GL11.glColorMask(true, true, true, true);
-		GL11.glDepthMask(true);
-		GL11.glStencilMask(0x00);
-		// draw where stencil's value is 0
-		 //GL11.glStencilFunc(GL11.GL_EQUAL, 0, 0xFF);
-		 
-		///* (nothing to draw) */
-		// draw only where stencil's value is 1
-		GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
+		finishClipSet();
 	}
 
 	@Override

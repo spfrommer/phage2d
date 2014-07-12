@@ -3,6 +3,7 @@ package migrate.gui.test;
 import migrate.LWJGLDisplay;
 import migrate.gui.GUI;
 import migrate.gui.layout.BorderLayout;
+import migrate.gui.widgets.Panel;
 import migrate.gui.widgets.TextField;
 import migrate.gui.widgets.Window;
 import migrate.input.Keyboard;
@@ -50,8 +51,11 @@ public class Test {
 		label.setText("Foo + bar = Foobar");
 		button.setContent(label);
 		window.getContentPane().add(button, BorderLayout.CENTER);*/
+		Panel panel = new Panel();
 		TextField textField = new SimpleTextField();
-		window.getContentPane().add(textField, BorderLayout.CENTER);
+		textField.setBounds(0, 0, 100, 100);
+		panel.add(textField);
+		window.getContentPane().add(panel, BorderLayout.CENTER);
 		window.setTitle("Really Long Test Title");
 		window.validate();
 		
