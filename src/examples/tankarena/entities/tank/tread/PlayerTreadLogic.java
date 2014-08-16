@@ -26,8 +26,8 @@ public class PlayerTreadLogic extends LogicComponent implements ActionExecutable
 	private int m_direction;
 
 	public PlayerTreadLogic(InputManager inputManager, int direction) {
-		super(new Aspect(TypeManager.getType(PhysicsData.class), TypeManager.getType(AnimationData.class),
-				TypeManager.getType(TextureData.class)));
+		super(new Aspect(TypeManager.typeOf(PhysicsData.class), TypeManager.typeOf(AnimationData.class),
+				TypeManager.typeOf(TextureData.class)));
 		m_inputManager = inputManager;
 		m_direction = direction;
 	}
@@ -72,9 +72,9 @@ public class PlayerTreadLogic extends LogicComponent implements ActionExecutable
 
 	@Override
 	public void loadDependencies() {
-		m_physics = (PhysicsData) this.loadDependency(TypeManager.getType(PhysicsData.class));
-		m_animation = (AnimationData) this.loadDependency(TypeManager.getType(AnimationData.class));
-		m_texture = (TextureData) this.loadDependency(TypeManager.getType(TextureData.class));
+		m_physics = (PhysicsData) this.loadDependency(TypeManager.typeOf(PhysicsData.class));
+		m_animation = (AnimationData) this.loadDependency(TypeManager.typeOf(AnimationData.class));
+		m_texture = (TextureData) this.loadDependency(TypeManager.typeOf(TextureData.class));
 	}
 
 	@Override

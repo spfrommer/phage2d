@@ -180,11 +180,12 @@ public class ComponentFactory {
 	 */
 	public static EncoderWrapper createBasicEncoder(Entity entity) {
 		EncoderWrapper encoder = new EncoderWrapper();
-		encoder.addDataEncoder(TypeManager.getType(PhysicsData.class), new PhysicsToShellEncoder());
-		encoder.addDataEncoder(TypeManager.getType(PhysicsShellData.class), new ShellEncoder());
-		encoder.addDataEncoder(TypeManager.getType(TextureData.class), new TextureEncoder());
-		encoder.addDataEncoder(TypeManager.getType(LayerData.class), new BasicDataEncoder());
-		encoder.addDataEncoder(TypeManager.getType(NetworkData.class), new NetworkEncoder(false));
+		encoder.addDataEncoder(TypeManager.typeOf(PhysicsData.class), new PhysicsToShellEncoder());
+		encoder.addDataEncoder(TypeManager.typeOf(PhysicsShellData.class), new ShellEncoder());
+		encoder.addDataEncoder(TypeManager.typeOf(TextureData.class), new TextureEncoder());
+		encoder.addDataEncoder(TypeManager.typeOf(LayerData.class), new BasicDataEncoder());
+		encoder.addDataEncoder(TypeManager.typeOf(NetworkData.class), new NetworkEncoder(false));
+		encoder.addDataEncoder(TypeManager.typeOf(NameData.class), new BasicDataEncoder());
 		encoder.addBlankEncoder(new BasicBlankEncoder(InterpolationData.class));
 		encoder.addBlankEncoder(new BasicBlankEncoder(ShellTransformWrapper.class));
 		encoder.addBlankEncoder(new BasicBlankEncoder(ClientLogic.class));

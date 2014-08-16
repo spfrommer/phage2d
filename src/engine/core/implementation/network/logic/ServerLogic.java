@@ -6,14 +6,14 @@ import utils.physics.Vector;
 import engine.core.framework.Aspect;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.type.TypeManager;
+import engine.core.implementation.network.base.communication.message.Message;
+import engine.core.implementation.network.base.communication.message.parameter.MessageParameter;
 import engine.core.implementation.network.wrappers.EncoderWrapper;
 import engine.core.implementation.physics.wrappers.TransformWrapper;
 import engine.core.implementation.rendering.data.TextureData;
-import engine.core.network.message.Message;
-import engine.core.network.message.parameter.MessageParameter;
 
 /**
- * Server logic that should be added to all server-side Entities that have to be synced across a network
+ * Basic server logic that should be added to all server-side Entities that have to be synced across a network
  * 
  * @eng.dependencies TextureData, EncoderWrapper, TransformWrapper
  */
@@ -23,8 +23,8 @@ public class ServerLogic extends NetworkSyncLogic {
 	private TransformWrapper m_transform;
 
 	public ServerLogic() {
-		super(new Aspect(TypeManager.getType(EncoderWrapper.class), TypeManager.getType(TextureData.class),
-				TypeManager.getType(TransformWrapper.class)));
+		super(new Aspect(TypeManager.typeOf(EncoderWrapper.class), TypeManager.typeOf(TextureData.class),
+				TypeManager.typeOf(TransformWrapper.class)));
 	}
 
 	@Override
@@ -42,7 +42,6 @@ public class ServerLogic extends NetworkSyncLogic {
 	 * @return
 	 */
 	private Vector m_lastPosition = new Vector(0, 0);
-	private Vector m_lastVelocity = new Vector(0, 0);
 	private double m_lastRotation = 0;
 	private double m_lastTextureID = -1;
 
@@ -100,9 +99,9 @@ public class ServerLogic extends NetworkSyncLogic {
 	@Override
 	public void loadDependencies() {
 		super.loadDependencies();
-		m_encoderWrapper = (EncoderWrapper) this.loadDependency(TypeManager.getType(EncoderWrapper.class));
-		m_textureComponent = (TextureData) this.loadDependency(TypeManager.getType(TextureData.class));
-		m_transform = (TransformWrapper) this.loadDependency(TypeManager.getType(TransformWrapper.class));
+		m_encoderWrapper = (EncoderWrapper) this.loadDependency(TypeManager.typeOf(EncoderWrapper.class));
+		m_textureComponent = (TextureData) this.loadDependency(TypeManager.typeOf(TextureData.class));
+		m_transform = (TransformWrapper) this.loadDependency(TypeManager.typeOf(TransformWrapper.class));
 	}
 
 	@Override

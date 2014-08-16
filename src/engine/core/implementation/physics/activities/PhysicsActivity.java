@@ -38,7 +38,7 @@ public class PhysicsActivity extends AspectActivity {
 	}
 
 	public PhysicsActivity(EntitySystem system) {
-		super(system, new Aspect(TypeManager.getType(PhysicsData.class)));
+		super(system, new Aspect(TypeManager.typeOf(PhysicsData.class)));
 
 		listenForCollisions();
 	}
@@ -52,7 +52,7 @@ public class PhysicsActivity extends AspectActivity {
 				boolean continue1 = true;
 				boolean continue2 = true;
 
-				ComponentType collisionHandlerType = TypeManager.getType(CollisionHandlerLogic.class);
+				ComponentType collisionHandlerType = TypeManager.typeOf(CollisionHandlerLogic.class);
 
 				if (entity1.getAspect().encapsulates(new Aspect(collisionHandlerType))) {
 					continue1 = ((CollisionHandlerLogic) entity1.getComponent(collisionHandlerType))
@@ -131,7 +131,7 @@ public class PhysicsActivity extends AspectActivity {
 
 	@Override
 	public void entityAdded(Entity entity) {
-		PhysicsData physics = (PhysicsData) entity.getComponent(TypeManager.getType(PhysicsData.class));
+		PhysicsData physics = (PhysicsData) entity.getComponent(TypeManager.typeOf(PhysicsData.class));
 		physics.addToWorld(m_world);
 
 		int id = physics.getID();
@@ -148,7 +148,7 @@ public class PhysicsActivity extends AspectActivity {
 
 	@Override
 	public void entityRemoved(Entity entity) {
-		PhysicsData physics = (PhysicsData) entity.getComponent(TypeManager.getType(PhysicsData.class));
+		PhysicsData physics = (PhysicsData) entity.getComponent(TypeManager.typeOf(PhysicsData.class));
 		physics.removeFromWorld(m_world);
 	}
 }

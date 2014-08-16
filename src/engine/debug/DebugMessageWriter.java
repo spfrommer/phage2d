@@ -2,9 +2,9 @@ package engine.debug;
 
 import java.io.IOException;
 
-import engine.core.network.lowlevel.ByteWriterInterpreter;
-import engine.core.network.lowlevel.MessageWriter;
-import engine.core.network.message.Message;
+import engine.core.implementation.network.base.communication.lowlevel.ByteWriterInterpreter;
+import engine.core.implementation.network.base.communication.lowlevel.MessageWriter;
+import engine.core.implementation.network.base.communication.message.Message;
 
 public class DebugMessageWriter extends MessageWriter {
 

@@ -57,7 +57,7 @@ public class TankBody extends Entity implements TankComponent {
 		this.addComponent(new PhysicsTransformWrapper());
 
 		EncoderWrapper encoder = ComponentFactory.createBasicEncoder(this);
-		encoder.addDataEncoder(TypeManager.getType(CameraFocusData.class), new BasicDataEncoder());
+		encoder.addDataEncoder(TypeManager.typeOf(CameraFocusData.class), new BasicDataEncoder());
 		this.addComponent(encoder);
 
 		ComponentDamageHandlerLogic damageHandler = new ComponentDamageHandlerLogic();
@@ -79,7 +79,7 @@ public class TankBody extends Entity implements TankComponent {
 		m_tank = tank;
 
 		ComponentDamageHandlerLogic damageHandler = (ComponentDamageHandlerLogic) this.getComponent(TypeManager
-				.getType(ComponentDamageHandlerLogic.class));
+				.typeOf(ComponentDamageHandlerLogic.class));
 		damageHandler.setTank(m_tank);
 	}
 

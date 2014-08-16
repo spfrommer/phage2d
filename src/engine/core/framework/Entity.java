@@ -25,6 +25,8 @@ public class Entity {
 	 */
 	private Map<ComponentType, Component> m_components;
 
+	private EntityContext m_context;
+
 	{
 		m_aspect = new Aspect();
 		m_components = new HashMap<ComponentType, Component>();
@@ -54,6 +56,24 @@ public class Entity {
 	}
 
 	/**
+	 * Sets the context of this Entity.
+	 * 
+	 * @param context
+	 */
+	public void setContext(EntityContext context) {
+		m_context = context;
+	}
+
+	/**
+	 * Gets the context of this Entity.
+	 * 
+	 * @return
+	 */
+	public EntityContext getContext() {
+		return m_context;
+	}
+
+	/**
 	 * Adds a Component to this Entity and sets the Component's parent to this Entity. Only one Component of each
 	 * ComponentType allowed. If it's a LogicComponent, there will also be checking to ensure that all dependencies are
 	 * satisfied.
@@ -64,12 +84,12 @@ public class Entity {
 		if (!(comp instanceof DataComponent || comp instanceof DependentComponent))
 			throw new RuntimeException("Component not instance of Data or Dependent Component");
 
-		if (!m_components.containsKey(TypeManager.getType(comp.getClass()))) {
+		if (!m_components.containsKey(TypeManager.typeOf(comp.getClass()))) {
 			if (comp instanceof DependentComponent)
 				checkDependencies((DependentComponent) comp);
 
-			m_aspect.addType(TypeManager.getType(comp.getClass()));
-			m_components.put(TypeManager.getType(comp.getClass()), comp);
+			m_aspect.addType(TypeManager.typeOf(comp.getClass()));
+			m_components.put(TypeManager.typeOf(comp.getClass()), comp);
 			comp.setEntity(this);
 
 			if (comp instanceof DependentComponent)
@@ -115,8 +135,8 @@ public class Entity {
 	 * @param comp
 	 */
 	private void forceAddComponent(Component comp) {
-		m_aspect.addType(TypeManager.getType(comp.getClass()));
-		m_components.put(TypeManager.getType(comp.getClass()), comp);
+		m_aspect.addType(TypeManager.typeOf(comp.getClass()));
+		m_components.put(TypeManager.typeOf(comp.getClass()), comp);
 	}
 
 	/**
@@ -169,8 +189,8 @@ public class Entity {
 
 	@Override
 	public String toString() {
-		if (m_aspect.encapsulates(new Aspect(TypeManager.getType(NameData.class)))) {
-			return ((NameData) this.getComponent(TypeManager.getType(NameData.class))).name;
+		if (m_aspect.encapsulates(new Aspect(TypeManager.typeOf(NameData.class)))) {
+			return ((NameData) this.getComponent(TypeManager.typeOf(NameData.class))).name;
 		} else {
 			return m_aspect.toString();
 		}

@@ -17,6 +17,10 @@ import engine.core.implementation.behavior.base.leaf.action.executor.ActionExecu
 import engine.core.implementation.behavior.logic.TreeLogic;
 import engine.core.implementation.camera.data.CameraFocusData;
 import engine.core.implementation.extras.activities.HealthActivity;
+import engine.core.implementation.network.base.communication.NetworkInputHub;
+import engine.core.implementation.network.base.communication.NetworkInputTrigger;
+import engine.core.implementation.network.base.communication.message.MessageDeclaration;
+import engine.core.implementation.network.base.communication.message.command.CommandInterpreter;
 import engine.core.implementation.network.base.decoding.DecoderMapper;
 import engine.core.implementation.network.base.encoding.BasicDataEncoder;
 import engine.core.implementation.network.logic.ServerLogic;
@@ -28,10 +32,6 @@ import engine.core.implementation.physics.logic.filter.ExclusiveCollisionFilterL
 import engine.core.implementation.physics.wrappers.PhysicsTransformWrapper;
 import engine.core.implementation.physics.wrappers.ShellTransformWrapper;
 import engine.core.implementation.rendering.activities.AnimationActivity;
-import engine.core.network.NetworkInputHub;
-import engine.core.network.NetworkInputTrigger;
-import engine.core.network.message.MessageDeclaration;
-import engine.core.network.message.command.CommandInterpreter;
 import engine.inputs.InputManager;
 import examples.spaceship.spawning.activities.SpawningActivity;
 import examples.spaceship.spawning.logic.GunLogic;
@@ -152,7 +152,7 @@ public class ShaceshipServer extends Server {
 		spaceship.addComponent(new PhysicsTransformWrapper());
 
 		EncoderWrapper encoder = ComponentFactory.createBasicEncoder(spaceship);
-		encoder.addDataEncoder(TypeManager.getType(CameraFocusData.class), new BasicDataEncoder());
+		encoder.addDataEncoder(TypeManager.typeOf(CameraFocusData.class), new BasicDataEncoder());
 		spaceship.addComponent(encoder);
 
 		spaceship.addComponent(new ServerLogic());

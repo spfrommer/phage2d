@@ -17,11 +17,11 @@ public class BehaviorActivity extends AspectActivity {
 	private ComponentType m_treeType;
 
 	{
-		m_treeType = TypeManager.getType(TreeLogic.class);
+		m_treeType = TypeManager.typeOf(TreeLogic.class);
 	}
 
 	public BehaviorActivity(EntitySystem system) {
-		super(system, new Aspect(TypeManager.getType(TreeLogic.class)));
+		super(system, new Aspect(TypeManager.typeOf(TreeLogic.class)));
 	}
 
 	public void update(int ticks) {

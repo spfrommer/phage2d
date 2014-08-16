@@ -5,6 +5,9 @@ import java.util.List;
 
 import utils.collections.TwoWayBuffer;
 
+/**
+ * Holds a group of Entities.
+ */
 public class EntitySystem {
 	private List<Entity> m_entities;
 	private List<SystemListener> m_listeners;
@@ -12,11 +15,15 @@ public class EntitySystem {
 
 	private TwoWayBuffer<Entity> m_buffer;
 
+	private EntityContext m_context;
+
 	{
 		m_entities = new ArrayList<Entity>();
 		m_listeners = new ArrayList<SystemListener>();
 		m_manager = new SystemAspectManager(this);
 		m_buffer = new TwoWayBuffer<Entity>();
+
+		m_context = new EntityContext(this);
 	}
 
 	/**
@@ -41,12 +48,14 @@ public class EntitySystem {
 		m_buffer.lock();
 		for (Entity entity : m_buffer.getAddBuffer()) {
 			m_entities.add(entity);
+			entity.setContext(m_context);
 
 			for (SystemListener esl : m_listeners)
 				esl.entityAdded(entity);
 		}
 		for (Entity entity : m_buffer.getRemoveBuffer()) {
 			m_entities.remove(entity);
+			entity.setContext(null);
 
 			for (SystemListener esl : m_listeners)
 				esl.entityRemoved(entity);

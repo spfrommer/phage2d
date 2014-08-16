@@ -4,10 +4,10 @@ import java.io.IOException;
 
 import javax.sound.sampled.AudioInputStream;
 
-import sound.PlaylistPlayer;
-import sound.PlaylistPlayer.PlaylistPlayerListener;
-import sound.SoundResource;
-import sound.SoundSystem;
+import engine.sound.PlaylistPlayer;
+import engine.sound.SoundResource;
+import engine.sound.SoundSystem;
+import engine.sound.PlaylistPlayer.PlaylistPlayerListener;
 
 public class PlaylistPlayerTest {
 	public static void main(String[] args) throws IOException, InterruptedException {

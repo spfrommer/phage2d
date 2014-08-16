@@ -7,17 +7,17 @@ import java.net.Socket;
 import utils.image.ImageUtils;
 import engine.core.framework.EntitySystem;
 import engine.core.implementation.network.activities.NetworkSyncActivity;
+import engine.core.implementation.network.base.communication.NetworkInputHub;
+import engine.core.implementation.network.base.communication.lowlevel.ByteReader;
+import engine.core.implementation.network.base.communication.lowlevel.ByteReaderInterpreter;
+import engine.core.implementation.network.base.communication.lowlevel.ByteWriter;
+import engine.core.implementation.network.base.communication.lowlevel.ByteWriterInterpreter;
+import engine.core.implementation.network.base.communication.lowlevel.MessageReader;
+import engine.core.implementation.network.base.communication.lowlevel.MessageWriter;
+import engine.core.implementation.network.base.communication.message.Message;
+import engine.core.implementation.network.base.communication.message.command.CommandInterpreter;
+import engine.core.implementation.network.base.communication.message.parameter.MessageParameter;
 import engine.core.implementation.network.base.decoding.DecoderMapper;
-import engine.core.network.NetworkInputHub;
-import engine.core.network.lowlevel.ByteReader;
-import engine.core.network.lowlevel.ByteReaderInterpreter;
-import engine.core.network.lowlevel.ByteWriter;
-import engine.core.network.lowlevel.ByteWriterInterpreter;
-import engine.core.network.lowlevel.MessageReader;
-import engine.core.network.lowlevel.MessageWriter;
-import engine.core.network.message.Message;
-import engine.core.network.message.command.CommandInterpreter;
-import engine.core.network.message.parameter.MessageParameter;
 
 /**
  * An abstract Server that manages networking details. Extend this class if you want to make a multiplayer game.
@@ -75,7 +75,7 @@ public abstract class Server {
 	}
 
 	/**
-	 * Whether this Server should print all incoming messages + the time difference
+	 * Whether this Server should print all incoming messages + the time difference.
 	 * 
 	 * @param dumpMessages
 	 */
@@ -84,7 +84,7 @@ public abstract class Server {
 	}
 
 	/**
-	 * How many times per second the server should call update
+	 * How many times per second the server should call update.
 	 * 
 	 * @param ups
 	 */
@@ -94,12 +94,12 @@ public abstract class Server {
 
 	/**
 	 * How many updates should the server perform before it transmits the data to the clients - 1 or below means it will
-	 * transmit every update
+	 * transmit every update.
 	 * 
-	 * @param upf
+	 * @param upt
 	 */
-	public void setUPF(int upf) {
-		m_upf = upf;
+	public void setUPT(int upt) {
+		m_upf = upt;
 	}
 
 	private void listen(int port) {
@@ -145,7 +145,9 @@ public abstract class Server {
 			if (m_updatesPassed >= m_upf) {
 				m_network.processWriters();
 				m_network.processMessages();
-				m_network.transmitUpdates();
+				boolean transmitted = m_network.transmitUpdates();
+				// if (transmitted)
+				// System.out.println("Transmitted");
 				m_updatesPassed = 1;
 			} else {
 				m_updatesPassed++;

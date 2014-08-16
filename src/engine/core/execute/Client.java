@@ -13,18 +13,18 @@ import engine.core.implementation.camera.base.Display;
 import engine.core.implementation.camera.base.SingleViewPortLayout;
 import engine.core.implementation.camera.base.ViewPort;
 import engine.core.implementation.network.activities.NetworkSyncActivity;
+import engine.core.implementation.network.base.communication.MessageBuffer;
+import engine.core.implementation.network.base.communication.lowlevel.ByteReader;
+import engine.core.implementation.network.base.communication.lowlevel.ByteReaderInterpreter;
+import engine.core.implementation.network.base.communication.lowlevel.ByteWriter;
+import engine.core.implementation.network.base.communication.lowlevel.ByteWriterInterpreter;
+import engine.core.implementation.network.base.communication.lowlevel.MessageReader;
+import engine.core.implementation.network.base.communication.lowlevel.MessageWriter;
+import engine.core.implementation.network.base.communication.message.Message;
+import engine.core.implementation.network.base.communication.message.command.CommandInterpreter;
 import engine.core.implementation.network.base.decoding.DecoderMapper;
 import engine.core.implementation.rendering.activities.BasicRenderingActivity;
 import engine.core.implementation.rendering.activities.RenderingActivity;
-import engine.core.network.MessageBuffer;
-import engine.core.network.lowlevel.ByteReader;
-import engine.core.network.lowlevel.ByteReaderInterpreter;
-import engine.core.network.lowlevel.ByteWriter;
-import engine.core.network.lowlevel.ByteWriterInterpreter;
-import engine.core.network.lowlevel.MessageReader;
-import engine.core.network.lowlevel.MessageWriter;
-import engine.core.network.message.Message;
-import engine.core.network.message.command.CommandInterpreter;
 import engine.graphics.Color;
 import engine.graphics.Renderer;
 import engine.graphics.lwjgl.LWJGLDisplay;
@@ -172,6 +172,8 @@ public abstract class Client {
 		return display;
 	}
 
+	private long m_lastTime = System.currentTimeMillis();
+
 	private void startServerHandlerLoop(Display display) {
 		while (!display.destroyRequested()) {
 			Message message = null;
@@ -191,12 +193,16 @@ public abstract class Client {
 
 			if (message.getCommand().equals("endtransmission")) {
 				m_network.processMessages();
+				System.out.println("Processing");
 				try {
+					long currentTime = System.currentTimeMillis();
+					System.out.println("Rendering interval: " + (currentTime - m_lastTime));
 					synchronized (m_display) {
 						org.lwjgl.opengl.Display.makeCurrent();
 						render(display);
 						org.lwjgl.opengl.Display.releaseContext();
 					}
+					m_lastTime = currentTime;
 				} catch (LWJGLException e) {
 					e.printStackTrace();
 				}

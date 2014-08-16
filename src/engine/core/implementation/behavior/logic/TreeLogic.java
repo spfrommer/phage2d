@@ -1,8 +1,8 @@
 package engine.core.implementation.behavior.logic;
 
-import engine.core.framework.Entity;
 import engine.core.framework.component.LogicComponent;
 import engine.core.implementation.behavior.base.Node;
+import engine.core.implementation.behavior.base.NodeContext;
 
 /**
  * An executable tree of Nodes.
@@ -12,6 +12,10 @@ public class TreeLogic extends LogicComponent {
 	 * The root node of the tree.
 	 */
 	private Node m_root;
+	/**
+	 * The NodeContext of tree.
+	 */
+	private NodeContext m_context;
 
 	public TreeLogic() {
 		super();
@@ -23,6 +27,10 @@ public class TreeLogic extends LogicComponent {
 	 * @param ticks
 	 */
 	public void update(int ticks) {
+		if (m_context == null) {
+			m_context = new NodeContext(this.getEntity().getContext());
+			m_root.setContext(m_context);
+		}
 		m_root.update(ticks);
 	}
 
@@ -32,10 +40,6 @@ public class TreeLogic extends LogicComponent {
 
 	public Node getRoot() {
 		return m_root;
-	}
-
-	public void load(Entity entity) {
-		m_root.load(entity);
 	}
 
 	@Override

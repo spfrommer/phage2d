@@ -28,7 +28,7 @@ public class GunLogic extends SpawningLogic {
 	private long ticksElapsed = 0;
 
 	public GunLogic(Entity spawn, InputManager input, long spawnInterval, double velocity) {
-		super(new Aspect(TypeManager.getType(TransformWrapper.class)));
+		super(new Aspect(TypeManager.typeOf(TransformWrapper.class)));
 		m_spawningEntity = spawn;
 		m_input = input;
 		m_spawnInterval = spawnInterval;
@@ -58,7 +58,7 @@ public class GunLogic extends SpawningLogic {
 	public Entity makeBullet(double offset) {
 		Entity spawn = m_spawningEntity.copy();
 
-		PhysicsData physics = (PhysicsData) spawn.getComponent(TypeManager.getType(PhysicsData.class));
+		PhysicsData physics = (PhysicsData) spawn.getComponent(TypeManager.typeOf(PhysicsData.class));
 		physics.setPosition(m_transform.getPosition().add(
 				Vector.dyn4jNormalVector(m_transform.getRotation()).scalarMultiply(100)));
 		physics.setRotation(m_transform.getRotation());
@@ -71,7 +71,7 @@ public class GunLogic extends SpawningLogic {
 
 	@Override
 	public void loadDependencies() {
-		m_transform = (TransformWrapper) this.loadDependency(TypeManager.getType(TransformWrapper.class));
+		m_transform = (TransformWrapper) this.loadDependency(TypeManager.typeOf(TransformWrapper.class));
 	}
 
 	@Override

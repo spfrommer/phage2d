@@ -19,7 +19,7 @@ public class AnimatedControllerLogic extends MouseControllerLogic {
 	private AnimationData m_animation;
 
 	public AnimatedControllerLogic(InputManager manager) {
-		super(new Aspect(TypeManager.getType(TextureData.class), TypeManager.getType(AnimationData.class)), manager);
+		super(new Aspect(TypeManager.typeOf(TextureData.class), TypeManager.typeOf(AnimationData.class)), manager);
 	}
 
 	@Override
@@ -37,8 +37,8 @@ public class AnimatedControllerLogic extends MouseControllerLogic {
 	@Override
 	public void loadDependencies() {
 		super.loadDependencies();
-		m_texture = (TextureData) this.loadDependency(TypeManager.getType(TextureData.class));
-		m_animation = (AnimationData) this.loadDependency(TypeManager.getType(AnimationData.class));
+		m_texture = (TextureData) this.loadDependency(TypeManager.typeOf(TextureData.class));
+		m_animation = (AnimationData) this.loadDependency(TypeManager.typeOf(AnimationData.class));
 	}
 
 	@Override

@@ -20,12 +20,12 @@ public class MouseControllerLogic extends LogicComponent implements ActionExecut
 	private InputManager m_inputManager;
 
 	public MouseControllerLogic(InputManager manager) {
-		super(new Aspect(TypeManager.getType(PhysicsData.class)));
+		super(new Aspect(TypeManager.typeOf(PhysicsData.class)));
 		m_inputManager = manager;
 	}
 
 	public MouseControllerLogic(Aspect dependences, InputManager manager) {
-		super(new Aspect(TypeManager.getType(PhysicsData.class)).addTypes(dependences));
+		super(new Aspect(TypeManager.typeOf(PhysicsData.class)).addTypes(dependences));
 		m_inputManager = manager;
 	}
 
@@ -78,7 +78,7 @@ public class MouseControllerLogic extends LogicComponent implements ActionExecut
 
 	@Override
 	public void loadDependencies() {
-		m_physics = (PhysicsData) this.loadDependency(TypeManager.getType(PhysicsData.class));
+		m_physics = (PhysicsData) this.loadDependency(TypeManager.typeOf(PhysicsData.class));
 	}
 
 	protected InputManager getInputManager() {

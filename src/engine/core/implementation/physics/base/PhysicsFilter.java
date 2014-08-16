@@ -26,10 +26,10 @@ public class PhysicsFilter implements Filter {
 			Entity entity = ((PhysicsFilter) filter).getEntity();
 
 			CollisionFilterLogic filter1 = (CollisionFilterLogic) m_entity.getComponent(TypeManager
-					.getType(CollisionFilterLogic.class));
+					.typeOf(CollisionFilterLogic.class));
 
 			CollisionFilterLogic filter2 = (CollisionFilterLogic) entity.getComponent(TypeManager
-					.getType(CollisionFilterLogic.class));
+					.typeOf(CollisionFilterLogic.class));
 
 			if (filter1 == null && filter2 == null) {
 				return true;

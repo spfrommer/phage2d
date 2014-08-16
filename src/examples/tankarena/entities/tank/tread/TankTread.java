@@ -35,7 +35,7 @@ public class TankTread extends Entity implements TankComponent {
 			TankBody body, PhysicsActivity physicsActivity, int direction) {
 		super();
 
-		PhysicsData tankPhysics = (PhysicsData) body.getComponent(TypeManager.getType(PhysicsData.class));
+		PhysicsData tankPhysics = (PhysicsData) body.getComponent(TypeManager.typeOf(PhysicsData.class));
 
 		PhysicsData physics = ComponentFactory.addPhysicsData(this, position, 0, new Rectangle(width, height));
 		physics.setRotationalFriction(0);
@@ -93,7 +93,7 @@ public class TankTread extends Entity implements TankComponent {
 		m_tank = tank;
 
 		ComponentDamageHandlerLogic damageHandler = (ComponentDamageHandlerLogic) this.getComponent(TypeManager
-				.getType(ComponentDamageHandlerLogic.class));
+				.typeOf(ComponentDamageHandlerLogic.class));
 		damageHandler.setTank(m_tank);
 	}
 

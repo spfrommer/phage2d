@@ -9,6 +9,10 @@ import engine.core.implementation.camera.activities.ChaseCameraActivity;
 import engine.core.implementation.camera.base.ViewPort;
 import engine.core.implementation.interpolation.activities.InterpolationActivity;
 import engine.core.implementation.interpolation.data.InterpolationData;
+import engine.core.implementation.network.base.communication.message.Message;
+import engine.core.implementation.network.base.communication.message.MessageDeclaration;
+import engine.core.implementation.network.base.communication.message.command.CommandInterpreter;
+import engine.core.implementation.network.base.communication.message.parameter.MessageParameter;
 import engine.core.implementation.network.base.decoding.BlankDataDecoder;
 import engine.core.implementation.network.base.decoding.DecoderMapper;
 import engine.core.implementation.network.base.decoding.ErrorDecoder;
@@ -18,10 +22,6 @@ import engine.core.implementation.physics.data.PhysicsShellData;
 import engine.core.implementation.rendering.data.AnimationData;
 import engine.core.implementation.rendering.data.TextureData;
 import engine.core.implementation.rendering.data.TextureDecoder;
-import engine.core.network.message.Message;
-import engine.core.network.message.MessageDeclaration;
-import engine.core.network.message.command.CommandInterpreter;
-import engine.core.network.message.parameter.MessageParameter;
 import engine.graphics.Renderer;
 import engine.graphics.lwjgl.LWJGLKeyboard;
 import engine.graphics.lwjgl.LWJGLMouse;
@@ -58,7 +58,7 @@ public class ArenaClient extends Client {
 
 		// m_cam = new KeyboardCameraActivity(this.getEntitySystem(), LWJGLKeyboard.instance(), new MovementProfile(10,
 		// 0.05));
-		m_interpolation = new InterpolationActivity(this.getEntitySystem(), this.getSyncActivity());
+		// m_interpolation = new InterpolationActivity(this.getEntitySystem(), this.getSyncActivity());
 	}
 
 	@Override
@@ -71,12 +71,11 @@ public class ArenaClient extends Client {
 	@Override
 	public void update(int ticks) {
 		// m_interpolation.update();
-
+		// m_cam.control(this.getViewPort().getCamera(), 1);
 	}
 
 	@Override
 	public void onRender(Renderer renderer) {
-		m_cam.control(this.getViewPort().getCamera(), 1);
 	}
 
 	public InputManager createInputManager(final int id) {

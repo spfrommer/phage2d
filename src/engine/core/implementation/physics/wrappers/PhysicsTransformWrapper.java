@@ -15,7 +15,7 @@ public class PhysicsTransformWrapper extends TransformWrapper {
 	private PhysicsData m_physics;
 
 	public PhysicsTransformWrapper() {
-		super(new Aspect(TypeManager.getType(PhysicsData.class)));
+		super(new Aspect(TypeManager.typeOf(PhysicsData.class)));
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class PhysicsTransformWrapper extends TransformWrapper {
 
 	@Override
 	public void loadDependencies() {
-		m_physics = (PhysicsData) this.loadDependency(TypeManager.getType(PhysicsData.class));
+		m_physics = (PhysicsData) this.loadDependency(TypeManager.typeOf(PhysicsData.class));
 	}
 
 	@Override

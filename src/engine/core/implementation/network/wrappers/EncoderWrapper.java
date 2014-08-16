@@ -27,8 +27,8 @@ import engine.core.implementation.network.base.encoding.BlankEncoder;
 import engine.core.implementation.network.base.encoding.DataEncoder;
 
 /**
- * A Wrapper that combines various Components into an Entity XML Document. Needed by ServerLogic to send Entities to the
- * ClientLogic.
+ * A Wrapper that combines various Components into an Entity XML Document. Needed by ServerLogic to send the Entity to
+ * the ClientLogic.
  * 
  * @eng.dependencies varies
  */

@@ -17,13 +17,13 @@ import engine.core.framework.component.type.ComponentType;
 import engine.core.framework.component.type.TypeManager;
 import engine.core.implementation.interpolation.base.TransmissionListener;
 import engine.core.implementation.interpolation.base.TransmissionReceiver;
+import engine.core.implementation.network.base.communication.lowlevel.MessageWriter;
+import engine.core.implementation.network.base.communication.message.Message;
+import engine.core.implementation.network.base.communication.message.parameter.MessageParameter;
 import engine.core.implementation.network.base.decoding.DecoderMapper;
 import engine.core.implementation.network.base.decoding.EntityDecoder;
 import engine.core.implementation.network.data.NetworkData;
 import engine.core.implementation.network.logic.NetworkSyncLogic;
-import engine.core.network.lowlevel.MessageWriter;
-import engine.core.network.message.Message;
-import engine.core.network.message.parameter.MessageParameter;
 
 /**
  * Syncs Entities across a network
@@ -81,8 +81,8 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 
 		m_transmissionListeners = new ArrayList<TransmissionListener>();
 
-		m_syncType = TypeManager.getType(NetworkSyncLogic.class);
-		m_dataType = TypeManager.getType(NetworkData.class);
+		m_syncType = TypeManager.typeOf(NetworkSyncLogic.class);
+		m_dataType = TypeManager.typeOf(NetworkData.class);
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 	 *            whether or not this Sync activity should act as a server or client
 	 */
 	public NetworkSyncActivity(EntitySystem system, DecoderMapper decoder) {
-		super(system, new Aspect(TypeManager.getType(NetworkSyncLogic.class), TypeManager.getType(NetworkData.class)));
+		super(system, new Aspect(TypeManager.typeOf(NetworkSyncLogic.class), TypeManager.typeOf(NetworkData.class)));
 		m_decoder = decoder;
 	}
 
@@ -168,8 +168,11 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 
 	/**
 	 * Processes all the Messages in the message buffer, then clears it
+	 * 
+	 * @return whether any messages were processed
 	 */
-	public void processMessages() {
+	public boolean processMessages() {
+		boolean processed = false;
 		m_messageBuffer.lock();
 		Set<Entity> updatedEntities = new HashSet<Entity>();
 
@@ -178,6 +181,7 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 				System.err.println("Message " + message + " has null component or is null. (nsp.handleMessages) ");
 				continue;
 			}
+			processed = true;
 
 			if (message.getCommand().equals("update")) {
 				Entity receiver = m_idMapper.getBackward((message.getParameters()[0]).getIntValue());
@@ -188,7 +192,7 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 				}
 
 				NetworkSyncLogic syncLogic = (NetworkSyncLogic) receiver.getComponent(TypeManager
-						.getType(NetworkSyncLogic.class));
+						.typeOf(NetworkSyncLogic.class));
 				syncLogic.processMessage(message);
 
 				updatedEntities.add(receiver);
@@ -210,6 +214,8 @@ public class NetworkSyncActivity extends AspectActivity implements TransmissionR
 
 		m_messageBuffer.clear();
 		m_messageBuffer.unlock();
+
+		return processed;
 	}
 
 	/**

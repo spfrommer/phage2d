@@ -15,7 +15,7 @@ public class ShellTransformWrapper extends TransformWrapper {
 	private PhysicsShellData m_shell;
 
 	public ShellTransformWrapper() {
-		super(new Aspect(TypeManager.getType(PhysicsShellData.class)));
+		super(new Aspect(TypeManager.typeOf(PhysicsShellData.class)));
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class ShellTransformWrapper extends TransformWrapper {
 
 	@Override
 	public void loadDependencies() {
-		m_shell = (PhysicsShellData) this.loadDependency(TypeManager.getType(PhysicsShellData.class));
+		m_shell = (PhysicsShellData) this.loadDependency(TypeManager.typeOf(PhysicsShellData.class));
 	}
 
 	@Override

@@ -3,7 +3,6 @@ package examples.tankarena.entities.tank.gun;
 import utils.physics.Vector;
 import engine.core.framework.Aspect;
 import engine.core.framework.Entity;
-import engine.core.framework.EntitySystem;
 import engine.core.framework.component.Component;
 import engine.core.framework.component.LogicComponent;
 import engine.core.framework.component.type.TypeManager;
@@ -18,7 +17,6 @@ import engine.core.implementation.physics.wrappers.TransformWrapper;
  * @eng.dependencies TransformWrapper
  */
 public class ShootingLogic extends LogicComponent implements ActionExecutable {
-	private EntitySystem m_system;
 	private Entity m_projectile;
 
 	private TransformWrapper m_transform;
@@ -31,9 +29,8 @@ public class ShootingLogic extends LogicComponent implements ActionExecutable {
 	 * @param system
 	 * @param projectile
 	 */
-	public ShootingLogic(EntitySystem system, Entity projectile) {
-		super(new Aspect(TypeManager.getType(TransformWrapper.class)));
-		m_system = system;
+	public ShootingLogic(Entity projectile) {
+		super(new Aspect(TypeManager.typeOf(TransformWrapper.class)));
 		m_projectile = projectile;
 	}
 
@@ -49,12 +46,12 @@ public class ShootingLogic extends LogicComponent implements ActionExecutable {
 
 	@Override
 	public void loadDependencies() {
-		m_transform = (TransformWrapper) this.loadDependency(TypeManager.getType(TransformWrapper.class));
+		m_transform = (TransformWrapper) this.loadDependency(TypeManager.typeOf(TransformWrapper.class));
 	}
 
 	@Override
 	public Component copy() {
-		return new ShootingLogic(m_system, m_projectile);
+		return new ShootingLogic(m_projectile);
 	}
 
 	@Override
@@ -65,12 +62,12 @@ public class ShootingLogic extends LogicComponent implements ActionExecutable {
 		}
 
 		Entity projectile = m_projectile.copy();
-		PhysicsData physics = (PhysicsData) projectile.getComponent(TypeManager.getType(PhysicsData.class));
+		PhysicsData physics = (PhysicsData) projectile.getComponent(TypeManager.typeOf(PhysicsData.class));
 		Vector directionNormal = Vector.dyn4jNormalVector(m_transform.getRotation());
 		physics.setPosition(m_transform.getPosition().add(directionNormal.scalarMultiply(80)));
 		physics.setRotation(m_transform.getRotation());
 		physics.setVelocity(directionNormal.scalarMultiply(1000));
-		m_system.addEntity(projectile);
+		this.getEntity().getContext().getSystem().addEntity(projectile);
 		m_gunHeat = m_firingHeat;
 
 		return ExecutionState.SUCCESS;
