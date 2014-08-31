@@ -14,13 +14,20 @@ import engine.graphics.lwjgl.vector.Vector2f;
 
 public class Triangulator {
 	public static ArrayList<Triangle> s_triangulate(ArrayList<Vector2f> points) {
+		if (points.size() == 0 || points.size() < 3) return new ArrayList<Triangle>();
 		ArrayList<PolygonPoint> polyPoints = new ArrayList<PolygonPoint>();
 		for (int i = 0; i < points.size(); i++) {
 			Vector2f vec = points.get(i);
 			polyPoints.add(new PolygonPoint(vec.getX(), vec.getY()));
 		}
 		Polygon poly = new Polygon(polyPoints);
-		Poly2Tri.triangulate(poly);
+		try {
+			Poly2Tri.triangulate(poly);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("Points: " + points);
+			return new ArrayList<Triangle>();
+		}
 		List<DelaunayTriangle> tris = poly.getTriangles();
 		ArrayList<Triangle> triangles = new ArrayList<Triangle>();
 		for (DelaunayTriangle tri : tris) {

@@ -52,7 +52,7 @@ public class Label extends ThemedWidget {
 	
 	@Override
 	public Dimension getPreferredSize() {
-		Rectangle2D bounds = m_font.getSize(getText());
+		Rectangle2D bounds = m_font.getBounds(getText());
 		return new Dimension((int) bounds.getWidth(), (int) bounds.getHeight());
 	}
 	@Override

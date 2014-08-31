@@ -21,6 +21,7 @@ public interface Renderer {
 	public Color getColor();
 	public void occlude(Shape clip);
 	public void clearClip();
+	public void setClip(float x, float y, float width, float height);
 	public void setClip(Shape clip);
 	public Shape getClip();
 	

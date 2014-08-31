@@ -36,7 +36,7 @@ public class LWJGLTest {
 	public void run(boolean lwjgl) {
 		LWJGLRenderer.initDisplayWithoutCanvas(1024, 1024, true);
 
-		LWJGLRenderer renderer = LWJGLRenderer.instance();
+		LWJGLRenderer renderer = LWJGLRenderer.getInstance();
 
 		ViewPort fakePort = new ViewPort(new Camera());
 		fakePort.resized(1024, 1024);
@@ -62,7 +62,7 @@ public class LWJGLTest {
 			GL11.glDepthMask(false);
 			render(renderer, true);
 			GL11.glDepthMask(true);
-			LWJGLRenderer.instance().update();
+			LWJGLRenderer.getInstance().update();
 		}
 	}
 

@@ -137,7 +137,7 @@ public class Console extends GUI implements ConsoleInterface, TypeListener {
 			String output = display.toString();
 			String[] outputLines = output.split("\n");
 			for (int i = 0; i < outputLines.length; i++) {
-				int ypos = m_font.getLineHeight() * i + m_font.getAscending();
+				int ypos = m_font.getHeight() * i + m_font.getAscent();
 				
 				String line  = outputLines[i];
 				renderer.setColor(Color.WHITE);

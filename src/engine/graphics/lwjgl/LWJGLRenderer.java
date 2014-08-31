@@ -4,7 +4,10 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -139,15 +142,7 @@ public class LWJGLRenderer implements Renderer {
 	/*
 	 * Clip functions
 	 */
-	@Override
-	public void setClip(Shape clip) {
-		m_clip = clip;
-		if (clip == null) {
-			GL11.glDisable(GL11.GL_STENCIL_TEST);
-			return;
-		} else {
-			GL11.glEnable(GL11.GL_STENCIL_TEST);
-		}
+	private void readyClipSet() {
 		GL11.glColorMask(false, false, false, false);
 		GL11.glDepthMask(false);
 		GL11.glStencilFunc(GL11.GL_NEVER, 1, 0xFF);
@@ -155,19 +150,45 @@ public class LWJGLRenderer implements Renderer {
 
 		GL11.glStencilMask(0xFF);
 		GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
-		// Draw clip here
-		fill(clip);
+	}
 
+	private void finishClipSet() {
 		// Back to normal rendering mode
 		GL11.glColorMask(true, true, true, true);
 		GL11.glDepthMask(true);
 		GL11.glStencilMask(0x00);
 		// draw where stencil's value is 0
-		GL11.glStencilFunc(GL11.GL_EQUAL, 0, 0xFF);
+		// GL11.glStencilFunc(GL11.GL_EQUAL, 0, 0xFF);
 
 		// /* (nothing to draw) */
 		// draw only where stencil's value is 1
-		// GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
+		GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
+	}
+
+	@Override
+	public void setClip(float x, float y, float width, float height) {
+		m_clip = new Rectangle2D.Float(x, y, width, height);
+		GL11.glEnable(GL11.GL_STENCIL_TEST);
+		readyClipSet();
+		fillRect(x, y, width, height);
+		finishClipSet();
+	}
+
+	@Override
+	public void setClip(Shape clip) {
+		m_clip = clip;
+		if (clip == null) {
+			GL11.glDisable(GL11.GL_STENCIL_TEST);
+			GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
+			return;
+		} else {
+			GL11.glEnable(GL11.GL_STENCIL_TEST);
+		}
+		readyClipSet();
+
+		fill(clip);
+
+		finishClipSet();
 	}
 
 	@Override
@@ -457,7 +478,7 @@ public class LWJGLRenderer implements Renderer {
 		doFrameSetup();
 	}
 
-	public static LWJGLRenderer instance() {
+	public static LWJGLRenderer getInstance() {
 		if (s_instance == null) {
 			s_instance = new LWJGLRenderer();
 		}
@@ -469,7 +490,7 @@ public class LWJGLRenderer implements Renderer {
 		s_defaultProgram.use();
 		LWJGLTexture.s_default.bind();
 		// Reset the color uniform
-		instance().setColor(instance().getColor());
+		getInstance().setColor(getInstance().getColor());
 	}
 
 	/*
@@ -491,9 +512,9 @@ public class LWJGLRenderer implements Renderer {
 
 		try {
 			FragmentShader fragment = new FragmentShader();
-			fragment.setSource(LWJGLRenderer.class.getResourceAsStream("/shaders/default.frag"));
+			fragment.setSource(new File(LWJGLRenderer.class.getResource("/shaders/default.frag").toURI()));
 			VertexShader vertex = new VertexShader();
-			vertex.setSource(LWJGLRenderer.class.getResourceAsStream("/shaders/default.vert"));
+			vertex.setSource(new File(LWJGLRenderer.class.getResource("/shaders/default.vert").toURI()));
 			fragment.compile();
 			vertex.compile();
 
@@ -502,6 +523,8 @@ public class LWJGLRenderer implements Renderer {
 			s_defaultProgram.link();
 			s_defaultProgram.validate();
 		} catch (ShaderCompileException e) {
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
 		// Setup for the first frame

@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-import utils.timers.AbsoluteTimer;
 import engine.core.implementation.camera.base.Camera;
 import engine.core.implementation.camera.base.Display;
 import engine.core.implementation.camera.base.SingleViewPortLayout;
@@ -70,16 +69,13 @@ public class GUITest {
 
 		Font font = null;
 		try {
-			File fontFile = new File(FontTest.class.getResource("/themes/basic/ptsans.fnt").toURI());
-			List<BMFont> fonts = BMFontXMLLoader.loadFonts(fontFile);
+			List<BMFont> fonts = BMFontXMLLoader.loadFonts(FontTest.class.getResource("/themes/basic/ptsans.fnt"));
 			font = fonts.get(0);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (SAXException e) {
 			e.printStackTrace();
 		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
 
@@ -129,16 +125,11 @@ public class GUITest {
 
 		logger.debug("Done setting up gui!");
 
-		AbsoluteTimer totalLoopTimer = new AbsoluteTimer();
-		AbsoluteTimer actionTimer = new AbsoluteTimer();
-		long lastTimeNanos = 100;
-		long lastActionTimeNanos = 0;
-
 		logger.debug("Going into render loop");
 
 		while (!org.lwjgl.opengl.Display.isCloseRequested()) {
-			manager.run(LWJGLRenderer.instance());
-			LWJGLRenderer.instance().update();
+			manager.run(LWJGLRenderer.getInstance());
+			LWJGLRenderer.getInstance().update();
 		}
 	}
 
