@@ -4,8 +4,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 
 import javax.imageio.ImageIO;
@@ -24,8 +23,10 @@ public class ImageUtils {
 
 	public static void initMapping(String file) {
 		try {
-			File images = new File(ImageUtils.class.getResource("/images/" + file).toURI());
-			BufferedReader br = new BufferedReader(new FileReader(images));
+			// File images = new File(ImageUtils.class.getResource("/images/" + file).toURI());
+			// BufferedReader br = new BufferedReader(new FileReader(images));
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					ImageUtils.class.getResourceAsStream("/images/" + file)));
 			int idCounter = 0;
 
 			String line;
@@ -77,7 +78,8 @@ public class ImageUtils {
 	public static BufferedImage readImage(String name) {
 		BufferedImage image = null;
 		try {
-			image = ImageIO.read(new File(ImageUtils.class.getResource(name).toURI()));
+			// image = ImageIO.read(new File(ImageUtils.class.getResource(name).toURI()));
+			image = ImageIO.read(ImageUtils.class.getResourceAsStream(name));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

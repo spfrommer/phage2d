@@ -40,7 +40,7 @@ public class PortalManager implements CollisionListener {
 		m_portals.put(portal, false);
 	}
 
-	public void resetPortals() {
+	public void removePortals() {
 		m_portals.clear();
 	}
 

@@ -27,7 +27,6 @@ import engine.core.implementation.rendering.activities.AnimationActivity;
 import engine.core.implementation.rendering.activities.ParallaxRenderingActivity;
 import engine.core.implementation.rendering.logic.TextureRenderingLogic;
 import engine.graphics.Renderer;
-import engine.graphics.lwjgl.LWJGLKeyboard;
 
 /**
  * A game that uses behavior trees to control a ball.
@@ -68,6 +67,8 @@ public class Platformer extends Game {
 				.getCamera());
 		rendering.loadEntities();
 		this.setRenderingActivity(rendering);
+
+		this.setFPS(60);
 	}
 
 	@Override
@@ -79,8 +80,7 @@ public class Platformer extends Game {
 	public void init() {
 		m_physics = new PhysicsActivity(this.getEntitySystem());
 		m_animation = new AnimationActivity(this.getEntitySystem());
-		m_camera = new KeyboardCameraActivity(this.getEntitySystem(), LWJGLKeyboard.instance(), new MovementProfile(10,
-				0.01));
+		m_camera = new KeyboardCameraActivity(this.getEntitySystem(), this.getKeyboard(), new MovementProfile(10, 0.01));
 		m_behavior = new BehaviorActivity(this.getEntitySystem());
 	}
 

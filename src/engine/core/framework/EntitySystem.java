@@ -105,7 +105,7 @@ public class EntitySystem {
 	public void removeAllEntities() {
 		int size = m_entities.size();
 		for (int i = 0; i < size; i++)
-			removeEntity(m_entities.get(0));
+			removeEntity(m_entities.get(i));
 	}
 
 	/**

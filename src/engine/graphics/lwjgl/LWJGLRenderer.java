@@ -5,8 +5,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -112,12 +110,16 @@ public class LWJGLRenderer implements Renderer {
 	public Color getColor() {
 		return m_color;
 	}
+
+	@Override
 	public void clearClip() {
 		GL11.glStencilMask(0xFF);
 		GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
 		m_clip = null;
 		GL11.glDisable(GL11.GL_STENCIL_TEST);
 	}
+
+	@Override
 	public void occlude(Shape s) {
 		GL11.glEnable(GL11.GL_STENCIL_TEST);
 		GL11.glColorMask(false, false, false, false);
@@ -133,6 +135,7 @@ public class LWJGLRenderer implements Renderer {
 		// draw where stencil's value is 0
 		GL11.glStencilFunc(GL11.GL_EQUAL, 0, 0xFF);
 	}
+
 	/*
 	 * Clip functions
 	 */
@@ -160,11 +163,11 @@ public class LWJGLRenderer implements Renderer {
 		GL11.glDepthMask(true);
 		GL11.glStencilMask(0x00);
 		// draw where stencil's value is 0
-		 GL11.glStencilFunc(GL11.GL_EQUAL, 0, 0xFF);
-		 
-		///* (nothing to draw) */
+		GL11.glStencilFunc(GL11.GL_EQUAL, 0, 0xFF);
+
+		// /* (nothing to draw) */
 		// draw only where stencil's value is 1
-		//GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
+		// GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
 	}
 
 	@Override
@@ -220,17 +223,20 @@ public class LWJGLRenderer implements Renderer {
 		GL11.glVertex2f(x2, y2);
 		GL11.glEnd();
 	}
+
 	@Override
 	public void drawLines(ArrayList<Point2D> points) {
 		GL11.glBegin(GL11.GL_LINES);
 		for (int i = 0; i < points.size(); i++) {
 			Point2D point = points.get(i);
-			//If this is not the first, finish up the previous one
-			if (i != 0 && i != (points.size() - 1)) GL11.glVertex2f((float) point.getX(), (float) point.getY());
+			// If this is not the first, finish up the previous one
+			if (i != 0 && i != (points.size() - 1))
+				GL11.glVertex2f((float) point.getX(), (float) point.getY());
 			GL11.glVertex2f((float) point.getX(), (float) point.getY());
 		}
 		GL11.glEnd();
 	}
+
 	@Override
 	public void drawLineLoop(ArrayList<Point2D> points) {
 		GL11.glBegin(GL11.GL_LINE_LOOP);
@@ -243,7 +249,8 @@ public class LWJGLRenderer implements Renderer {
 
 	@Override
 	public void fill(Shape shape) {
-		if (shape == null) return;
+		if (shape == null)
+			return;
 		ArrayList<Vector2f> points = ShapeUtils.getVectors(shape, true);
 		ArrayList<Triangle> tris = Triangulator.s_triangulate(points);
 		System.out.println("Filling: " + points.size());
@@ -263,8 +270,8 @@ public class LWJGLRenderer implements Renderer {
 		float[] coords = new float[6];
 		while (!iterator.isDone()) {
 			iterator.currentSegment(coords);
-			float x = (float) coords[0];
-			float y = (float) coords[1];
+			float x = coords[0];
+			float y = coords[1];
 			points.add(new Point2f(x, y));
 			iterator.next();
 		}
@@ -444,7 +451,7 @@ public class LWJGLRenderer implements Renderer {
 
 		GL11.glLoadIdentity();
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		
+
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 		GL11.glLoadIdentity();
 		doFrameSetup();
@@ -484,9 +491,9 @@ public class LWJGLRenderer implements Renderer {
 
 		try {
 			FragmentShader fragment = new FragmentShader();
-			fragment.setSource(new File(LWJGLRenderer.class.getResource("/shaders/default.frag").toURI()));
+			fragment.setSource(LWJGLRenderer.class.getResourceAsStream("/shaders/default.frag"));
 			VertexShader vertex = new VertexShader();
-			vertex.setSource(new File(LWJGLRenderer.class.getResource("/shaders/default.vert").toURI()));
+			vertex.setSource(LWJGLRenderer.class.getResourceAsStream("/shaders/default.vert"));
 			fragment.compile();
 			vertex.compile();
 
@@ -495,8 +502,6 @@ public class LWJGLRenderer implements Renderer {
 			s_defaultProgram.link();
 			s_defaultProgram.validate();
 		} catch (ShaderCompileException e) {
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
 		// Setup for the first frame

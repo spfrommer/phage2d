@@ -1,8 +1,6 @@
 package examples.flipflop.level;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.net.URISyntaxException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Scanner;
 
@@ -15,19 +13,12 @@ public class LevelReader {
 	}
 
 	public static String read(String levelName) {
-		File file = null;
-		try {
-			file = new File(LevelReader.class.getResource(
-					READ_DIRECTORY + levelName).toURI());
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		try {
-			String string = new Scanner(file).useDelimiter("\\A").next();
-			return string;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		return null;
+		InputStream in = null;
+		in = LevelReader.class.getResourceAsStream(READ_DIRECTORY + levelName);
+
+		Scanner scanner = new Scanner(in);
+		String string = scanner.useDelimiter("\\A").next();
+		scanner.close();
+		return string;
 	}
 }

@@ -14,6 +14,10 @@ import engine.core.implementation.rendering.activities.RenderingActivity;
 import engine.graphics.Color;
 import engine.graphics.Renderer;
 import engine.graphics.lwjgl.LWJGLDisplay;
+import engine.graphics.lwjgl.LWJGLKeyboard;
+import engine.graphics.lwjgl.LWJGLMouse;
+import engine.inputs.keyboard.Keyboard;
+import engine.inputs.mouse.Mouse;
 
 /**
  * A single player Game.
@@ -26,6 +30,9 @@ public abstract class Game {
 	private ViewPort m_viewport;
 	private Camera m_camera;
 	private Display m_display;
+
+	private Keyboard m_keyboard;
+	private Mouse m_mouse;
 
 	private int m_desiredFPS = 40;
 
@@ -40,6 +47,9 @@ public abstract class Game {
 		PhageSplash splash = new PhageSplash();
 
 		m_display = setupDisplay(width, height);
+
+		m_keyboard = LWJGLKeyboard.instance();
+		m_mouse = new LWJGLMouse(m_viewport.getViewShape());
 
 		init();
 
@@ -103,9 +113,9 @@ public abstract class Game {
 
 			nextGameTick += milliSkip;
 			long sleepTime = nextGameTick - System.currentTimeMillis();
-			System.out.println("Next time: " + nextGameTick + "; current time: " + System.currentTimeMillis());
+			// System.out.println("Next time: " + nextGameTick + "; current time: " + System.currentTimeMillis());
 			if (sleepTime > 0) {
-				System.out.println("Sleeping: " + sleepTime);
+				// System.out.println("Sleeping: " + sleepTime);
 				try {
 					Thread.sleep(sleepTime);
 				} catch (InterruptedException e) {
@@ -133,6 +143,14 @@ public abstract class Game {
 
 	protected ViewPort getViewPort() {
 		return m_viewport;
+	}
+
+	protected Mouse getMouse() {
+		return m_mouse;
+	}
+
+	protected Keyboard getKeyboard() {
+		return m_keyboard;
 	}
 
 	protected EntitySystem getEntitySystem() {

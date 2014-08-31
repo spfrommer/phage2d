@@ -28,6 +28,10 @@ import engine.core.implementation.rendering.activities.RenderingActivity;
 import engine.graphics.Color;
 import engine.graphics.Renderer;
 import engine.graphics.lwjgl.LWJGLDisplay;
+import engine.graphics.lwjgl.LWJGLKeyboard;
+import engine.graphics.lwjgl.LWJGLMouse;
+import engine.inputs.keyboard.Keyboard;
+import engine.inputs.mouse.Mouse;
 
 /**
  * An abstract Client that manages networking details and rendering. Extend this class if you want to make a multiplayer
@@ -58,6 +62,9 @@ public abstract class Client {
 	private static final int DEFAULT_UPS = 60;
 	private int m_ups = DEFAULT_UPS;
 
+	private Keyboard m_keyboard;
+	private Mouse m_mouse;
+
 	{
 		m_system = new EntitySystem();
 		m_rendering = new BasicRenderingActivity(m_system);
@@ -77,6 +84,9 @@ public abstract class Client {
 		m_port = port;
 		m_display = display;
 		splash.setVisible(false);
+
+		m_keyboard = LWJGLKeyboard.instance();
+		m_mouse = new LWJGLMouse(m_viewport.getViewShape());
 	}
 
 	/**
@@ -236,6 +246,14 @@ public abstract class Client {
 
 	protected EntitySystem getEntitySystem() {
 		return m_system;
+	}
+
+	protected Mouse getMouse() {
+		return m_mouse;
+	}
+
+	protected Keyboard getKeyboard() {
+		return m_keyboard;
 	}
 
 	/**

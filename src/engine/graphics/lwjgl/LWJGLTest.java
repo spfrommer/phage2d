@@ -2,8 +2,6 @@ package engine.graphics.lwjgl;
 
 import java.awt.Font;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.net.URISyntaxException;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -48,12 +46,10 @@ public class LWJGLTest {
 		FragmentShader lFrag = new FragmentShader();
 		VertexShader lVert = new VertexShader();
 		try {
-			lFrag.setSource(new File(LWJGLTest.class.getResource("/shaders/lighting.frag").toURI()));
+			lFrag.setSource(LWJGLTest.class.getResourceAsStream("/shaders/lighting.frag"));
 			lFrag.compile();
-			lVert.setSource(new File(LWJGLTest.class.getResource("/shaders/lighting.vert").toURI()));
+			lVert.setSource(LWJGLTest.class.getResourceAsStream("/shaders/lighting.vert"));
 			lVert.compile();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
 		} catch (ShaderCompileException e) {
 			e.printStackTrace();
 		}

@@ -2,7 +2,6 @@ package examples.flipflop;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +21,6 @@ import engine.core.implementation.camera.activities.CameraActivity;
 import engine.core.implementation.camera.activities.KeyboardCameraActivity;
 import engine.core.implementation.camera.activities.MovementProfile;
 import engine.core.implementation.camera.base.Camera;
-import engine.core.implementation.camera.base.ViewPort;
 import engine.core.implementation.physics.activities.PhysicsActivity;
 import engine.core.implementation.physics.data.PhysicsData;
 import engine.core.implementation.rendering.activities.AnimationActivity;
@@ -31,14 +29,15 @@ import engine.graphics.Color;
 import engine.graphics.Renderer;
 import engine.graphics.font.BMFontXMLLoader;
 import engine.graphics.font.Font;
-import engine.graphics.lwjgl.LWJGLKeyboard;
+import engine.graphics.lwjgl.LWJGLNatives;
 import engine.inputs.BindingListener;
 import engine.inputs.InputManager;
 import engine.inputs.keyboard.KeyTrigger;
+import engine.inputs.keyboard.Keyboard;
 import engine.sound.PlaylistPlayer;
+import engine.sound.PlaylistPlayer.PlaylistPlayerListener;
 import engine.sound.SoundResource;
 import engine.sound.SoundSystem;
-import engine.sound.PlaylistPlayer.PlaylistPlayerListener;
 import engine.sound.decode.GenericDecoder;
 import examples.flipflop.gui.Editor;
 import examples.flipflop.level.DynamicLevel;
@@ -115,6 +114,8 @@ public class FlipFlop extends Game {
 	}
 
 	public static void main(String[] args) {
+		LWJGLNatives.load(new File(System.getProperty("user.home") + "/.flipflop"));
+
 		FlipFlop f = new FlipFlop();
 		f.start();
 	}
@@ -134,8 +135,7 @@ public class FlipFlop extends Game {
 
 		m_physics = new PhysicsActivity(this.getEntitySystem());
 		m_animation = new AnimationActivity(this.getEntitySystem());
-		m_camera = new KeyboardCameraActivity(this.getEntitySystem(), LWJGLKeyboard.instance(), new MovementProfile(10,
-				0.01));
+		m_camera = new KeyboardCameraActivity(this.getEntitySystem(), this.getKeyboard(), new MovementProfile(10, 0.01));
 	}
 
 	@Override
@@ -287,8 +287,9 @@ public class FlipFlop extends Game {
 
 	private void startNextLevel() {
 		this.getEntitySystem().removeAllEntities();
+		this.getEntitySystem().update();
 		m_physics.setGravity(new Vector(0, -9.8));
-		m_portalManager.resetPortals();
+		m_portalManager.removePortals();
 
 		int world = m_nextLevel / 3;
 		loadWorld(world);
@@ -370,8 +371,7 @@ public class FlipFlop extends Game {
 		if (m_position != null && string != null) {
 			try {
 				if (font == null) {
-					font = BMFontXMLLoader.loadFonts(
-							new File(FlipFlop.class.getResource("/themes/basic/ptsans.fnt").toURI())).get(0);
+					font = BMFontXMLLoader.loadFonts(FlipFlop.class.getResource("/themes/basic/ptsans.fnt")).get(0);
 				}
 				renderer.setFont(font);
 			} catch (SAXException e) {
@@ -379,8 +379,6 @@ public class FlipFlop extends Game {
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (ParserConfigurationException e) {
-				e.printStackTrace();
-			} catch (URISyntaxException e) {
 				e.printStackTrace();
 			}
 			renderer.setColor(new Color(1, 1, 1, (float) m_fade));
@@ -413,15 +411,14 @@ public class FlipFlop extends Game {
 	}
 
 	private InputManager makeInputManager() {
-		ViewPort port = getViewPort();
-
 		final InputManager manager = new InputManager();
-		manager.addBinding("Up", new KeyTrigger(LWJGLKeyboard.instance().getKey('i')));
-		manager.addBinding("Down", new KeyTrigger(LWJGLKeyboard.instance().getKey('k')));
-		manager.addBinding("Right", new KeyTrigger(LWJGLKeyboard.instance().getKey('l')));
-		manager.addBinding("Left", new KeyTrigger(LWJGLKeyboard.instance().getKey('j')));
-		manager.addBinding("Print", new KeyTrigger(LWJGLKeyboard.instance().getKey('=')));
-		manager.addBinding("Restart", new KeyTrigger(LWJGLKeyboard.instance().getKey('r')));
+		Keyboard keyboard = this.getKeyboard();
+		manager.addBinding("Up", new KeyTrigger(keyboard.getKey('i')));
+		manager.addBinding("Down", new KeyTrigger(keyboard.getKey('k')));
+		manager.addBinding("Right", new KeyTrigger(keyboard.getKey('l')));
+		manager.addBinding("Left", new KeyTrigger(keyboard.getKey('j')));
+		manager.addBinding("Print", new KeyTrigger(keyboard.getKey('=')));
+		manager.addBinding("Restart", new KeyTrigger(keyboard.getKey('r')));
 
 		manager.addBindingListener("Up", new BindingListener() {
 			@Override
