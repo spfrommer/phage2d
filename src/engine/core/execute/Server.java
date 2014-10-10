@@ -145,7 +145,7 @@ public abstract class Server {
 			if (m_updatesPassed >= m_upf) {
 				m_network.processWriters();
 				m_network.processMessages();
-				boolean transmitted = m_network.transmitUpdates();
+				// boolean transmitted = m_network.transmitUpdates();
 				// if (transmitted)
 				// System.out.println("Transmitted");
 				m_updatesPassed = 1;
